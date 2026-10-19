@@ -1,0 +1,46 @@
+# Robot « construction » : à chaque modification du code (src/, tools/, assets/…),
+# il refabrique le jeu publié (index.html, jeu.js, jeu.css, sw.js…), vérifie qu'il démarre
+# et enregistre le résultat. GitHub Pages publie ensuite la nouvelle version.
+name: Construire le jeu
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'tools/**'
+      - 'assets/**'
+      - 'lib/**'
+      - 'package.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ecriture-main
+  cancel-in-progress: false
+
+jobs:
+  construire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Fabriquer le jeu
+        run: node tools/build.js
+      - name: Vérifier les menus et les sauvegardes
+        run: node tests/menu_test.js
+      - name: Enregistrer la version construite
+        run: |
+          git config user.name "Robot Crampons d'Or"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html jeu.js jeu.css sw.js manifest.webmanifest version.json
+          if git diff --cached --quiet; then echo "Rien à changer."; exit 0; fi
+          git commit -m "Construction automatique $(node -p "require('./version.json').version")"
+          git pull --rebase origin main
+          git push origin HEAD:main

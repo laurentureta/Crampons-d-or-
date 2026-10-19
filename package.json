@@ -1,0 +1,10 @@
+{
+  "name": "crampons-dor",
+  "version": "11.0.0",
+  "description": "Crampons d'Or : simulateur de carrière de footballeur, de 14 ans au Ballon d'Or.",
+  "private": true,
+  "scripts": {
+    "build": "node tools/build.js",
+    "test": "node tests/menu_test.js && node tests/ui_test.js BU 1"
+  }
+}

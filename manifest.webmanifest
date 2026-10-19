@@ -1,17 +1,30 @@
 {
-  "name": "Crampons d'Or",
-  "short_name": "Crampons d'Or",
-  "description": "Simulateur de carrière de footballeur, de 14 ans jusqu'au Ballon d'Or.",
-  "lang": "fr",
-  "start_url": "./",
-  "scope": "./",
-  "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#09130f",
-  "theme_color": "#09130f",
-  "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
-  ]
+ "name": "Crampons d'Or",
+ "short_name": "Crampons d'Or",
+ "description": "Simulateur de carrière de footballeur, de 14 ans jusqu'au Ballon d'Or.",
+ "lang": "fr",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#09130f",
+ "theme_color": "#09130f",
+ "icons": [
+  {
+   "src": "assets/icones/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "assets/icones/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "assets/icones/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
 }
