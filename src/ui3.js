@@ -274,6 +274,7 @@ const ACT = {
   lStat: () => { UI.lstat = UI.lstat ? false : 'st'; render(); },
   lStatTab: v => { UI.lstat = v === 'fd' ? 'fd' : 'st'; render(); },
   lEnd: v => { UI.lend = v; render(); },
+  optRec: v => { OPTS.voixRec = v === '1'; saveOpts(); auUnlock(); render(); if (v === '1' && typeof VOIX_INDEX !== 'undefined') { const k = Object.keys(VOIX_INDEX).find(x => x.startsWith('S|')); if (k) { sayStop(); sayPush({ txt: k.slice(2), pri: 2, who: 'S' }); } } },
   optVoice: v => { OPTS.voice = v === '1'; saveOpts(); auUnlock(); if (v === '1') { sayStop(); sayPush({ txt: 'Bonjour à tous ! Ici Lo Sol, au micro.', pri: 2, who: 'S' }); sayPush({ txt: 'Et Nathalie, à ses côtés.', pri: 2, who: 'N' }); } else sayStop(); render(); },
   vTest: v => { auUnlock(); sayTest(v); },
   aivProv: v => { OPTS.aiv = ['openai', 'eleven'].includes(v) ? v : 'off'; if (OPTS.aiv === 'off') { OPTS.aivS = OPTS.aivN = ''; } else if (OPTS.aivProvWas !== OPTS.aiv) { OPTS.aivS = OPTS.aivN = ''; } OPTS.aivProvWas = OPTS.aiv; AIV.dead = ''; AIV.cache.clear(); saveOpts(); render(); if (OPTS.aiv === 'eleven' && aivKey() && !(OPTS.aivEL || []).length) aivLoadEL().then(render); },
