@@ -80,16 +80,21 @@ function g3Body() {
   const boot = g3Merge([T(bt), T(new THREE.BoxGeometry(.25, .014, .092).translate(.055, -.077, 0), 0x2a2a2a)]);
   return { torso, shorts, head, hair, uarm, ubare, farm, hand, thigh, shin, boot };
 }
-function g3Players() {
-  const sc = G3.sc, P = {};
+// les 11 maillages d'un corps (instanciés N fois) : utilisés par le match et par la vitrine de la Boutique
+function g3Parts(sc, N) {
+  const P = {};
   const std = (rough) => new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: rough, metalness: 0 });
   const mk = (geo, mat, n, shadow) => { const m = new THREE.InstancedMesh(geo, mat, n); m.instanceMatrix.setUsage(THREE.DynamicDrawUsage); m.frustumCulled = false; m.castShadow = shadow !== false; m.receiveShadow = false; for (let i = 0; i < n; i++) m.setColorAt(i, new THREE.Color(1, 1, 1)); sc.add(m); return m; };
   // corps plus réaliste (v11) : buste galbé, visage, manches, chaussettes, crampons profilés
   const B = g3Body(), stdV = rough => new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: rough, metalness: 0, vertexColors: true });
   const shortM = std(.7); shortM.side = THREE.DoubleSide;
-  P.torso = mk(B.torso, stdV(.78), G3N); P.shorts = mk(B.shorts, shortM, G3N); P.head = mk(B.head, stdV(.55), G3N); P.hair = mk(B.hair, std(.9), G3N);
-  P.uarm = mk(B.uarm, stdV(.78), G3N * 2); P.ubare = mk(B.ubare, std(.55), G3N * 2); P.farm = mk(B.farm, std(.55), G3N * 2); P.hand = mk(B.hand, std(.6), G3N * 2);
-  P.thigh = mk(B.thigh, std(.55), G3N * 2); P.shin = mk(B.shin, stdV(.8), G3N * 2); P.boot = mk(B.boot, stdV(.35), G3N * 2);
+  P.torso = mk(B.torso, stdV(.78), N); P.shorts = mk(B.shorts, shortM, N); P.head = mk(B.head, stdV(.55), N); P.hair = mk(B.hair, std(.9), N);
+  P.uarm = mk(B.uarm, stdV(.78), N * 2); P.ubare = mk(B.ubare, std(.55), N * 2); P.farm = mk(B.farm, std(.55), N * 2); P.hand = mk(B.hand, std(.6), N * 2);
+  P.thigh = mk(B.thigh, std(.55), N * 2); P.shin = mk(B.shin, stdV(.8), N * 2); P.boot = mk(B.boot, stdV(.35), N * 2);
+  return P;
+}
+function g3Players() {
+  const sc = G3.sc, P = g3Parts(sc, G3N);
   // numéros dans le dos (atlas 10×10)
   // numéros de maillot en police « collège » (Graduate), redessinés dès que la police est chargée
   const [ac, ax] = g3Canvas(1024, 1024);
@@ -289,57 +294,94 @@ function g3Tmp() { if (_m.e) return; _m.e = new THREE.Euler(); _m.q = new THREE.
 function g3J(out, parent, x, y, z, rx, ry, rz) { _m.e.set(rx || 0, ry || 0, rz || 0, 'YZX'); _m.q.setFromEuler(_m.e); _m.l.compose(_m.v.set(x, y, z), _m.q, _m.s); return out.multiplyMatrices(parent, _m.l); }
 const ease = x => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
 const bell = (p, a, b) => p < a || p > b ? 0 : Math.sin((p - a) / (b - a) * Math.PI);
-// pose : { x, z, yaw, v (vitesse), ph (phase de course), act, at (temps depuis le geste), aa (paramètre), gk, hold }
+// pose : { x, z, yaw, v (vitesse), ph (phase de course), act, at (temps depuis le geste), aa (paramètre), gk, hold,
+//          look (tête vers le ballon), turn (vitesse de virage), idle (immobile depuis), tm (horloge), cel (célébration),
+//          key (mémoire du lissage), gdt (temps de jeu écoulé), snap (pas de lissage) }
+// proportions du squelette (celles du corps en pièces ; remplacées par celles du vrai modèle 3D quand il est chargé)
+const G3RIG_DEF = { hp: .97, hipY: -.07, hipW: .1, thigh: .45, shin: .45, torY: .04, shY: .5, shW: .225, ua: .3, fa: .28, neck: .7 };
+let G3RIG = Object.assign({}, G3RIG_DEF);
+const G3JS = new Map(), G3_JK = ['hp', 'lean', 'roll', 'twist', 'nod', 'look', 'hipL', 'hipR', 'kneeL', 'kneeR', 'shL', 'shR', 'abL', 'abR', 'elL', 'elR', 'ab2'];
+const G3_CELS = ['plane', 'classic', 'ear', 'heart', 'knee', 'dance'];
 function g3Pose(P, n, s) {
-  const run = clamp(s.v / 7, 0, 1), walk = clamp(s.v / 1.6, 0, 1), ph = s.ph, sn = Math.sin(ph), cs = Math.cos(ph);
-  let hp = .97, lean = .04 + .2 * run, roll = 0, pitch = 0, twist = 0, nod = 0;
-  let hipL = sn * (.12 + .7 * run) * walk, hipR = -hipL, kneeL = (.08 + (.25 + 1.05 * run) * Math.max(0, cs)) * walk + .05, kneeR = (.08 + (.25 + 1.05 * run) * Math.max(0, -cs)) * walk + .05;
-  let shL = -sn * (.15 + .55 * run) * walk, shR = -shL, abL = .12, abR = .12, elL = .35 + .9 * run, elR = elL, ab2 = 0;
-  hp -= .04 * run * Math.abs(Math.sin(ph)) - .02 * run;
-  if (s.gk && s.v < 1.5 && s.alert) { kneeL = kneeR = .5; hipL = hipR = .35; hp = .86; lean = .3; shL = shR = .5; abL = abR = .45; elL = elR = .6; }
+  const run = clamp(s.v / 7, 0, 1), walk = clamp(s.v / 1.6, 0, 1), ph = s.ph, sn = Math.sin(ph), cs = Math.cos(ph), tm = s.tm || 0;
+  const H0 = G3RIG.hp, KN = G3RIG.thigh - G3RIG.hipY + .03; let hp = H0, lean = .04 + .2 * run, roll = 0, pitch = 0, twist = 0, nod = 0, look = s.look || 0, yawAdd = 0;
+  let hipL = sn * (.12 + .75 * run) * walk, hipR = -hipL, kneeL = (.08 + (.25 + 1.15 * run) * Math.max(0, cs)) * walk + .05, kneeR = (.08 + (.25 + 1.15 * run) * Math.max(0, -cs)) * walk + .05;
+  let shL = -sn * (.15 + .6 * run) * walk, shR = -shL, abL = .12, abR = .12, elL = .35 + 1.0 * run, elR = elL, ab2 = 0;
+  hp -= .045 * run * Math.abs(Math.sin(ph)) - .02 * run;
+  twist = -sn * .16 * run * walk;                     // épaules à contre-temps des hanches
+  nod = -lean * .45;                                   // le regard reste à l'horizontale
+  roll = clamp((s.turn || 0) * s.v * .025, -.28, .28); // on se penche dans les virages
+  // à l'arrêt : respiration, transfert d'appui, puis mains sur les hanches
+  if (s.v < .4 && !s.gk && !(s.act && s.at >= 0 && s.at < 3)) {
+    const br = Math.sin(tm * 2.1 + n * 1.7); shL += .03 * br; shR += .03 * br; nod += .02 * br; roll += .025 * Math.sin(tm * .6 + n);
+    if ((s.idle || 0) > 3.5) { const w = clamp((s.idle - 3.5) / .6, 0, 1); abL = abR = .12 + .62 * w; shL = shL * (1 - w) - .32 * w; shR = shR * (1 - w) - .32 * w; elL = elR = .35 + 1.55 * w; }
+  }
+  if (s.gk && s.v < 1.5 && s.alert) { kneeL = kneeR = .5; hipL = hipR = .35; hp = H0 - .11; lean = .3; shL = shR = .5; abL = abR = .45; elL = elR = .6; nod = -.2; }
   const a = s.act, t = s.at, side = (n % 2) ? 1 : -1;
   if (a && t >= 0) {
-    if (a === 1 || a === 11) { const p = t / (a === 11 ? .7 : .55); if (p < 1) { const back = ease(p / .4), fwd = ease((p - .4) / .25), k = side > 0; const hk = -.7 * back * (1 - fwd) + 1.25 * fwd * (1 - ease((p - .75) / .25) * .6), kk = 1.4 * back * (1 - fwd) + .15 * fwd; if (k) { hipR = hk; kneeR = kk; hipL = -.15; kneeL = .25; } else { hipL = hk; kneeL = kk; hipR = -.15; kneeR = .25; } abL = abR = .55 * bell(p, .2, 1); shL = shR = .2; lean = .12 - .25 * fwd; twist = side * .25 * bell(p, .2, .9); } }
-    else if (a === 2) { const p = t / .8; if (p < 1) { const j = bell(p, 0, 1); hp += .55 * j; kneeL = kneeR = .9 * j + .1; hipL = hipR = .5 * j; shL = shR = 1.1 * j; abL = abR = .5 * j; nod = .5 * bell(p, .35, .7); lean = -.1 * j; } }
-    else if (a === 3) { const p = t / 1.1; if (p < 1) { const w = Math.min(1, p * 5) * (1 - ease((p - .8) / .2)); pitch = 1.15 * w; hp = .97 - .7 * w; hipL = side > 0 ? .3 * w : 1.3 * w; hipR = side > 0 ? 1.3 * w : .3 * w; kneeL = side > 0 ? 1.3 * w : .1; kneeR = side > 0 ? .1 : 1.3 * w; shL = shR = -.6 * w; abL = abR = .6 * w; lean = 0; } }
+    if (a === 1 || a === 11) { const p = t / (a === 11 ? .7 : .55); if (p < 1) { const back = ease(p / .4), fwd = ease((p - .4) / .25), k = side > 0; const hk = -.75 * back * (1 - fwd) + 1.3 * fwd * (1 - ease((p - .75) / .25) * .6), kk = 1.45 * back * (1 - fwd) + .15 * fwd; if (k) { hipR = hk; kneeR = kk; hipL = -.15; kneeL = .3; } else { hipL = hk; kneeL = kk; hipR = -.15; kneeR = .3; } abL = abR = .6 * bell(p, .2, 1); shL = shR = .2; if (k) shL = .6 * bell(p, .3, 1); else shR = .6 * bell(p, .3, 1); lean = .12 - .3 * fwd; twist = side * .3 * bell(p, .2, .9); roll = -side * .12 * bell(p, .3, 1); look *= .3; } }
+    else if (a === 2) { const p = t / .8; if (p < 1) { const j = bell(p, 0, 1); hp += .55 * j; kneeL = kneeR = .9 * j + .1; hipL = hipR = .5 * j; shL = shR = 1.1 * j; abL = abR = .5 * j; nod = .55 * bell(p, .35, .7) - .3 * bell(p, 0, .35); lean = -.15 * j; look *= .2; } }
+    else if (a === 3) { const p = t / 1.1; if (p < 1) { const w = Math.min(1, p * 5) * (1 - ease((p - .8) / .2)); pitch = 1.15 * w; hp = H0 - .7 * w; hipL = side > 0 ? .3 * w : 1.3 * w; hipR = side > 0 ? 1.3 * w : .3 * w; kneeL = side > 0 ? 1.3 * w : .1; kneeR = side > 0 ? .1 : 1.3 * w; shL = shR = -.6 * w; abL = abR = .6 * w; lean = 0; } }
     else if (a === 4) { const p = t / .6; if (p < 1) { const w = bell(p, 0, 1); if (side > 0) { hipR = 1 * w; kneeR = .2; abR = .1; } else { hipL = 1 * w; kneeL = .2; } lean = .3 * w; hp -= .14 * w; abL = abR = .4 * w; } }
     else if (a === 17) { const p = t / .6; if (p < 1) { const w = bell(p, 0, 1); shL = shR = -.2; abL = abR = .1; elL = elR = 1.6 * w; twist = .5 * w * side; hp += .1 * w; } }
-    else if (a === 5) { const p = t / 1.4; if (p < 1) { const sg = s.aa === 0 ? 0 : Math.sign(s.aa), lvl = Math.abs(s.aa) || 1.1; const fly = ease(p / .3), land = ease((p - .45) / .2), w = fly; roll = sg * 1.45 * w; hp = .97 + (lvl < 1 ? .55 : lvl < 1.3 ? .25 : -.2) * bell(p, 0, .55) - (.97 - .25) * land; shL = shR = 2.7 * w; abL = abR = .2; elL = elR = .1; hipL = hipR = .15; kneeL = kneeR = .3; if (!sg) { hp = .97 - .35 * bell(p, 0, .8); kneeL = kneeR = 1; hipL = hipR = .8; shL = shR = .6; abL = abR = .9; } } }
-    else if (a === 7) { if (s.hold || t < .8) { shL = shR = .95; elL = elR = 1.4; abL = abR = .15; } }
-    else if (a === 8) { const p = t; if (p < 11) { const v2 = n % 3; if (v2 === 0) { abL = abR = 1.45; shL = shR = .1; elL = elR = .1; lean = .25; } else if (v2 === 1) { shL = shR = 2.7; abL = abR = .35; elL = elR = .2; hp += .25 * Math.max(0, Math.sin(p * 7)) * (p > 3 ? 1 : 0); } else { shR = 2.9; abR = .2; elR = .3; shL = .5; elL = 1.2; } } }
-    else if (a === 18) { if (t < 9) { shL = shR = 2.2 + .3 * Math.sin(t * 6); abL = abR = .4; elL = elR = .3; } }
-    else if (a === 9) { const dur = s.busy || 1.6; if (t < dur + .6) { const down = ease(t / .4), up = ease((t - dur) / .6), w = down * (1 - up); pitch = -1.45 * w; hp = .97 - .8 * w; shL = shR = 1.6 * w; elL = elR = .3; abL = abR = .5 * w; kneeL = kneeR = .3 * w; } }
+    else if (a === 5) { const p = t / 1.4; if (p < 1) { const sg = s.aa === 0 ? 0 : Math.sign(s.aa), lvl = Math.abs(s.aa) || 1.1; const fly = ease(p / .3), land = ease((p - .45) / .2), w = fly; roll = sg * 1.45 * w; hp = H0 + (lvl < 1 ? .55 : lvl < 1.3 ? .25 : -.2) * bell(p, 0, .55) - (H0 - .25) * land; shL = shR = 2.8 * w; abL = abR = .2; elL = elR = .05; hipL = hipR = .15; kneeL = kneeR = .25 + .2 * bell(p, 0, .4); if (!sg) { hp = H0 - .35 * bell(p, 0, .8); kneeL = kneeR = 1; hipL = hipR = .8; shL = shR = .6; abL = abR = .9; } } }
+    else if (a === 7) { if (s.hold || t < .8) { shL = shR = .95; elL = elR = 1.4; abL = abR = .15; nod = .2; } }
+    else if (a === 8 && t < 11) {
+      // célébrations : en courant, les bras font déjà la fête ; une fois arrêté, le geste complet
+      const cel = s.cel || G3_CELS[n % G3_CELS.length], en = ease(t / .3) * (1 - ease((t - 9.5) / 1.2)), rw = clamp((s.v - 1.2) / 3, 0, 1) * en, A = (1 - clamp((s.v - 1.2) / 3, 0, 1)) * en, mx = (c, g, w) => c + (g - c) * w;
+      look = 0;
+      if (cel === 'plane') { const w = Math.max(rw, A); abL = mx(abL, 1.45, w); abR = mx(abR, 1.45, w); shL = mx(shL, .05, w); shR = mx(shR, .05, w); elL = mx(elL, .05, w); elR = mx(elR, .05, w); roll += .38 * Math.sin(t * 2.4) * w; lean += .08 * w; }
+      else if (cel === 'knee') { const K = ease((t - .7) / .25) * en; hp = mx(hp, KN, K); hipL = mx(hipL, .12, K); hipR = mx(hipR, .12, K); kneeL = mx(kneeL, 1.62, K); kneeR = mx(kneeR, 1.62, K); lean = mx(lean, -.45, K); shL = mx(shL, 2.6, Math.max(K, rw * .5)); shR = mx(shR, 2.6, Math.max(K, rw * .5)); abL = mx(abL, .65, K); abR = mx(abR, .65, K); elL = mx(elL, .15, K); elR = mx(elR, .15, K); nod = mx(nod, -.4, K); roll = mx(roll, 0, K); }
+      else if (cel === 'calm') { const pp = Math.sin(t * 9); shL = mx(shL, .55 + .12 * pp, A); shR = mx(shR, .55 + .12 * pp, A); abL = mx(abL, .5, A); abR = mx(abR, .5, A); elL = mx(elL, .35, A); elR = mx(elR, .35, A); lean = mx(lean, -.06, A); nod = mx(nod, -.12, A); ab2 = .1 * A; kneeL = mx(kneeL, .2, A); kneeR = mx(kneeR, .2, A); hp -= .03 * A; }
+      else if (cel === 'heart') { shL = mx(shL, 1.3, A); shR = mx(shR, 1.3, A); abL = mx(abL, -.14, A); abR = mx(abR, -.14, A); elL = mx(elL, 1.35, A); elR = mx(elR, 1.35, A); lean = mx(lean, .02, A); roll += .06 * Math.sin(t * 2) * A; nod = mx(nod, .05, A); }
+      else if (cel === 'ear') { shR = mx(shR, .35, A); abR = mx(abR, 1.35, A); elR = mx(elR, 2.35 + .1 * Math.sin(t * 5), A); shL = mx(shL, .45, A); abL = mx(abL, 1.05, A); elL = mx(elL, .2, A); lean = mx(lean, -.12, A); roll += .12 * A; twist += .2 * A; }
+      else if (cel === 'spin') { const J = t - .5, p = clamp(J / .75, 0, 1), air = bell(p, 0, 1) * A, land = (J > .75 ? 1 : 0) * A; hp += .55 * air; yawAdd = Math.PI * 2 * ease(p) * (A > .5 ? 1 : 0); kneeL = mx(kneeL, 1, air); kneeR = mx(kneeR, 1, air); shL = mx(shL, .3, air); shR = mx(shR, .3, air); elL = mx(elL, 1.5, air); elR = mx(elR, 1.5, air); abL = mx(abL, .98, land); abR = mx(abR, .98, land); shL = mx(shL, -.3, land); shR = mx(shR, -.3, land); elL = mx(elL, .05, land); elR = mx(elR, .05, land); ab2 = .2 * land; lean = mx(lean, -.18, land); nod = mx(nod, -.18, land); hp -= .06 * land; }
+      else if (cel === 'dance') { const b = Math.sin(t * 6.4); roll += .12 * b * A; kneeL = mx(kneeL, .3 + .18 * Math.sin(t * 12.8), A); kneeR = mx(kneeR, .3 + .18 * Math.sin(t * 12.8 + 1), A); hp -= .06 * A * (1 + Math.sin(t * 12.8)) / 2; shL = mx(shL, 1.5 + 1.1 * b, A); shR = mx(shR, 1.5 - 1.1 * b, A); elL = mx(elL, 1.1, A); elR = mx(elR, 1.1, A); abL = mx(abL, .45, A); abR = mx(abR, .45, A); twist += .28 * Math.sin(t * 6.4 + .8) * A; }
+      else if (cel === 'flip') { const J = t - .6, p = clamp(J / .8, 0, 1), crouch = bell(J, -.3, .05) * A, air = bell(p, 0, 1) * A, after = (J > .8 ? 1 : 0) * A; hp += -.28 * crouch + 1.05 * air; kneeL = mx(kneeL, 1, crouch); kneeR = mx(kneeR, 1, crouch); pitch = J > 0 && J < .8 && A > .5 ? Math.PI * 2 * ease(p) : 0; hipL = mx(hipL, 1.5, air); hipR = mx(hipR, 1.5, air); kneeL = mx(kneeL, 1.8, air); kneeR = mx(kneeR, 1.8, air); shL = mx(shL, 1.3, air); shR = mx(shR, 1.3, air); shL = mx(shL, 2.8, after); shR = mx(shR, 2.8, after); abL = mx(abL, .55, after); abR = mx(abR, .55, after); elL = mx(elL, .1, after); elR = mx(elR, .1, after); lean = mx(lean, -.12, after); }
+      else { // classic : le poing levé, l'autre main sur le cœur
+        const w = Math.max(rw, A), pump = Math.sin(t * 7.5); shR = mx(shR, 2.6 + .3 * pump * A, w); abR = mx(abR, .2, w); elR = mx(elR, .2 + .5 * Math.max(0, -pump) * A, w); shL = mx(shL, .85, A); elL = mx(elL, 2, A); abL = mx(abL, .05, A); lean = mx(lean, -.1, A); hp += .1 * Math.max(0, pump) * A; }
+    }
+    else if (a === 18) { if (t < 9) { const j = s.v < 1 ? Math.max(0, Math.sin(t * 6 + n)) : 0; shL = shR = 2.2 + .3 * Math.sin(t * 6 + n); abL = abR = .4; elL = elR = .3; hp += .14 * j; kneeL += .3 * j; kneeR += .3 * j; look = 0; } }
+    else if (a === 9) { const dur = s.busy || 1.6; if (t < dur + .6) { const down = ease(t / .4), up = ease((t - dur) / .6), w = down * (1 - up); pitch = -1.45 * w; hp = H0 - .8 * w; shL = shR = 1.6 * w; elL = elR = .3; abL = abR = .5 * w; kneeL = kneeR = .3 * w; } }
     else if (a === 10) { const p = t / .9; if (p < 1) { const w = bell(p, 0, 1); shL = shR = 2.9 - 1.2 * ease((p - .45) / .3); elL = elR = 1.6 * (1 - ease((p - .45) / .3)); abL = abR = .2; lean = -.25 * w + .25 * ease((p - .45) / .3); } }
-    else if (a === 12) { const p = t / .35; if (p < 1) { const w = bell(p, 0, 1); if (side > 0) { hipR = .5 * w; kneeR = .7 * w; } else { hipL = .5 * w; kneeL = .7 * w; } abL = abR = .5 * w; } }
-    else if (a === 14) { if (t < 6) { shL = shR = 2.5; abL = abR = .9; elL = elR = 2.3; nod = .35; lean = .1; } }
+    else if (a === 12) { const p = t / .35; if (p < 1) { const w = bell(p, 0, 1); if (side > 0) { hipR = .5 * w; kneeR = .7 * w; } else { hipL = .5 * w; kneeL = .7 * w; } abL = abR = .5 * w; nod = .25 * w; } }
+    else if (a === 14) { if (t < 6) { shL = shR = 2.5; abL = abR = .9; elL = elR = 2.3; nod = .35; lean = .1; look = 0; } }
     else if (a === 15) { if (t < 2.2) { shR = 3; abR = .1; elR = 0; } }
   }
   if (s.flagUp) { shR = 3; abR = .2; elR = 0; }
+  // lissage : les gestes s'enchaînent sans à-coups (en temps de jeu, donc juste aussi en accéléré et au ralenti)
+  { const key = s.key ?? n; let J = G3JS.get(key); const cur = [hp, lean, roll, twist, nod, look, hipL, hipR, kneeL, kneeR, shL, shR, abL, abR, elL, elR, ab2];
+    if (!J || s.snap) { J = Float32Array.from(cur); G3JS.set(key, J); }
+    else { const k = 1 - Math.exp(-(s.gdt || 0) * (a && t >= 0 && t < 1.5 ? 26 : 14)); for (let i = 0; i < cur.length; i++) J[i] += (cur[i] - J[i]) * k; }
+    [hp, lean, roll, twist, nod, look, hipL, hipR, kneeL, kneeR, shL, shR, abL, abR, elL, elR, ab2] = J; }
   // composition
   const R = G3M.root, sq = n * 2;
-  _m.e.set(roll, -s.yaw, pitch, 'YZX'); _m.q.setFromEuler(_m.e); R.compose(_m.v.set(s.x, Math.max(.12, hp), s.z), _m.q, _m.s);
-  g3J(G3M.tor, R, 0, .04, 0, 0, twist, -lean);
+  _m.e.set(roll, -s.yaw - yawAdd, pitch, 'YZX'); _m.q.setFromEuler(_m.e); R.compose(_m.v.set(s.x, Math.max(.12, hp), s.z), _m.q, _m.s);
+  g3J(G3M.tor, R, 0, G3RIG.torY, 0, 0, twist + look * .2, -lean);
   P.torso.setMatrixAt(n, G3M.tor); P.shorts.setMatrixAt(n, R);
-  g3J(G3M.hd, G3M.tor, 0, .7, 0, 0, 0, -nod); P.head.setMatrixAt(n, G3M.hd); P.hair.setMatrixAt(n, G3M.hd);
-  if (n < 22) { g3J(G3M.z, G3M.tor, -.128, .33, 0, 0, 0, 0); P.num.setMatrixAt(n, G3M.z); G3M.z.makeScale(0, 0, 0); } else P.num.setMatrixAt(n, G3M.z);
+  g3J(G3M.hd, G3M.tor, 0, G3RIG.neck, 0, 0, look * .8, -nod); P.head.setMatrixAt(n, G3M.hd); P.hair.setMatrixAt(n, G3M.hd);
+  const SKo = P.sk && P.sk.out; if (SKo) { P.sk.hid[n] = 0; g3SkPut(SKo, n, 0, R); g3SkPut(SKo, n, 1, G3M.tor); g3SkPut(SKo, n, 2, G3M.hd); }
+  if (n < 22) { g3J(G3M.z, G3M.tor, G3RIG.numX ?? -.128, G3RIG.numY ?? .33, 0, 0, 0, 0); P.num.setMatrixAt(n, G3M.z); G3M.z.makeScale(0, 0, 0); } else P.num.setMatrixAt(n, G3M.z);
   for (let k = 0; k < 2; k++) {
     const sd = k ? 1 : -1, sh = k ? shR : shL, ab = k ? abR : abL, el = k ? elR : elL;
-    g3J(G3M.ua, G3M.tor, 0, .5, sd * .225, sd * ab, 0, sh); P.uarm.setMatrixAt(sq + k, G3M.ua); if (P.ubare) P.ubare.setMatrixAt(sq + k, G3M.ua);
-    g3J(G3M.fa, G3M.ua, 0, -.3, 0, 0, 0, el); P.farm.setMatrixAt(sq + k, G3M.fa);
-    g3J(G3M.sh, G3M.fa, 0, -.28, 0, 0, 0, 0); P.hand.setMatrixAt(sq + k, G3M.sh);
+    g3J(G3M.ua, G3M.tor, 0, G3RIG.shY, sd * G3RIG.shW, -sd * ab, 0, sh); // ab > 0 : le bras s'écarte du corps P.uarm.setMatrixAt(sq + k, G3M.ua); if (P.ubare) P.ubare.setMatrixAt(sq + k, G3M.ua);
+    g3J(G3M.fa, G3M.ua, 0, -G3RIG.ua, 0, 0, 0, el); P.farm.setMatrixAt(sq + k, G3M.fa);
+    g3J(G3M.sh, G3M.fa, 0, -G3RIG.fa, 0, 0, 0, 0); P.hand.setMatrixAt(sq + k, G3M.sh);
+    if (SKo) { g3SkPut(SKo, n, 3 + k * 3, G3M.ua); g3SkPut(SKo, n, 4 + k * 3, G3M.fa); g3SkPut(SKo, n, 5 + k * 3, G3M.sh); }
     const hip = k ? hipR : hipL, kn = k ? kneeR : kneeL;
-    g3J(G3M.th, R, 0, -.07, sd * .1, sd * (.04 + ab2), 0, hip); P.thigh.setMatrixAt(sq + k, G3M.th);
-    g3J(G3M.sn, G3M.th, 0, -.45, 0, 0, 0, -kn); P.shin.setMatrixAt(sq + k, G3M.sn);
-    g3J(G3M.hip, G3M.sn, 0, -.45, 0, 0, 0, Math.min(.6, kn * .3)); P.boot.setMatrixAt(sq + k, G3M.hip);
+    g3J(G3M.th, R, 0, G3RIG.hipY, sd * G3RIG.hipW, -sd * (.04 + ab2), 0, hip); // ab2 > 0 : jambes écartées P.thigh.setMatrixAt(sq + k, G3M.th);
+    g3J(G3M.sn, G3M.th, 0, -G3RIG.thigh, 0, 0, 0, -kn); P.shin.setMatrixAt(sq + k, G3M.sn);
+    g3J(G3M.hip, G3M.sn, 0, -G3RIG.shin, 0, 0, 0, Math.min(.6, kn * .3)); P.boot.setMatrixAt(sq + k, G3M.hip);
+    if (SKo) { g3SkPut(SKo, n, 9 + k * 3, G3M.th); g3SkPut(SKo, n, 10 + k * 3, G3M.sn); g3SkPut(SKo, n, 11 + k * 3, G3M.hip); }
   }
 }
-function g3Hide(P, n) { const Z = G3M.z; for (const k of ['torso', 'shorts', 'head', 'hair', 'num']) P[k].setMatrixAt(n, Z); for (const k of ['uarm', 'ubare', 'farm', 'hand', 'thigh', 'shin', 'boot']) if (P[k]) { P[k].setMatrixAt(n * 2, Z); P[k].setMatrixAt(n * 2 + 1, Z); } }
+function g3Hide(P, n) { const Z = G3M.z; if (P.sk) P.sk.hid[n] = 1; for (const k of ['torso', 'shorts', 'head', 'hair', 'num']) P[k].setMatrixAt(n, Z); for (const k of ['uarm', 'ubare', 'farm', 'hand', 'thigh', 'shin', 'boot']) if (P[k]) { P[k].setMatrixAt(n * 2, Z); P[k].setMatrixAt(n * 2 + 1, Z); } }
 // couleurs des maillots (une fois par effectif)
 function g3Kits(M, ros) {
   const P = G3.P, E = M.E, key = JSON.stringify(ros.map(t => t.map(r => r.n + r.num)));
   if (G3.kitKey === key) return; G3.kitKey = key;
   const hairC = ['#1b1410', '#2b1d14', '#3b2a1a', '#6b4a2b', '#b48a4a', '#121212'];
-  const set = (n, shirt, shorts, socks, skin, hair, num, gloves, me) => { P.torso.setColorAt(n, shirt); P.uarm.setColorAt(n * 2, shirt); P.uarm.setColorAt(n * 2 + 1, shirt); P.shorts.setColorAt(n, shorts); for (const k of [0, 1]) { P.thigh.setColorAt(n * 2 + k, skin); P.shin.setColorAt(n * 2 + k, socks); P.farm.setColorAt(n * 2 + k, skin); if (P.ubare) P.ubare.setColorAt(n * 2 + k, skin); P.hand.setColorAt(n * 2 + k, gloves || skin); P.boot.setColorAt(n * 2 + k, me ? g3Lin('#f2b632') : (n % 3) ? new THREE.Color(0x111111) : new THREE.Color(0xf0f0f0)); } P.head.setColorAt(n, skin); P.hair.setColorAt(n, hair); const a = P.num.geometry.attributes.aNum; const nn = clamp(num | 0, 0, 99); a.setXY(n, (nn % 10) * .1, 1 - (Math.floor(nn / 10) + 1) * .1); a.needsUpdate = true; };
+  const set = (n, shirt, shorts, socks, skin, hair, num, gloves, me) => { P.torso.setColorAt(n, shirt); P.uarm.setColorAt(n * 2, shirt); P.uarm.setColorAt(n * 2 + 1, shirt); P.shorts.setColorAt(n, shorts); for (const k of [0, 1]) { P.thigh.setColorAt(n * 2 + k, skin); P.shin.setColorAt(n * 2 + k, socks); P.farm.setColorAt(n * 2 + k, skin); if (P.ubare) P.ubare.setColorAt(n * 2 + k, skin); P.hand.setColorAt(n * 2 + k, gloves || skin); P.boot.setColorAt(n * 2 + k, me ? g3Lin(typeof shopEq === 'function' ? shopEq('boots') : '#f2b632') : (n % 3) ? new THREE.Color(0x111111) : new THREE.Color(0xf0f0f0)); } if (P.sk) g3SkColors(P.sk, n, { shirt, shorts, socks, skin, hair, boots: me ? g3Lin(typeof shopEq === 'function' ? shopEq('boots') : '#f2b632') : (n % 3) ? new THREE.Color(0x111111) : new THREE.Color(0xf0f0f0) }); P.head.setColorAt(n, skin); P.hair.setColorAt(n, hair); const a = P.num.geometry.attributes.aNum; const nn = clamp(num | 0, 0, 99); a.setXY(n, (nn % 10) * .1, 1 - (Math.floor(nn / 10) + 1) * .1); a.needsUpdate = true; };
   for (let k = 0; k < 2; k++) {
     const T = E.T[k], col = g3Lin(T.col), c2 = g3Lin(T.col2), gk = g3Lin(T.gkc), wShorts = hashN(T.n) % 3 === 0, shortsC = wShorts ? new THREE.Color(0xf2f2f2) : c2, socks = hashN(T.n + 's') % 2 ? col : (wShorts ? new THREE.Color(0xf2f2f2) : c2);
     for (let i = 0; i < 11; i++) { const r = (ros[k] && ros[k][i]) || {}, n = k * 11 + i, skin = g3Lin(SKIN[hashN(r.n || 'x') % SKIN.length]), hair = g3Lin(hairC[hashN((r.n || 'x') + 'h') % hairC.length]);
@@ -391,9 +433,14 @@ function g3Draw(M, t, dt, paused) {
   const pr = lvPair(t); if (!pr) return false;
   const [fa, fb, a] = pr, L = i => fa[i] + (fb[i] - fa[i]) * a, mir = fa[2] === 2, E = M.E, P = G3.P;
   const X = x => (mir ? PL - x : x) - 52.5, Z = y => (mir ? PW - y : y) - 34, YAW = f => mir ? f + Math.PI : f;
+  g3SkAttach(P);
   const ros = LV.ros[fa[8]] || LV.ros[Object.keys(LV.ros).pop()] || meRoster(E); g3Kits(M, ros);
   // temps de jeu écoulé depuis l'image précédente (phases de course)
+  const snap = G3.lastT == null || Math.abs(t - G3.lastT) > 1;
   let gdt = G3.lastT == null ? 0 : t - G3.lastT; if (gdt < 0 || gdt > 1) gdt = 0; G3.lastT = t;
+  if (!G3.idle) G3.idle = new Float32Array(25);
+  const tm = performance.now() / 1000, myCel = typeof shopEq === 'function' ? shopEq('celeb') : 'classic';
+  g3BallSkin();
   const bx = X(L(3)), bz = Z(L(4)), by = L(5), own = fa[6] >= 0 ? [fa[6], fa[7]] : null, hold = fa[10] > .5;
   const fdt = Math.max(.05, fb[0] - fa[0]);
   let celeb = null, meIdx = -1;
@@ -404,7 +451,12 @@ function g3Draw(M, t, dt, paused) {
     let fA = fa[o + 3], fB = fb[o + 3], d = Math.atan2(Math.sin(fB - fA), Math.cos(fB - fA)); const yaw = YAW(fA + d * a);
     G3.ph[n] = (G3.ph[n] + gdt * Math.PI * 2 * v / (1.5 + .24 * v)) % (Math.PI * 200);
     const r = (ros[kk] && ros[kk][i]) || {}, act = fa[o + 4], at = t - fa[o + 5];
-    const st = { x, z, yaw, v, ph: G3.ph[n] + n, act, at, aa: fa[o + 6], gk: !!r.gk, alert: r.gk && Math.abs(bx - (kk === 0 ? (mir ? 52.5 : -52.5) : (mir ? -52.5 : 52.5))) < 30, hold: hold && own && own[0] === kk && own[1] === i, busy: 1.6 };
+    G3.idle[n] = v < .4 ? G3.idle[n] + gdt : 0;
+    const rel = Math.atan2(bz - z, bx - x) - yaw, dB = Math.hypot(bz - z, bx - x), look = clamp(-Math.atan2(Math.sin(rel), Math.cos(rel)), -1.1, 1.1) * (dB < 40 ? 1 : .5);
+    const st = { x, z, yaw, v, ph: G3.ph[n] + n, act, at, aa: fa[o + 6], gk: !!r.gk, alert: r.gk && Math.abs(bx - (kk === 0 ? (mir ? 52.5 : -52.5) : (mir ? -52.5 : 52.5))) < 30, hold: hold && own && own[0] === kk && own[1] === i, busy: 1.6,
+      look, turn: d / fdt, idle: G3.idle[n], tm, cel: r.me ? myCel : null, gdt, snap };
+    // ton but : le spectacle choisi dans la Boutique
+    if (r.me && act === 8 && at >= 0 && at < .6 && G3.fxAt !== fa[o + 5] && typeof shopEq === 'function') { G3.fxAt = fa[o + 5]; g3FxGoal(G3.sc, G3.cam, shopEq('fx'), x, z, E.T[kk] ? [E.T[kk].col, E.T[kk].col2] : null); }
     // le plongeon : sens dans le repère de l'écran
     if (act === 5) st.aa = (mir ? -1 : 1) * fa[o + 6] * (Math.cos(yaw) >= 0 ? 1 : -1);
     g3Pose(P, n, st);
@@ -415,17 +467,18 @@ function g3Draw(M, t, dt, paused) {
   if (fa.length >= MF_N) {
     const rx = X(L(MF_R)), rz = Z(L(MF_R + 1)), rv = Math.hypot(fb[MF_R] - fa[MF_R], fb[MF_R + 1] - fa[MF_R + 1]) / fdt;
     G3.ph[22] = (G3.ph[22] + gdt * Math.PI * 2 * rv / (1.5 + .24 * rv)) % 600;
-    g3Pose(P, 22, { x: rx, z: rz, yaw: YAW(fa[MF_R + 2]), v: rv, ph: G3.ph[22], act: fa[MF_R + 3], at: t - fa[MF_R + 4] });
+    g3Pose(P, 22, { x: rx, z: rz, yaw: YAW(fa[MF_R + 2]), v: rv, ph: G3.ph[22], act: fa[MF_R + 3], at: t - fa[MF_R + 4], tm, gdt, snap });
     if (!G3.lin) G3.lin = [null, null];
     for (let k = 0; k < 2; k++) {
       const lx = X(L(MF_R + 5 + k * 2)), lz = Z(k === 0 ? -1.3 : PW + 1.3), up = t - fa[MF_R + 6 + k * 2] < 3, prev = G3.lin[k] ?? lx, lv = gdt > 0 ? Math.abs(lx - prev) / gdt : 0; G3.lin[k] = lx;
       G3.ph[23 + k] = (G3.ph[23 + k] + gdt * Math.PI * 2 * lv / (1.5 + .24 * lv)) % 600;
-      g3Pose(P, 23 + k, { x: lx, z: lz, yaw: lz < 0 ? Math.PI / 2 : -Math.PI / 2, v: Math.min(6, lv), ph: G3.ph[23 + k], act: 0, at: -1, flagUp: up });
+      g3Pose(P, 23 + k, { x: lx, z: lz, yaw: lz < 0 ? Math.PI / 2 : -Math.PI / 2, v: Math.min(6, lv), ph: G3.ph[23 + k], act: 0, at: -1, flagUp: up, tm, gdt, snap });
       P.hand.getMatrixAt((23 + k) * 2 + 1, G3M.fa); P.flag.setMatrixAt(k, G3M.fa);
     }
     P.flag.instanceMatrix.needsUpdate = true;
   }
   for (const k of ['torso', 'shorts', 'head', 'hair', 'num', 'uarm', 'ubare', 'farm', 'hand', 'thigh', 'shin', 'boot']) P[k].instanceMatrix.needsUpdate = true;
+  if (P.sk) g3SkFlush(P.sk);
   // ombres « projecteurs » (nuit) ou ombre douce sous les joueurs (mode rapide)
   { const bl = P.blob, m4 = _m.m4 || (_m.m4 = new THREE.Matrix4()); let c = 0; const lamps = G3.night ? G3.lamps : null, useBlob = G3.night || !G3.sun.castShadow;
     if (useBlob) { const q = _m.q2 || (_m.q2 = new THREE.Quaternion()), v3 = _m.v3 || (_m.v3 = new THREE.Vector3()), sc3 = _m.s3 || (_m.s3 = new THREE.Vector3());
@@ -435,7 +488,8 @@ function g3Draw(M, t, dt, paused) {
       if (lamps) { m4.compose(v3.set(bx, .02, bz), q.identity(), sc3.set(.5, 1, .5)); bl.setMatrixAt(c++, m4); } }
     bl.count = c; bl.instanceMatrix.needsUpdate = true; bl.material.opacity = lamps ? .22 : .45; }
   // anneau de ton joueur
-  if (meIdx >= 0) { P.torso.getMatrixAt(meIdx, G3M.l || (G3M.l = new THREE.Matrix4())); const e = G3M.l.elements; P.ring.visible = !(e[0] === 0 && e[1] === 0); P.ring.position.set(e[12], .03, e[14]); } else P.ring.visible = false;
+  if (meIdx >= 0) { P.torso.getMatrixAt(meIdx, G3M.l || (G3M.l = new THREE.Matrix4())); const e = G3M.l.elements; P.ring.visible = !(e[0] === 0 && e[1] === 0); P.ring.position.set(e[12], .03, e[14]); g3Halo(P.ring, tm); } else P.ring.visible = false;
+  g3FxUpdate(G3.sc, G3.cam, dt, G3.h * G3.r.getPixelRatio());
   // ballon : rotation selon la vitesse, plus gros de loin pour rester lisible
   { const b = G3.ball, vx = (fb[3] - fa[3]) / fdt * (mir ? -1 : 1), vz = (fb[4] - fa[4]) / fdt * (mir ? -1 : 1), sp = Math.hypot(vx, vz);
     const camD = G3.cam.position.distanceTo(b.position), sc2 = clamp(camD / 34, 1, 2.3); b.scale.setScalar(sc2);

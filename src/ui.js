@@ -97,6 +97,8 @@ function render() {
   renderModal(); renderAdv();
   auScene(UI.screen === 'live' ? 'live' : UI.screen === 'game' ? 'game' : 'menu');
   if (UI.screen === 'live') { if (typeof lvAttach === 'function' && S && S.live && S.live.M.eng && !LV.off) lvAttach(); } else if (typeof lvStop === 'function') lvStop();
+  if (typeof ldStart === 'function') { if (UI.screen === 'loading' || UI.screen === 'splash') ldStart(); else ldStop(); }
+  if (typeof shopAfterRender === 'function') shopAfterRender();
   if (UI.anim) setTimeout(() => { UI.anim = null; }, 50);
 }
 
@@ -123,23 +125,23 @@ function runSplash() {
   };
   setTimeout(tick, 250);
 }
+// écran de chargement (src/loading.js) : les étapes défilent, la barre et le ballon suivent, puis éclair et entrée en jeu
 function runLoading(title, steps, work, done) {
-  UI.load = { title, t: steps[0], p: 0 }; UI.screen = 'loading'; render();
-  let i = 0;
+  UI.load = { title, t: steps[0], p: 0 }; UI.screen = 'loading'; if (typeof LD !== 'undefined') LD.shown = 0; render();
+  let i = 0; const t0 = Date.now();
   const tick = () => {
     UI.load.t = steps[i]; UI.load.p = Math.round((i + 1) / steps.length * 100);
-    const lb = $('#lb'), lt = $('#lt'), lp = $('#lp');
-    if (lb) { lb.style.width = UI.load.p + '%'; lt.textContent = UI.load.t; lp.textContent = UI.load.p + ' %'; }
+    const lt = $('#lt'); if (lt) { lt.textContent = UI.load.t; if (lt.classList) { lt.classList.remove('in'); void lt.offsetWidth; lt.classList.add('in'); } }
     if (i === 1 && work) work();
     i++;
-    if (i < steps.length) setTimeout(tick, 260 + Math.random() * 160); else setTimeout(done, 350);
+    if (i < steps.length) setTimeout(tick, 280 + Math.random() * 150);
+    else setTimeout(() => { const d = $('#ldx'); if (d && d.classList) d.classList.add('out'); setTimeout(done, d && d.classList ? 280 : 0); }, Math.max(380, 1500 - (Date.now() - t0)));
   };
-  setTimeout(tick, 120);
+  setTimeout(tick, 320);
 }
 function vLoading() {
   const L = UI.load || { title: '', t: '', p: 0 };
-  return `<div class="splash"><div class="spl-top"><div class="lbl">Chargement</div><h2 class="logo sm">${esc(L.title)}</h2></div><div class="pitch" aria-hidden="true"><div class="ball"></div></div>
-    <div class="loadbox"><div class="loadbar"><i id="lb" style="width:${L.p}%"></i></div><div class="row between"><span id="lt" class="note">${esc(L.t)}</span><span id="lp" class="note num">${L.p} %</span></div></div></div>`;
+  return typeof vLoadScreen === 'function' ? vLoadScreen(L) : `<div class="splash"><h2 class="logo sm">${esc(L.title)}</h2><span id="lt">${esc(L.t)}</span><span id="lp"></span></div>`;
 }
 
 // ---------- Menu principal ----------
@@ -154,6 +156,7 @@ function vMenu() {
     <nav class="mlist">
       ${item('newCareer', '', 'star', 'Nouvelle carrière', 'Commence à 14 ans dans le club de ta ville')}
       ${item('page', 'saves', 'save', 'Sauvegardes', typeof onlOn === 'function' && onlOn() ? '3 emplacements · sauvegarde en ligne' : '3 emplacements · code à exporter')}
+      ${typeof vShop === 'function' ? item('page', 'shop', 'star', 'Boutique', `${fnum(shopW().bal)} Pépites · crampons, ballons, célébrations`, 'shopit') : ''}
       ${typeof onlOn === 'function' && onlOn() ? item('page', 'ranks', 'medal', 'Classement mondial', 'Les plus grandes carrières des joueurs') : ''}
       ${item('page', 'help', 'help', 'Comment jouer', 'Les bases en 2 minutes')}
       ${item('page', 'options', 'gear', 'Options', 'Matchs en direct, vitesse')}
@@ -164,8 +167,8 @@ function vMenu() {
   </div>`;
 }
 function vMenuPage() {
-  const t = { saves: 'Sauvegardes', help: 'Comment jouer', options: 'Options', credits: 'Données & crédits', ranks: 'Classement mondial' }[UI.page];
-  const f = { saves: vSaves, help: vHelp, options: vOptions, credits: vCredits, ranks: typeof vRanks === 'function' ? vRanks : () => '' }[UI.page];
+  const t = { saves: 'Sauvegardes', help: 'Comment jouer', options: 'Options', credits: 'Données & crédits', ranks: 'Classement mondial', shop: 'Boutique' }[UI.page];
+  const f = { saves: vSaves, help: vHelp, options: vOptions, credits: vCredits, ranks: typeof vRanks === 'function' ? vRanks : () => '', shop: typeof vShop === 'function' ? vShop : () => '' }[UI.page];
   return `<div class="subhd"><button class="backb" data-a="toMenu" aria-label="Retour">${icon('back')}</button><h2>${t}</h2></div><main class="stack scroll">${f()}</main>`;
 }
 
@@ -295,6 +298,7 @@ function vHome() {
     </div>
     <div class="gauges">${gauge('Énergie', p.energy, p.energy < 30 ? 'bad' : 'ok')}${gauge('Moral', p.moral, 'info')}${gauge('Forme', p.forme)}</div>
   </section>
+  ${typeof shopW === 'function' ? `<button class="pepbar" data-a="open" data-v="shop"><i class="pep"></i><b>${fnum(shopW().bal)}</b><span class="grow">Pépites · Boutique</span>${shopDailyOk() ? '<span class="pepnew">Bonus du jour</span>' : ''}<span class="chev">›</span></button>` : ''}
   ${alerts.slice(0, 2).join('')}${alerts.length > 2 ? `<p class="note">+ ${alerts.length - 2} autre${alerts.length > 3 ? 's' : ''} alerte${alerts.length > 3 ? 's' : ''}</p>` : ''}
   <section class="card sec">
     <div class="hd"><h3>${cap(MONTHS[d0.getMonth()])} ${d0.getFullYear()}</h3><span class="note">Semaine ${S.week}${WINTER(S.week) || SUMMER(S.week) ? ' · mercato ouvert' : ''}</span></div>

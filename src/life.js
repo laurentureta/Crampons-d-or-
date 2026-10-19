@@ -494,6 +494,7 @@ const SAVE_PREFIX = 'cdo2_slot_', META_KEY = 'cdo2_meta';
 function slotsMeta() { try { return JSON.parse(localStorage.getItem(META_KEY) || '{}'); } catch (e) { return {}; } }
 function save() {
   if (!S) return;
+  try { if (typeof shopTick === 'function') { shopTick(); S.shopW = shopSnap(); } } catch (e) { }
   try {
     const slot = S.slot || 1;
     localStorage.setItem(SAVE_PREFIX + slot, JSON.stringify(S, (k, v) => k === 'ref' ? undefined : v));
@@ -505,6 +506,7 @@ function loadSlot(n) { try { const t = localStorage.getItem(SAVE_PREFIX + n); if
 function deleteSlot(n) { try { localStorage.removeItem(SAVE_PREFIX + n); const m = slotsMeta(); delete m[n]; localStorage.setItem(META_KEY, JSON.stringify(m)); } catch (e) { } }
 function hydrate(s) { S = s; IDX = null; EVQ = []; if (S.squad) for (const x of S.squad) if (x.star) x.ref = S.W.stars.find(st => st.n === x.n); ensureV3(); if (S.live && S.live.M && !S.live.M.eng && typeof liveSetup === 'function') { try { S.live.M = liveSetup(S.live.prep); } catch (e) { S.live = null; } } if (S.live && S.live.M && S.live.M.eng && typeof meUpgrade === 'function') { meUpgrade(S.live.M.E); const M = S.live.M; if (!M.com) { M.com = []; M.cmT = M.clockAt || 0; M.comLast = -99; M.say = []; } } }
 function exportSave() {
+  try { if (typeof shopSnap === 'function') S.shopW = shopSnap(); } catch (e) { }
   const json = JSON.stringify(S, (k, v) => k === 'ref' ? undefined : v);
   const LZ = typeof LZString !== 'undefined' ? LZString : (typeof window !== 'undefined' ? window.LZString : null);
   if (LZ) return 'CDO2Z' + LZ.compressToBase64(json);
@@ -519,6 +521,6 @@ function importSave(str, slot) {
     else if (str.startsWith('CDO2B')) json = decodeURIComponent(escape(atob(str.slice(5))));
     else return 'Ce code ne ressemble pas à une sauvegarde Crampons d\'Or.';
     const s = JSON.parse(json); if (!s || s.v !== VERSION) return 'Sauvegarde d\'une ancienne version.';
-    s.slot = slot; hydrate(s); save(); return null;
+    s.slot = slot; hydrate(s); if (typeof shopMerge === 'function') shopMerge(s.shopW); save(); return null;
   } catch (e) { return 'Code invalide ou incomplet.'; }
 }

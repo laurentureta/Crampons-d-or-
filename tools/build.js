@@ -5,7 +5,7 @@
 const fs = require('fs'), path = require('path'), crypto = require('crypto');
 const ROOT = path.join(__dirname, '..'), R = p => path.join(ROOT, p), read = p => fs.readFileSync(R(p), 'utf8');
 // ordre de chargement des modules (ils partagent une même portée)
-const ORDER = ['data.js', 'core.js', 'sim.js', 'life.js', 'extra.js', 'me.js', 'live.js', 'comm.js', 'audio.js', 'media.js', 'art.js', 'mview.js', 'm3d.js', 'intro.js', 'online.js', 'ui.js', 'ui2.js', 'ui3.js', 'ui4.js'].filter(f => fs.existsSync(R('src/' + f)));
+const ORDER = ['data.js', 'core.js', 'sim.js', 'life.js', 'extra.js', 'me.js', 'live.js', 'comm.js', 'audio.js', 'media.js', 'art.js', 'mview.js', 'm3d.js', 'm3dsk.js', 'm3dfx.js', 'intro.js', 'loading.js', 'online.js', 'shop.js', 'ui.js', 'ui2.js', 'ui3.js', 'ui4.js'].filter(f => fs.existsSync(R('src/' + f)));
 const pkg = JSON.parse(read('package.json')), VERSION = pkg.version;
 // empreintes : le même contenu donne toujours les mêmes fichiers (ici comme chez le robot) ; un contenu modifié change d'adresse,
 // ce qui force les téléphones à le retélécharger
@@ -14,13 +14,15 @@ const ls = d => fs.existsSync(R(d)) ? fs.readdirSync(R(d)) : [];
 const crowd = ls('assets/foule').filter(f => f.endsWith('.mp3')).sort().map(f => f.slice(0, -4));
 const sons = ls('assets/sons').filter(f => f.endsWith('.mp3')).sort().map(f => f.slice(0, -4));
 const voix = fs.existsSync(R('assets/voix/index.json')) ? JSON.parse(read('assets/voix/index.json')) : {};
+const JOUEUR = fs.existsSync(R('assets/joueur/joueur.json')) ? JSON.parse(read('assets/joueur/joueur.json')) : null;
 const MEDIA_H = {}; for (const [d, ks] of [['foule', crowd], ['sons', sons]]) for (const k of ks) MEDIA_H[d + '/' + k] = sha(fs.readFileSync(R(`assets/${d}/${k}.mp3`))).slice(0, 8);
+if (JOUEUR) MEDIA_H.joueur = sha(Buffer.concat(ls('assets/joueur').sort().map(f => fs.readFileSync(R('assets/joueur/' + f))))).slice(0, 8);
 const murl = (d, k) => `assets/${d}/${k}.mp3?h=${MEDIA_H[d + '/' + k]}`;
 const code = ORDER.map(f => `// ===== src/${f} =====\n` + read('src/' + f)).join('\n');
 const css = read('src/style.css');
 const FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=Big+Shoulders+Display:wght@700;800&family=Graduate&family=Protest+Strike&display=swap">';
 const LZ = 'https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js';
-const SHELL = '<div id="app"></div><nav id="nav" class="nav"></nav><div id="adv"></div><div id="ov"></div><div id="toast" aria-live="polite"></div>';
+const SHELL = '<div id="app"><div class="boot" aria-label="Chargement"><div class="boot-l">Crampons<span>d\'Or</span></div><div class="boot-bar"><i></i></div></div></div><nav id="nav" class="nav"></nav><div id="adv"></div><div id="ov"></div><div id="toast" aria-live="polite"></div>';
 const HEAD = (icon, extra) => `<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -30,10 +32,12 @@ const HEAD = (icon, extra) => `<meta charset="utf-8">
 <meta name="theme-color" content="#09130f">
 <link rel="apple-touch-icon" href="${icon}">
 <title>Crampons d'Or</title>
+${BOOT_CSS}
 ${FONTS}
 ${extra || ''}`;
+const BOOT_CSS = '<style>html,body{margin:0;background:#03080a}.boot{position:fixed;inset:0;background:radial-gradient(120% 70% at 50% 0%,#0d2418 0%,#03080a 62%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;overflow:hidden}.boot:before,.boot:after{content:"";position:absolute;top:-12%;width:70%;height:125%;background:linear-gradient(180deg,rgba(255,228,175,.26),rgba(255,228,175,0) 72%);clip-path:polygon(46% 0,54% 0,100% 100%,0 100%);animation:bootBeam 2.4s ease-in-out infinite alternate}.boot:before{left:-18%;transform:rotate(-22deg);transform-origin:50% 0}.boot:after{right:-18%;transform:rotate(22deg);transform-origin:50% 0;animation-delay:-1.2s}.boot-l{position:relative;font:800 clamp(52px,16vw,104px)/.84 "Big Shoulders Display","Arial Narrow",Impact,sans-serif;text-transform:uppercase;color:#f3f6f3;text-align:center;letter-spacing:-.01em;filter:drop-shadow(0 8px 24px rgba(0,0,0,.9))}.boot-l span{display:block;color:#ffc23d}.boot-bar{position:relative;width:44%;max-width:260px;height:3px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}.boot-bar i{position:absolute;inset:0;width:40%;background:linear-gradient(90deg,transparent,#ffd36b,transparent);animation:bootRun 1.1s ease-in-out infinite}@keyframes bootRun{from{transform:translateX(-100%)}to{transform:translateX(260%)}}@keyframes bootBeam{from{opacity:.45}to{opacity:1}}@media (prefers-reduced-motion:reduce){.boot:before,.boot:after,.boot-bar i{animation:none}}</style>';
 const BASE_CSS = 'html,body{margin:0;height:100%}\n:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}\n[hidden]{display:none!important}\nimg{max-width:100%}\n';
-const data = (c, s, v) => `var GAME_VERSION = ${JSON.stringify(VERSION)};\nvar CRWD_FILES = ${JSON.stringify(c)};\nvar SONS_FILES = ${JSON.stringify(s)};\nvar MEDIA_H = ${JSON.stringify(c.length || s.length ? MEDIA_H : {})};\nvar VOIX_INDEX = ${JSON.stringify(v)};\n`;
+const data = (c, s, v) => `var GAME_VERSION = ${JSON.stringify(VERSION)};\nvar CRWD_FILES = ${JSON.stringify(c)};\nvar SONS_FILES = ${JSON.stringify(s)};\nvar MEDIA_H = ${JSON.stringify(c.length || s.length ? MEDIA_H : {})};\nvar VOIX_INDEX = ${JSON.stringify(v)};\nvar JOUEUR_3D = ${JSON.stringify(JOUEUR)};\n`;
 const wrap = js => `(function(){\n${js}\n})();\n`;
 
 // ---------- 1. site publié (multi-fichiers) ----------
@@ -115,8 +119,8 @@ ${body(withCrowd, extraJs)}
 `;
 fs.writeFileSync(R('dist/crampons-dor.html'), single(true));
 fs.writeFileSync(R('dist/crampons-dor-leger.html'), single(false));
-fs.writeFileSync(R('dist/artifact.html'), `<title>Crampons d'Or</title>\n${FONTS}\n<style>\n${css}\n</style>\n${body(true)}\n`);
-const TEST_EXPORTS = "\nwindow.__T = () => ({ get S() { return S; }, retire, reconvert, render, flow, UI, save, ACT, AU, auStartTrack, auUnlock, sfxPlay, crowdStart, crowdStop, TRACKS, OPTS, LV, liveStats, meFrame, lvDraw, lvReset, G3, SAY, CMX, sayPush, AIV, SMP, smpPlay, INTRO, introPlay, introFrame, introEnd, PK, pkStat, pkLines, aivVoice, aivFetch, sfxG, voixFile: typeof voixFile === 'function' ? voixFile : null, ONL: typeof ONL !== 'undefined' ? ONL : null });";
+fs.writeFileSync(R('dist/artifact.html'), `<title>Crampons d'Or</title>\n${BOOT_CSS}\n${FONTS}\n<style>\n${css}\n</style>\n${body(true)}\n`);
+const TEST_EXPORTS = "\nwindow.__T = () => ({ get S() { return S; }, retire, reconvert, render, flow, UI, save, ACT, AU, auStartTrack, auUnlock, sfxPlay, crowdStart, crowdStop, TRACKS, OPTS, LV, liveStats, meFrame, lvDraw, lvReset, G3, SAY, CMX, sayPush, AIV, SMP, smpPlay, INTRO, introPlay, introFrame, introEnd, PK, pkStat, pkLines, aivVoice, aivFetch, sfxG, voixFile: typeof voixFile === 'function' ? voixFile : null, ONL: typeof ONL !== 'undefined' ? ONL : null, BTQ: typeof BTQ !== 'undefined' ? BTQ : null, shopW: typeof shopW === 'function' ? shopW : null, shopEquip: typeof shopEquip === 'function' ? shopEquip : null, shopGain: typeof shopGain === 'function' ? shopGain : null, G3PV: typeof G3PV !== 'undefined' ? G3PV : null, G3SK: typeof G3SK !== 'undefined' ? G3SK : null, G3: typeof G3 !== 'undefined' ? G3 : null, g3Pose: typeof g3Pose === 'function' ? g3Pose : null });";
 fs.writeFileSync(R('dist/test.html'), single(true, TEST_EXPORTS));
 fs.writeFileSync(R('dist/jeu-test.js'), data(crowd, sons, voix) + wrap(code + TEST_EXPORTS)); // version multi-fichiers testable (tests/serve.js)
 const sz = f => (fs.statSync(R(f)).size / 1024).toFixed(0) + ' Ko';

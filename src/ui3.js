@@ -70,6 +70,7 @@ function flow() {
   }
   closeModal(); render();
   const tt = (S.toasts || []).splice(0); if (S.newAch && S.newAch.length) { tt.push('Succès débloqué : ' + S.newAch.join(', ')); S.newAch = []; }
+  if (typeof shopToast === 'function') { const st = shopToast(); if (st) tt.push(st); }
   if (tt.length) toast(tt.join(' · '));
 }
 function numberModal() {
@@ -106,22 +107,29 @@ function trialModal(fb) {
 function drawCard() {
   const cv = document.createElement('canvas'); cv.width = 720; cv.height = 1000;
   const x = cv.getContext('2d'); if (!x) return null;
-  const p = S.p, gold = '#ffb02e';
-  const g = x.createLinearGradient(0, 0, 720, 1000); g.addColorStop(0, '#1c3529'); g.addColorStop(1, '#09130f');
+  const p = S.p, K = typeof shopEq === 'function' ? shopEq('card') : { b0: '#1c3529', b1: '#09130f', fr: '#ffb02e', ac: '#ffb02e', fg: '#edf4ef', mu: '#9bb2a6' }, gold = K.ac;
+  const g = x.createLinearGradient(0, 0, 720, 1000); g.addColorStop(0, K.b0); g.addColorStop(1, K.b1);
   x.fillStyle = '#09130f'; x.fillRect(0, 0, 720, 1000);
-  x.beginPath(); x.roundRect ? x.roundRect(30, 30, 660, 940, 40) : x.rect(30, 30, 660, 940); x.fillStyle = g; x.fill(); x.lineWidth = 6; x.strokeStyle = gold; x.stroke();
+  x.beginPath(); x.roundRect ? x.roundRect(30, 30, 660, 940, 40) : x.rect(30, 30, 660, 940); x.fillStyle = g; x.fill();
+  // finitions de la Boutique : reflet doré, holographique, étoiles
+  x.save(); x.clip();
+  if (K.holo) { const h = x.createLinearGradient(0, 0, 720, 1000); ['rgba(255,80,160,.35)', 'rgba(80,200,255,.35)', 'rgba(120,255,160,.3)', 'rgba(255,230,90,.3)', 'rgba(170,110,255,.35)'].forEach((c, i, a) => h.addColorStop(i / (a.length - 1), c)); x.fillStyle = h; x.fillRect(0, 0, 720, 1000); }
+  if (K.shine || K.holo) { const h = x.createLinearGradient(100, 0, 620, 1000); h.addColorStop(.35, 'rgba(255,255,255,0)'); h.addColorStop(.5, 'rgba(255,255,255,.35)'); h.addColorStop(.65, 'rgba(255,255,255,0)'); x.fillStyle = h; x.fillRect(0, 0, 720, 1000); }
+  if (K.stars) { let r = 7; const rnd = () => (r = (r * 9301 + 49297) % 233280) / 233280; for (let i = 0; i < 90; i++) { x.fillStyle = `rgba(242,205,92,${.15 + rnd() * .5})`; x.beginPath(); x.arc(40 + rnd() * 640, 40 + rnd() * 920, .8 + rnd() * 2.4, 0, Math.PI * 2); x.fill(); } }
+  x.restore();
+  x.beginPath(); x.roundRect ? x.roundRect(30, 30, 660, 940, 40) : x.rect(30, 30, 660, 940); x.lineWidth = 6; x.strokeStyle = K.fr; x.stroke();
   x.strokeStyle = 'rgba(237,244,239,.08)'; x.lineWidth = 3; x.beginPath(); x.arc(560, 300, 200, 0, Math.PI * 2); x.stroke();
   const D = "800 {s}px 'Big Shoulders Display', 'Arial Narrow', sans-serif", B = "600 {s}px 'Barlow', sans-serif";
   const f = (t, s) => t.replace('{s}', s);
   x.fillStyle = gold; x.font = f(D, 170); x.textBaseline = 'alphabetic'; x.fillText(String(OVR()), 80, 230);
-  x.fillStyle = '#edf4ef'; x.font = f(D, 64); x.fillText(p.pos, 86, 300);
-  x.font = f(B, 30); x.fillStyle = '#9bb2a6'; x.fillText(nation().n.toUpperCase(), 86, 345);
+  x.fillStyle = K.fg; x.font = f(D, 64); x.fillText(p.pos, 86, 300);
+  x.font = f(B, 30); x.fillStyle = K.mu; x.fillText(nation().n.toUpperCase(), 86, 345);
   x.fillText(S.club.n.toUpperCase().slice(0, 26), 86, 385);
-  x.fillStyle = '#edf4ef'; x.font = f(D, 92); x.fillText(p.first.toUpperCase().slice(0, 14), 80, 520); x.fillStyle = gold; x.fillText(p.last.toUpperCase().slice(0, 14), 80, 610);
+  x.fillStyle = K.fg; x.font = f(D, 92); x.fillText(p.first.toUpperCase().slice(0, 14), 80, 520); x.fillStyle = gold; x.fillText(p.last.toUpperCase().slice(0, 14), 80, 610);
   const keys = p.pos === 'GB' ? ['GAR', 'MEN', 'PHY', 'PAS', 'VIT', 'END'] : ['VIT', 'TIR', 'PAS', 'DRI', 'DEF', 'PHY'];
-  keys.forEach((k, i) => { const cx = 86 + (i % 3) * 200, cy = 700 + Math.floor(i / 3) * 90; x.fillStyle = '#edf4ef'; x.font = f(D, 64); x.fillText(String(Math.floor(p.at[k])), cx, cy); x.fillStyle = '#9bb2a6'; x.font = f(B, 26); x.fillText(ATTR_N[k].slice(0, 3).toUpperCase(), cx + 80, cy - 6); });
+  keys.forEach((k, i) => { const cx = 86 + (i % 3) * 200, cy = 700 + Math.floor(i / 3) * 90; x.fillStyle = K.fg; x.font = f(D, 64); x.fillText(String(Math.floor(p.at[k])), cx, cy); x.fillStyle = K.mu; x.font = f(B, 26); x.fillText(ATTR_N[k].slice(0, 3).toUpperCase(), cx + 80, cy - 6); });
   x.fillStyle = 'rgba(237,244,239,.15)'; x.fillRect(80, 820, 560, 2);
-  x.fillStyle = '#edf4ef'; x.font = f(B, 28);
+  x.fillStyle = K.fg; x.font = f(B, 28);
   x.fillText(`${S.stats.proApps} matchs pro · ${S.stats.proGoals} buts · ${S.intl.caps} sélections`, 80, 870);
   x.fillText(`${S.trophies.length} trophées · ${fnum(p.followers)} abonnés · ${p.age} ans`, 80, 912);
   x.fillStyle = gold; x.font = f(D, 30); x.fillText("CRAMPONS D'OR · " + seasonLabel(S.season), 80, 952);
@@ -301,6 +309,7 @@ const ACT = {
   mbtn: v => { const b = MODAL && MODAL.btns[+v]; MODAL = null; if (b && b.fn) b.fn(); if (!MODAL) renderModal(); if (UI.screen !== 'live') render(); },
 };
 if (typeof ONL_ACT !== 'undefined') Object.assign(ACT, ONL_ACT);
+if (typeof SHOP_ACT !== 'undefined') Object.assign(ACT, SHOP_ACT);
 
 document.addEventListener('click', e => {
   if (!AU.unlocked) auUnlock();
@@ -314,6 +323,7 @@ document.addEventListener('input', e => { if (e.target.id === 'mvol' || e.target
 
 // ---------- Démarrage ----------
 function start(data) {
+  if (typeof shopApply === 'function') shopApply();
   if (data && data.S) { hydrate(data.S); UI.screen = data.screen === 'live' && S.live ? 'live' : 'game'; render(); if (UI.screen === 'live') liveRun(); return; }
   UI.screen = 'menu'; render();
   if (typeof introPlay === 'function') introPlay(false);

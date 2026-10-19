@@ -13,6 +13,7 @@ Sur iPhone, ouvre le lien dans Safari puis *Partager → Sur l'écran d'accueil*
 | `assets/foule/` | Ambiances de stade (MP3, licences dans `CREDITS.md`) |
 | `assets/sons/` | Bruitages (frappe, poteau, filet, sifflet…), fabriqués sur ElevenLabs |
 | `assets/voix/` | Répliques enregistrées des commentateurs et personnages + `index.json` |
+| `assets/joueur/` | Le modèle 3D des joueurs (géométrie, textures, squelette) préparé par `tools/joueur3d.py` |
 | `assets/icones/` | Icônes de l'app |
 | `lib/` | Three.js (3D) |
 | `tools/build.js` | Fabrique le jeu publié à partir de `src/` et `assets/` |
@@ -56,6 +57,24 @@ Le jeu les joue sans clé ni réseau (option *Voix enregistrées*). Les phrases 
 Projet Supabase **crampons-dor** (région Paris), installé avec `tools/supabase.sql`. L'adresse et la clé **publiable** sont dans `src/online.js` (`ONL.url`, `ONL.key`) : cette clé est publique par nature, elle ne permet que ce que les 4 fonctions SQL autorisent. Les tables elles-mêmes sont fermées (personne ne peut lister les sauvegardes).
 
 Ensuite apparaissent : la sauvegarde en ligne (un code de 12 caractères pour retrouver sa carrière sur un autre téléphone, envoi automatique toutes les 5 minutes) et le classement mondial des carrières (le joueur fictif, aucune donnée personnelle).
+
+## Joueurs en 3D
+
+Les joueurs des matchs en 3D utilisent le modèle **« A footballer 3d model »** par **AP 3d models** ([Sketchfab](https://sketchfab.com/3d-models/a-footballer-3d-model-afd601d0e0ea471f90b26c0d3b6c1cb7)), sous licence [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/). Adaptations : allégé à 35 % des triangles (gltfpack), squelette ramené aux 15 os du jeu, peau cachée sous les vêtements retirée, textures réduites, vêtements recolorés aux couleurs de chaque club.
+
+Pour changer de modèle (un .glb « riggé », squelette type Mixamo) :
+
+```sh
+gltfpack -i modele.glb -o leger.glb -si 0.35 -noq -kn -km
+python3 tools/joueur3d.py leger.glb --noms modele.glb
+node tools/build.js
+```
+
+Les 25 joueurs sont dessinés en une seule fois par pièce (instanciation + texture d'os) ; les animations restent celles du jeu (`g3Pose`).
+
+## Pépites et Boutique
+
+Les Pépites se gagnent uniquement en jouant (matchs, buts, passes, notes, trophées, succès, bonus du jour) et n'achètent que du style : crampons, ballons, célébrations et effets de but en 3D, halos, cartes de joueur, thèmes de couleurs (`src/shop.js`). Le porte-monnaie est commun à toutes les carrières et voyage avec les sauvegardes exportées ou en ligne.
 
 ## Version
 

@@ -431,6 +431,7 @@ function recordMatch(prep, r, kind) {
     p.rep = clamp(p.rep + ((pst.rt - 6.4) * .12 + pst.g * .18 + pst.a * .1) * prep.repW * (prep.derby ? 1.3 : 1) * lvl * clamp((OVR() - 60) / 22, .05, 1.4), 0, 100);
     const mine = prep.side === 'h' ? r.hg : r.ag, th = prep.side === 'h' ? r.ag : r.hg;
     p.moral = clamp(p.moral + (mine > th ? 3 : mine < th ? -2 : 0) + (pst.rt >= 8 ? 3 : pst.rt < 5.5 ? -3 : 0), 0, 100);
+    if (typeof shopEarnMatch === 'function') shopEarnMatch(pst, mine, th, prep);
     if (S.club.kind !== 'amateur' && kind === 'club') S.coach.rel = clamp(S.coach.rel + (pst.rt >= 7.6 ? 2 : pst.rt < 5.6 ? -2 : 0), 0, 100);
     if (mine > th) S.mateRel = clamp(S.mateRel + 1, 0, 100);
     const key = ATTR.filter(k => POSW[p.pos][k]); trainGain({ [pick(key)]: .3, MEN: .12 }, pst.min / 90, log);

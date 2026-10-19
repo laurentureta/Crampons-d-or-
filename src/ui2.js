@@ -36,6 +36,7 @@ const TILES = {
     ['music', 'note', 'Musique', (AU.playing && OPTS.music ? '♪ ' : '') + TRACKS[AU.cur].n],
     ['saves', 'save', 'Sauvegardes', 'Emplacement ' + (S.slot || 1) + (S.onl && S.onl.code ? ' · en ligne' : '')],
     typeof onlOn === 'function' && onlOn() ? ['ranks', 'medal', 'Classement mondial', 'Ta carrière face aux autres'] : null,
+    typeof vShop === 'function' ? ['shop', 'star', 'Boutique', fnum(shopW().bal) + ' Pépites'] : null,
     ['help', 'help', 'Comment jouer', 'Les bases en 2 minutes'],
     ['quit', 'grid', 'Menu principal', 'Ta partie est sauvegardée'],
   ],
@@ -50,7 +51,7 @@ const TILES = {
     ['bdo', 'ball', 'Ballon d\'Or', S.bdo.length ? 'Dernier : ' + S.bdo[S.bdo.length - 1].w : 'Cérémonie fin octobre'],
   ],
 };
-const SUB_T = { ranks: 'Classement mondial', settings: 'Réglages', goals: 'Objectifs & défi', locker: 'Vestiaire', rival: 'Ton rival', perks: 'Talents', curves: 'Progression', music: 'Musique', recruit: 'Mercato', jobs: 'Offres d\'emploi', mgr: 'Bilan d\'entraîneur', club: 'Mon club', transfers: 'Transferts & contrat', nego: 'Négociation', trials: 'Essais en club', agent: 'Agent', nat: 'Sélection', comps: 'Compétitions', stats: 'Stats & palmarès', world: 'Actualités du foot', money: 'Argent', family: 'Famille', love: 'Amour', friends: 'Amis', assets: 'Patrimoine', invest: 'Placements', staff: 'Staff personnel', school: 'École & permis', sheet: 'Fiche joueur', card: 'Carte joueur', social: 'Réseaux sociaux', ach: 'Succès', inbox: 'Messages', bdo: 'Ballon d\'Or', saves: 'Sauvegardes', options: 'Options', help: 'Comment jouer' };
+const SUB_T = { shop: 'Boutique', ranks: 'Classement mondial', settings: 'Réglages', goals: 'Objectifs & défi', locker: 'Vestiaire', rival: 'Ton rival', perks: 'Talents', curves: 'Progression', music: 'Musique', recruit: 'Mercato', jobs: 'Offres d\'emploi', mgr: 'Bilan d\'entraîneur', club: 'Mon club', transfers: 'Transferts & contrat', nego: 'Négociation', trials: 'Essais en club', agent: 'Agent', nat: 'Sélection', comps: 'Compétitions', stats: 'Stats & palmarès', world: 'Actualités du foot', money: 'Argent', family: 'Famille', love: 'Amour', friends: 'Amis', assets: 'Patrimoine', invest: 'Placements', staff: 'Staff personnel', school: 'École & permis', sheet: 'Fiche joueur', card: 'Carte joueur', social: 'Réseaux sociaux', ach: 'Succès', inbox: 'Messages', bdo: 'Ballon d\'Or', saves: 'Sauvegardes', options: 'Options', help: 'Comment jouer' };
 function vTiles(tab) {
   const head = { career: ['Carrière', 'Ton club, ton avenir, tes stats'], life: ['Vie', 'Argent, famille, amour, patrimoine'], profile: ['Profil', 'Ton image, tes succès'] }[tab];
   return `<div class="tabhd"><h2>${head[0]}</h2><span class="note">${head[1]}</span></div>${vTileGrid(tab)}
@@ -62,7 +63,7 @@ function vTileGrid(tab) {
 }
 function vSubParts() { const h = vSub(), k = h.indexOf('</div>') + 6; return [h.slice(0, k), h.slice(k)]; }
 function vSub() {
-  const f = { settings: () => vTileGrid('settings'), goals: vGoals, locker: vLocker, rival: vRival, perks: vPerks, curves: vCurves, music: vMusic, recruit: vRecruit, jobs: vJobs, mgr: vMgr, club: vClub, transfers: vTransfers, nego: vNego, trials: vTrials, agent: vAgent, nat: vNat, comps: vComps, stats: vStats, world: vWorld, money: vMoney, family: vFamily, love: vLove, friends: vFriends, assets: vAssets, invest: vInvest, staff: vStaff, school: vSchool, sheet: vSheet, card: vCard, social: vSocial, ach: vAch, inbox: vInbox, bdo: vBdo, saves: vSaves, options: vOptions, help: vHelp, ranks: typeof vRanks === 'function' ? vRanks : () => '' }[UI.sub];
+  const f = { settings: () => vTileGrid('settings'), goals: vGoals, locker: vLocker, rival: vRival, perks: vPerks, curves: vCurves, music: vMusic, recruit: vRecruit, jobs: vJobs, mgr: vMgr, club: vClub, transfers: vTransfers, nego: vNego, trials: vTrials, agent: vAgent, nat: vNat, comps: vComps, stats: vStats, world: vWorld, money: vMoney, family: vFamily, love: vLove, friends: vFriends, assets: vAssets, invest: vInvest, staff: vStaff, school: vSchool, sheet: vSheet, card: vCard, social: vSocial, ach: vAch, inbox: vInbox, bdo: vBdo, saves: vSaves, options: vOptions, help: vHelp, ranks: typeof vRanks === 'function' ? vRanks : () => '', shop: typeof vShop === 'function' ? vShop : () => '' }[UI.sub];
   return `<div class="subhd"><button class="backb" data-a="back" aria-label="Retour">${icon('back')}</button><h2>${SUB_T[UI.sub] || ''}</h2></div>${f ? f() : ''}`;
 }
 const kv = rows => `<dl class="kv">${rows.filter(Boolean).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`;
@@ -389,6 +390,7 @@ function vHelp() {
 function vCredits() {
   return `<section class="card sec"><h3>Ce qui est réel</h3><p class="note">Clubs, entraîneurs, sélectionneurs et effectifs principaux de la saison 2026-27, mis à jour au 11 octobre 2026 (mercato d'été 2026 compris). Coupe du monde 2026 : ${REAL_FACTS.wc2026}. Ballon d'Or 2025 : ${REAL_FACTS.bdo2025}.</p></section>
   <section class="card sec"><h3>Ce qui est simulé</h3><p class="note">Tous les résultats à partir du début de ta carrière, le Ballon d'Or 2026 (cérémonie réelle le ${REAL_FACTS.bdo2026date}), les transferts futurs, les jeunes joueurs générés, les sponsors (marques fictives) et ta vie.</p></section>
+  ${typeof JOUEUR_3D !== 'undefined' && JOUEUR_3D ? `<section class="card sec"><h3>Joueurs en 3D</h3><p class="note">Modèle « ${esc(JOUEUR_3D.name)} » par ${esc(String(JOUEUR_3D.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(JOUEUR_3D.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(JOUEUR_3D.source || 'Sketchfab')}. Adapté pour le jeu : allégé, squelette et animations du jeu, couleurs des clubs.</p></section>` : ''}
   <section class="card sec"><h3>Crampons d'Or</h3><p class="note">Un simulateur de carrière pensé pour iPhone. Ajoute-le à l'écran d'accueil depuis Safari pour l'avoir comme une app : il marche aussi hors connexion et se met à jour tout seul.</p><p class="note">Version ${typeof GAME_VERSION !== 'undefined' ? GAME_VERSION : 'dev'}${typeof VOIX_INDEX !== 'undefined' ? ' · ' + Object.keys(VOIX_INDEX).length + ' répliques enregistrées' : ''}</p></section>`;
 }
 
