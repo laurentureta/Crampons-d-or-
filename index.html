@@ -5460,7 +5460,7 @@ function aivFetch(x) {
         if (prov === 'openai') res = await fetch('https://api.openai.com/v1/audio/speech', { method: 'POST', signal: ctl && ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + aivKey() }, body: JSON.stringify({ model, voice, input: txt, instructions: aivInstr(x), response_format: 'mp3' }) });
         else res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voice)}?output_format=mp3_44100_64`, { method: 'POST', signal: ctl && ctl.signal, headers: { 'Content-Type': 'application/json', 'xi-api-key': aivKey(), Accept: 'audio/mpeg' }, body: JSON.stringify({ text: txt, model_id: model, voice_settings: x.who === 'N' ? { stability: .55, similarity_boost: .75, style: .15, use_speaker_boost: true } : { stability: x.pri >= 3 || x.song ? .3 : .4, similarity_boost: .75, style: x.pri >= 3 || x.song ? .6 : .4, use_speaker_boost: true } }) });
       } finally { if (to) clearTimeout(to); }
-      if (!res.ok) { let m = ''; try { m = (await res.text()).slice(0, 160); } catch (e) { } throw Object.assign(new Error(m || ('HTTP ' + res.status)), { st: res.status }); }
+      if (!res.ok) { let m = ''; try { m = (await res.text()).slice(0, 300); } catch (e) { } throw Object.assign(new Error(m || ('HTTP ' + res.status)), { st: res.status }); }
       ab = await res.arrayBuffer(); aivUse(txt.length); aidbPut(ck, ab.slice(0));
     }
     return await new Promise((ok, ko) => { try { const r = AU.ctx.decodeAudioData(ab.slice(0), ok, ko); if (r && r.catch) r.catch(ko); } catch (e) { ko(e); } });
@@ -5470,8 +5470,16 @@ function aivFetch(x) {
   return p;
 }
 // panne de la voix IA : on repasse aux voix du téléphone et on prévient une fois
+// détail d'une erreur du fournisseur (JSON ElevenLabs/OpenAI → phrase courte), gardé pour l'afficher dans Options
+function aivErr(e) {
+  if (!e) return 'erreur inconnue';
+  if (!e.st) return e.name === 'AbortError' ? 'délai dépassé' : 'appel bloqué ou réseau indisponible (' + (e.message || 'TypeError') + ')';
+  let d = e.message || ''; try { const j = JSON.parse(d), x = j.detail || j.error || j; d = (x.message || x.status || (typeof x === 'string' ? x : JSON.stringify(x))); } catch (er) { }
+  return 'code ' + e.st + (d ? ' : ' + String(d).slice(0, 140) : '');
+}
 function aivFail(e) {
-  const st = e && e.st, msg = st === 401 || st === 403 ? 'Voix IA : clé refusée. Vérifie-la dans Options.' : st === 429 || st === 402 ? 'Voix IA : quota ou crédit épuisé chez le fournisseur.' : st === 0 ? 'Voix IA : choisis les voix ElevenLabs dans Options.' : st ? 'Voix IA indisponible (' + st + ').' : 'Voix IA injoignable (réseau, ou appel bloqué par la page : utilise la version Netlify/GitHub).';
+  AIV.last = aivErr(e) + ' · ' + new Date().toLocaleTimeString('fr-FR');
+  const st = e && e.st, msg = st === 401 || st === 403 ? 'Voix IA : clé refusée. Vérifie-la dans Options.' : st === 429 || st === 402 ? 'Voix IA : quota ou crédit épuisé chez le fournisseur.' : st === 0 ? 'Voix IA : choisis les voix ElevenLabs dans Options.' : st ? 'Voix IA indisponible (' + st + ').' : 'Voix IA injoignable (réseau, ou appel bloqué par la page).';
   if (!st || st === 401 || st === 403 || st === 402 || st === 429 || st === 0 || st === 404 || st === 400 || st === 422) AIV.dead = msg;
   if (typeof toast === 'function' && Date.now() - (AIV.toastT || 0) > 15000) { AIV.toastT = Date.now(); toast(msg + ' Retour aux voix du téléphone.'); }
 }
@@ -5480,8 +5488,8 @@ function aivDuck(on) { const C = AU.crowd; if (!C || !AU.ctx) return; C.out.gain
 // liste des voix de ton compte ElevenLabs (pour les menus d'Options)
 async function aivLoadEL() {
   if (!aivKey()) return false;
-  try { const r = await fetch('https://api.elevenlabs.io/v1/voices', { headers: { 'xi-api-key': aivKey() } }); if (!r.ok) throw Object.assign(new Error('HTTP ' + r.status), { st: r.status }); const j = await r.json(); OPTS.aivEL = (j.voices || []).slice(0, 80).map(v => ({ id: v.voice_id, n: v.name, g: (v.labels && v.labels.gender) || '', a: (v.labels && (v.labels.accent || v.labels.language)) || '' })); saveOpts(); return true; }
-  catch (e) { if (typeof toast === 'function') toast(e && e.st === 401 ? 'ElevenLabs : clé refusée.' : 'Impossible de lire tes voix ElevenLabs (réseau ou page bloquée).'); return false; }
+  try { const r = await fetch('https://api.elevenlabs.io/v1/voices', { headers: { 'xi-api-key': aivKey() } }); if (!r.ok) { let m = ''; try { m = (await r.text()).slice(0, 300); } catch (er) { } throw Object.assign(new Error(m || ('HTTP ' + r.status)), { st: r.status }); } const j = await r.json(); OPTS.aivEL = (j.voices || []).slice(0, 80).map(v => ({ id: v.voice_id, n: v.name, g: (v.labels && v.labels.gender) || '', a: (v.labels && (v.labels.accent || v.labels.language)) || '' })); saveOpts(); return true; }
+  catch (e) { AIV.last = 'Liste des voix : ' + aivErr(e) + ' · ' + new Date().toLocaleTimeString('fr-FR'); if (typeof toast === 'function') toast(e && e.st ? 'ElevenLabs refuse la liste des voix (' + aivErr(e) + ').' : 'Impossible de joindre ElevenLabs (' + aivErr(e) + ').'); return false; }
 }
 const sayOn = () => OPTS.voice !== false && (OPTS.svol ?? .8) > 0 && AU.unlocked && (aivOn() || sayInit());
 // it : { txt, pri, who: 'S'|'N', song, dig }
@@ -7115,6 +7123,7 @@ function vAiVoice() {
   <div class="vrow"><button class="btn sm" data-a="vTest" data-v="S"${k ? '' : ' disabled'}>Écouter Lo Sol</button><button class="btn sm" data-a="vTest" data-v="N"${k ? '' : ' disabled'}>Écouter Nathalie</button></div>`;
   const U = OPTS.aivUse && OPTS.aivUse.m === new Date().toISOString().slice(0, 7) ? OPTS.aivUse.c : 0;
   if (AIV.dead) h += `<div class="alert"><span class="grow"><b>Voix IA en pause</b><span>${esc(AIV.dead)}</span></span><button class="btn sm" data-a="aivRetry">Réessayer</button></div>`;
+  if (AIV.last) h += `<p class="note">Dernière erreur du fournisseur : ${esc(AIV.last)}</p>`;
   h += `<p class="note">Ce mois-ci : ${U.toLocaleString('fr-FR')} caractères envoyés. Un match regardé en entier en ×1 en consomme environ 13 000 à 16 000 (environ 4 500 en mode économique, qui ne garde que les temps forts et les histoires) ; les répliques déjà entendues sont gardées sur le téléphone et ne sont pas refacturées. Ta clé reste sur ce téléphone, n'est envoyée qu'à ${P === 'openai' ? 'OpenAI' : 'ElevenLabs'} et n'apparaît pas dans les sauvegardes exportées. Pense à fixer un plafond de dépenses sur ton compte. La voix IA marche dans la version Netlify/GitHub ; si la page publiée ici bloque l'appel, le jeu repasse tout seul aux voix du téléphone.</p>`;
   return h;
 }
