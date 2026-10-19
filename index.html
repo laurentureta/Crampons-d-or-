@@ -5419,10 +5419,15 @@ const AIV_TAGS = new Set(['eleven_v3', 'eleven_v3_conversational', 'eleven_v4_tu
 function aivKey() { if (AIV.key == null) { try { AIV.key = localStorage.getItem('cdo_aikey') || ''; } catch (e) { AIV.key = ''; } } return AIV.key; }
 function aivSetKey(k) { AIV.key = String(k || '').trim(); AIV.dead = ''; AIV.cache.clear(); try { if (AIV.key) localStorage.setItem('cdo_aikey', AIV.key); else localStorage.removeItem('cdo_aikey'); } catch (e) { } }
 const aivOn = () => (OPTS.aiv === 'openai' || OPTS.aiv === 'eleven') && !!aivKey() && !AIV.dead && !!AU.ctx;
+// voix ElevenLabs créée par le joueur pour Lo Sol : utilisée par défaut (un autre choix dans Options reste prioritaire)
+const AIV_EL_DEF = { S: 'EQHLm8eFXUqKbFzlvnSA', N: '' };
 function aivVoice(who) {
   if (OPTS.aiv === 'openai') return (who === 'N' ? OPTS.aivN : OPTS.aivS) || (who === 'N' ? 'marin' : 'cedar');
   const id = who === 'N' ? OPTS.aivN : OPTS.aivS; if (id && !AIV_OAI.includes(id)) return id;
-  const L = OPTS.aivEL || []; const f = L.find(v => (v.g || '') === (who === 'N' ? 'female' : 'male')) || L[who === 'N' ? 1 : 0] || L[0]; return f ? f.id : '';
+  if (AIV_EL_DEF[who]) return AIV_EL_DEF[who];
+  // sinon : une voix de ton compte, homme pour Lo Sol, femme pour Nathalie, jamais la même que l'autre commentateur
+  const other = who === 'N' ? aivVoice('S') : '', L = (OPTS.aivEL || []).filter(v => v.id !== other);
+  const f = L.find(v => (v.g || '') === (who === 'N' ? 'female' : 'male')) || L[who === 'N' ? 1 : 0] || L[0]; return f ? f.id : '';
 }
 // consignes de jeu d'acteur (OpenAI) ou balises d'émotion (ElevenLabs v3/v4)
 function aivInstr(x) {
@@ -7102,7 +7107,8 @@ function vAiVoice() {
   } else {
     h += sel('aivM', 'Modèle', OPTS.aivM || 'eleven_flash_v2_5', AIV_ELM);
     const V = OPTS.aivEL || [];
-    if (V.length) { const au = w => { const f = V.find(v => (v.g || '') === (w === 'N' ? 'female' : 'male')) || V[w === 'N' ? 1 : 0] || V[0]; return f ? ' (' + f.n + ')' : ''; }, L = [['', 'Automatique'], ...V.map(v => [v.id, v.n + (v.g ? ' · ' + (v.g === 'male' ? 'homme' : v.g === 'female' ? 'femme' : v.g) : '') + (v.a ? ' · ' + v.a : '')])]; h += sel('aivS', 'Voix de Lo Sol', OPTS.aivS || '', [['', 'Automatique' + au('S')], ...L.slice(1)]) + sel('aivN', 'Voix de Nathalie', OPTS.aivN || '', [['', 'Automatique' + au('N')], ...L.slice(1)]); }
+    if (V.length) { const au = w => { const keep = [OPTS.aivS, OPTS.aivN]; OPTS.aivS = OPTS.aivN = ''; const id = aivVoice(w); [OPTS.aivS, OPTS.aivN] = keep; const f = V.find(v => v.id === id); return f ? ' (' + f.n + ')' : id === AIV_EL_DEF[w] ? ' (ta voix créée)' : ''; }, L = [['', 'Automatique'], ...V.map(v => [v.id, v.n + (v.g ? ' · ' + (v.g === 'male' ? 'homme' : v.g === 'female' ? 'femme' : v.g) : '') + (v.a ? ' · ' + v.a : '')])]; h += sel('aivS', 'Voix de Lo Sol', OPTS.aivS || '', [['', 'Automatique' + au('S')], ...L.slice(1)]) + sel('aivN', 'Voix de Nathalie', OPTS.aivN || '', [['', 'Automatique' + au('N')], ...L.slice(1)]); }
+    if (!V.length && AIV_EL_DEF.S) h += `<p class="note">Lo Sol parle avec ta voix créée sur ElevenLabs. Charge tes voix pour choisir aussi celle de Nathalie.</p>`;
     h += `<div class="vrow"><button class="btn sm" data-a="aivLoad"${k ? '' : ' disabled'}>${V.length ? 'Recharger mes voix' : 'Charger mes voix ElevenLabs'}</button></div><p class="note">Astuce : ajoute à ta bibliothèque ElevenLabs des voix françaises (Voice Library, par exemple un commentateur sportif pour Lo Sol), puis recharge.</p>`;
   }
   h += `<div class="seg">${seg('aivMode', 'all', 'Tout le commentaire', OPTS.aivMode !== 'eco')}${seg('aivMode', 'eco', 'Économique', OPTS.aivMode === 'eco')}</div>
