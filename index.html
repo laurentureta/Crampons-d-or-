@@ -737,6 +737,12 @@ details.alert.vhelp>span{display:block;margin-top:6px;font-size:13px;color:var(-
 @keyframes ifall{to{transform:translateY(40px) scale(1.04);opacity:0}}
 #intro .ititle .logo .ln{display:table;margin:0 auto;white-space:nowrap;font-weight:inherit}
 #intro .ititle .lbl{white-space:nowrap;font-size:11.5px;letter-spacing:.14em}
+.lcom .who.p{background:rgba(255,255,255,.12);color:#e8eef0}
+/* pack de voix et bruitages */
+.pack{display:flex;flex-direction:column;gap:8px;border:1px solid var(--line2);border-radius:14px;padding:10px 12px;background:rgba(255,176,46,.04)}
+.pkbar{height:6px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden}
+.pkbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),#ffe08a);transition:width .3s ease}
+.vrow.wrap{flex-wrap:wrap}
 
 </style>
 </head>
@@ -4733,7 +4739,7 @@ function coachQuick(prep) {
 // Variables : {n} joueur, {n2} second joueur, {tm} son équipe, {other} l'autre équipe, {my} ton équipe, {op} l'adversaire,
 // {home}/{away}, {me} ton surnom, {meN} ton nom, {sc} score, {min} minute, {city} ta ville, {att} affluence, {temp},
 // {gk} gardien, {d} distance, {hello} bonjour/bonsoir, {rival}, {pron} pronostic, {anyp} un joueur au hasard.
-const CM_WHO = { S: 'Lo Sol', N: 'Nathalie' };
+const CM_WHO = { S: 'Lo Sol', N: 'Nathalie', P: 'Speaker' };
 const CMX = {
   intro: [
     ['{hello} à tous ! Ici Jordi Puig, Lo Sol pour les intimes… et pour les autres aussi.', 'N:Et Nathalie Ferrand, qui va essayer de le canaliser pendant quatre-vingt-dix minutes.', 'Elle n\'y arrive jamais, mais elle essaie, et c\'est beau. {home} contre {away}, mes amis, préparez votre cœur !'],
@@ -5155,9 +5161,9 @@ function comLookEv(M, e) {
     case 'goal': {
       if (e.og) { if (!mineK && mine < th) cs.behind = true; return add(3, seqL([[mineK ? 'goalOgFor' : 'goalOg', 3]])); }
       if (!mineK) {
-        const seq = [['goalOpp', 3]];
+        const seq = [['goalOpp', 3]], paO = typeof paGoal === 'function' && paGoal(M, e, mn);
         if (S && S.rival && e.n === S.rival.n && !M.coach) seq.push(['goalRival', 2]); else if (mine === th && R() < .7) seq.push(['goalOppEq', 2]); else if (R() < .55) seq.push(['goalOppN', 2]);
-        if (mine < th) cs.behind = true; return add(3, seqL(seq));
+        if (mine < th) cs.behind = true; const GO = seqL(seq); if (paO) GO.splice(1, 0, paO); return add(3, GO);
       }
       cs.scorers[e.n] = (cs.scorers[e.n] || 0) + 1;
       const first = meK && S && S.ss && !(S.ss.g > 0) && !(cs.lg > 0) && !(S.hist || []).some(h => h.g > 0);
@@ -5178,7 +5184,8 @@ function comLookEv(M, e) {
         if (!meK && cs.scorers[e.n] === 2 && !cs.nk[e.n]) { const nick = pick(CM_NICKS.filter(x => !Object.values(cs.nk).includes(x))); cs.nk[e.n] = nick; seq.push(['nickGive', 2, false, { nick, n: LN(e.n) }]); if (R() < .6) seq.push(['nickGiveN', 2]); }
         if (cs.avia && R() < .5) seq.push(['goalAvia', 2]);
       }
-      return add(3, seqL(seq));
+      const GL = seqL(seq), pa = typeof paGoal === 'function' && paGoal(M, e, mn); if (pa) GL.splice(1, 0, pa);
+      return add(3, GL);
     }
     case 'save': if (meK) return add(3, seqL([['saveMe', 3]])); if (!mineK && (e.xg || 0) > .12 && R() < .6) return add((e.xg || 0) > .2 ? 3 : 2, seqL([['saveOpp', 3]])); return add((e.xg || 0) > .2 ? 3 : 2, seqL([[(e.xg || 0) > .2 ? 'saveBig' : 'save', 3]]));
     case 'miss': if ((e.xg || 0) > .25) return add(2, seqL(R() < .5 ? [['missBig', 2], ['missBigN', 2]] : [['missBig', 2]])); return add(1, seqL([[e.hi ? 'missHigh' : 'missWide', 1]]));
@@ -5197,13 +5204,14 @@ function comLookEv(M, e) {
     case 'sub': if (mineK && e.me && !M.coach) return add(2, seqL([['subIn', 2]])); if (mineK && e.outMe) return add(2, seqL([[e.why === 'blessure' ? 'injMe' : 'subOut', 2]])); return add(0, seqL([['sub', 0]]));
     case 'inj': { const L = seqL([[e.me && mineK && !M.coach ? 'injMe' : 'inj', 1]]); if (cmChat() && R() < .5) for (const l of comLines(M, 'injPause', c, { pri: 1 })) L.push(l); return add(1, L); }
     case 'ht': { cs.htT = t; const it = add(2, seqL([['ht', 2]])); if (it) it.late = 20; return it; }
-    case 'ft': { const it = add(3, seqL([[mine > th ? 'ftWin' : mine < th ? 'ftLoss' : 'ftDraw', 3]])); if (it) it.late = 20; return it; }
+    case 'ft': { const FL = seqL([[mine > th ? 'ftWin' : mine < th ? 'ftLoss' : 'ftDraw', 3]]), pe = typeof paEnd === 'function' && paEnd(M); if (pe) FL.splice(1, 0, pe); const it = add(3, FL); if (it) it.late = 20; return it; }
   }
 }
 // avant le coup d'envoi : présentation à deux voix, puis (dès qu'il y a un temps calme) météo, ton joueur, le rival…
 function comIntro(M) {
   const cs = comInit(M), C = M.cond || {}, c = comCtx(M);
-  const it = comItem(M, 0, 'intro', 2, comLines(M, 'intro', c), comLate('intro', 2)); if (it) it.late = 40;
+  const IL = comLines(M, 'intro', c); if (typeof paIntro === 'function') IL.unshift(...paIntro(M));
+  const it = comItem(M, 0, 'intro', 2, IL, comLate('intro', 2)); if (it) it.late = 40;
   const ex = C.derby ? 'introDerby' : C.snow ? 'introSnow' : C.rain ? 'introRain' : C.att > 40000 ? 'introBig' : C.att < 500 ? 'introSmall' : C.temp >= 28 ? 'introHot' : C.temp <= 3 ? 'introCold' : C.night && R() < .6 ? 'introNight' : null;
   const lines = [];
   if (cmChat()) {
@@ -5514,7 +5522,7 @@ function auInit() {
     return true;
   } catch (e) { AU.failed = true; AU.ctx = null; return false; }
 }
-function auUnlock() { if (!auInit()) return; if (!AU.unlocked) sayPrime(); AU.unlocked = true; if (AU.ctx.state !== 'running') AU.ctx.resume(); auScene(AU.want || 'menu', true); }
+function auUnlock() { if (!auInit()) return; if (!AU.unlocked) { sayPrime(); if (typeof pkdb === 'function') pkdb().then(() => sfxGenLoad()); } AU.unlocked = true; if (AU.ctx.state !== 'running') AU.ctx.resume(); auScene(AU.want || 'menu', true); }
 // ---------- Instruments ----------
 function vca(t, peak, a, d, s, r, dur) { const g = AU.ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + a); g.gain.setTargetAtTime(peak * s, t + a, d / 3); g.gain.setTargetAtTime(0, t + Math.max(a, dur), r / 4); return g; }
 function send(node, rev, dly) { if (rev) { const g = AU.ctx.createGain(); g.gain.value = rev; node.connect(g); g.connect(AU.rev); } if (dly) { const g = AU.ctx.createGain(); g.gain.value = dly; node.connect(g); g.connect(AU.dly); } node.connect(AU.bus); }
@@ -5692,6 +5700,8 @@ function horn(t) { const c = AU.ctx; for (let k = 0; k < 3; k++) { const tt = t 
 function boo(t) { const n = noiseSrc(t, t + 3, true), f = filt('lowpass', 380, .8), g = vca(t, .9, .5, 1.5, .5, .8, 1.6); n.connect(f); f.connect(g); g.connect(AU.fx); for (let i = 0; i < 7; i++) { const tt = t + Math.random() * 1.5, d = .25 + Math.random() * .5, o = osc('sine', 2300 + Math.random() * 1400, tt, tt + d + .1), gg = vca(tt, .025, .02, d, 1, .05, d); o.frequency.linearRampToValueAtTime(2000 + Math.random() * 1500, tt + d); o.connect(gg); gg.connect(AU.fx); } }
 function sfxPlay(k) {
   if (!AU.ctx || !AU.unlocked || (OPTS.svol ?? .8) <= 0) return; const t = AU.ctx.currentTime + .02, C = AU.crowd;
+  // bruitages réalistes générés (pack ElevenLabs), sinon synthèse
+  if (typeof sfxG === 'function') { if (k === 'whistle1' && sfxG('whistle1', .9)) return; if (k === 'whistle2' && sfxG('whistle1', .8)) { sfxG('whistle1', .8, .45); return; } if (k === 'whistle3' && sfxG('whistle3', .95)) { swell(.75, .3, 1, 1.5); return; } }
   if (k === 'whistle1') whistle(t, .75);
   else if (k === 'whistle2') { whistle(t, .3); whistle(t + .45, .3); }
   else if (k === 'whistle3') { whistle(t, .28); whistle(t + .42, .28); whistle(t + .84, 1.1); swell(.75, .3, 1, 1.5); }
@@ -5745,7 +5755,7 @@ function sayInit() {
   return SAY.ok;
 }
 // essai d'une voix depuis les Options
-function sayTest(who) { if (!aivOn() && !sayInit()) return; try { if (sayInit()) sayPick(); } catch (e) { } sayStop(); if (who === 'N') sayPush({ txt: 'Bonsoir, ici Nathalie Ferrand. Je vais essayer de le canaliser pendant quatre-vingt-dix minutes.', pri: 2, who: 'N' }); else sayPush({ txt: 'Bonsoir à tous, ici Lo Sol ! Quel plaisir d\'être avec vous ce soir, mes amis !', pri: 2, who: 'S' }); }
+function sayTest(who) { if (!aivOn() && !sayInit()) return; try { if (sayInit()) sayPick(); } catch (e) { } sayStop(); if (typeof VOX_TEST !== 'undefined' && VOX_TEST[who]) sayPush({ txt: VOX_TEST[who], pri: 2, who }); else if (who === 'N') sayPush({ txt: 'Bonsoir, ici Nathalie Ferrand. Je vais essayer de le canaliser pendant quatre-vingt-dix minutes.', pri: 2, who: 'N' }); else sayPush({ txt: 'Bonsoir à tous, ici Lo Sol ! Quel plaisir d\'être avec vous ce soir, mes amis !', pri: 2, who: 'S' }); }
 function sayPrime() { if (!sayInit()) return; try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) { } }
 // texte → prononçable (les mots en capitales seraient épelés)
 function sayNorm(t) {
@@ -5754,7 +5764,7 @@ function sayNorm(t) {
 }
 // ---------- Voix IA : vraies voix humaines (OpenAI ou ElevenLabs), avec la clé API du joueur ----------
 // La clé reste sur l'appareil (stockage local à part, jamais dans les sauvegardes exportées) et n'est envoyée qu'au fournisseur choisi.
-const AIV = { key: null, cache: new Map(), dead: '', el: null, src: null, duck: 0 };
+const AIV = { key: null, cache: new Map(), dead: '', el: null, src: null, duck: 0, bad: new Set() };
 const AIV_OAI = ['cedar', 'marin', 'ash', 'ballad', 'coral', 'echo', 'fable', 'nova', 'onyx', 'sage', 'shimmer', 'verse', 'alloy'];
 const AIV_ELM = [['eleven_flash_v2_5', 'Flash 2.5 (rapide, économique)'], ['eleven_multilingual_v2', 'Multilingual v2 (qualité)'], ['eleven_v3', 'v3 (très expressif, plus lent)'], ['eleven_v4_turbo', 'v4 Turbo (expressif et rapide)']];
 const AIV_TAGS = new Set(['eleven_v3', 'eleven_v3_conversational', 'eleven_v4_turbo']);
@@ -5764,15 +5774,19 @@ const aivOn = () => (OPTS.aiv === 'openai' || OPTS.aiv === 'eleven') && !!aivKey
 // voix ElevenLabs créée par le joueur pour Lo Sol : utilisée par défaut (un autre choix dans Options reste prioritaire)
 const AIV_EL_DEF = { S: 'EQHLm8eFXUqKbFzlvnSA', N: '' };
 function aivVoice(who) {
-  if (OPTS.aiv === 'openai') return (who === 'N' ? OPTS.aivN : OPTS.aivS) || (who === 'N' ? 'marin' : 'cedar');
-  const id = who === 'N' ? OPTS.aivN : OPTS.aivS; if (id && !AIV_OAI.includes(id)) return id;
-  if (AIV_EL_DEF[who]) return AIV_EL_DEF[who];
-  // sinon : une voix de ton compte, homme pour Lo Sol, femme pour Nathalie, jamais la même que l'autre commentateur
-  const other = who === 'N' ? aivVoice('S') : '', L = (OPTS.aivEL || []).filter(v => v.id !== other);
-  const f = L.find(v => (v.g || '') === (who === 'N' ? 'female' : 'male')) || L[who === 'N' ? 1 : 0] || L[0]; return f ? f.id : '';
+  who = who || 'S';
+  if (OPTS.aiv === 'openai') return who === 'N' ? (OPTS.aivN || 'marin') : who === 'S' ? (OPTS.aivS || 'cedar') : ((typeof VOX_OAI !== 'undefined' && VOX_OAI[who]) || 'alloy');
+  const id = who === 'N' ? OPTS.aivN : who === 'S' ? OPTS.aivS : (OPTS.aivX || {})[who]; if (id && !AIV_OAI.includes(id) && !AIV.bad.has(id)) return id;
+  const def = AIV_EL_DEF[who] || (typeof VOX_EL !== 'undefined' && VOX_EL[who]); if (def && !AIV.bad.has(def)) return def;
+  // sinon : une voix de ton compte, homme ou femme selon le personnage, jamais celle d'un commentateur
+  const avoid = who === 'S' ? [] : who === 'N' ? [aivVoice('S')] : [aivVoice('S'), aivVoice('N')], L = (OPTS.aivEL || []).filter(v => !avoid.includes(v.id) && !AIV.bad.has(v.id));
+  const g = (typeof VOX_G !== 'undefined' && VOX_G[who]) || 'male';
+  const f = L.find(v => (v.g || '') === g) || L[who === 'N' ? 1 : 0] || L[0]; return f ? f.id : (who !== 'S' && who !== 'N' ? aivVoice(g === 'female' ? 'N' : 'S') : '');
 }
 // consignes de jeu d'acteur (OpenAI) ou balises d'émotion (ElevenLabs v3/v4)
 function aivInstr(x) {
+  const OT = { P: 'Tu es le speaker officiel d\'un stade de football français : voix grave, posée, solennelle, tu détaches les noms comme dans la sono d\'un stade.', C: 'Tu es l\'entraîneur, dans le vestiaire à la mi-temps : voix ferme, motivante, directe, tu parles à ton joueur les yeux dans les yeux.', A: 'Tu es l\'agent du joueur : complice, commercial, sûr de toi, débit vif et souriant.', J: 'Tu es une journaliste sportive en conférence de presse : ton professionnel, question claire et posée.' };
+  if (OT[x.who]) return OT[x.who] + ' Français de France, débit naturel.';
   const base = x.who === 'N' ? 'Tu es Nathalie Ferrand, consultante football à la télévision française, ancienne milieu de terrain internationale. Voix posée, claire, analytique, pince-sans-rire, un peu amusée par son collègue. Français de France, débit naturel.'
     : 'Tu es Jordi « Lo Sol » Puig, commentateur de football à la télévision française, ancien ailier de Perpignan : léger accent chantant du Sud, voix chaleureuse, passionnée, débit vif, beaucoup d\'émotion et d\'humour. Français de France.';
   return base + (x.song ? ' Tu CHANTES cette petite chanson de supporter, joyeusement et un peu faux, en rythme, comme dans une tribune.' : x.pri >= 3 ? ' Moment énorme du match : vis-le à fond, explosion de joie ou grosse déception selon la phrase, tu peux crier et étirer les voyelles.' : x.dig ? ' Moment calme : tu racontes une anecdote, ton détendu, complice, souriant.' : x.pri >= 2 ? ' Action chaude : ton vif, tendu, rythmé.' : ' Commentaire en direct, naturel et vivant.');
@@ -5788,23 +5802,36 @@ const AIDB = { p: null };
 function aidb() { if (AIDB.p) return AIDB.p; AIDB.p = new Promise(res => { try { const r = indexedDB.open('cdo-voix', 1); r.onupgradeneeded = () => { try { r.result.createObjectStore('a'); } catch (e) { } }; r.onsuccess = () => { const db = r.result; try { const q = db.transaction('a').objectStore('a').count(); q.onsuccess = () => { if (q.result > 1500) try { db.transaction('a', 'readwrite').objectStore('a').clear(); } catch (e) { } }; } catch (e) { } res(db); }; r.onerror = () => res(null); } catch (e) { res(null); } }); return AIDB.p; }
 function aidbGet(k) { return aidb().then(db => db && new Promise(res => { try { const q = db.transaction('a').objectStore('a').get(k); q.onsuccess = () => res(q.result || null); q.onerror = () => res(null); } catch (e) { res(null); } })); }
 function aidbPut(k, v) { aidb().then(db => { if (db) try { db.transaction('a', 'readwrite').objectStore('a').put(v, k); } catch (e) { } }); }
+// un appel au fournisseur (réplique → MP3) ; une voix de la bibliothèque refusée par ton compte est remplacée
+async function aivNet(x, voice, depth) {
+  const prov = OPTS.aiv, txt = aivText(x), model = prov === 'openai' ? 'gpt-4o-mini-tts' : (OPTS.aivM || 'eleven_flash_v2_5');
+  if (!voice) throw Object.assign(new Error('Aucune voix ElevenLabs choisie'), { st: 0 });
+  const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null, to = ctl && setTimeout(() => ctl.abort(), 15000);
+  const vs = x.who === 'N' || x.who === 'J' ? { stability: .55, similarity_boost: .75, style: .15, use_speaker_boost: true } : x.who === 'P' ? { stability: .7, similarity_boost: .8, style: .1, use_speaker_boost: true } : x.who === 'C' || x.who === 'A' ? { stability: .5, similarity_boost: .75, style: .3, use_speaker_boost: true } : { stability: x.pri >= 3 || x.song ? .3 : .4, similarity_boost: .75, style: x.pri >= 3 || x.song ? .6 : .4, use_speaker_boost: true };
+  let res;
+  try {
+    if (prov === 'openai') res = await fetch('https://api.openai.com/v1/audio/speech', { method: 'POST', signal: ctl && ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + aivKey() }, body: JSON.stringify({ model, voice, input: txt, instructions: aivInstr(x), response_format: 'mp3' }) });
+    else res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voice)}?output_format=mp3_44100_64`, { method: 'POST', signal: ctl && ctl.signal, headers: { 'Content-Type': 'application/json', 'xi-api-key': aivKey(), Accept: 'audio/mpeg' }, body: JSON.stringify({ text: txt, model_id: model, voice_settings: vs }) });
+  } finally { if (to) clearTimeout(to); }
+  if (!res.ok) {
+    let m = ''; try { m = (await res.text()).slice(0, 300); } catch (e) { }
+    // voix par défaut inaccessible (voix de bibliothèque pas ajoutée à ton compte) : on passe à une voix du compte
+    if (prov === 'eleven' && !depth && [400, 403, 404, 422].includes(res.status) && /voice/i.test(m) && x.who !== 'S' && !(x.who === 'N' && OPTS.aivN)) { AIV.bad.add(voice); const v2 = aivVoice(x.who); if (v2 && v2 !== voice) return aivNet(x, v2, 1); }
+    throw Object.assign(new Error(m || ('HTTP ' + res.status)), { st: res.status });
+  }
+  return await res.arrayBuffer();
+}
 function aivFetch(x) {
   const prov = OPTS.aiv, voice = aivVoice(x.who), txt = aivText(x), model = prov === 'openai' ? 'gpt-4o-mini-tts' : (OPTS.aivM || 'eleven_flash_v2_5'), style = x.song ? 's' : x.pri >= 3 ? 'h' : x.dig ? 'd' : x.pri >= 2 ? 'w' : 'n';
   const ck = [prov, model, voice, style, txt].join('|');
   if (AIV.cache.has(ck)) return AIV.cache.get(ck);
   const p = (async () => {
     if (!voice) throw Object.assign(new Error('Aucune voix ElevenLabs choisie'), { st: 0 });
-    const t0 = Date.now(); let ab = await aidbGet(ck);
-    if (!ab) {
-      const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null, to = ctl && setTimeout(() => ctl.abort(), 12000);
-      let res;
-      try {
-        if (prov === 'openai') res = await fetch('https://api.openai.com/v1/audio/speech', { method: 'POST', signal: ctl && ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + aivKey() }, body: JSON.stringify({ model, voice, input: txt, instructions: aivInstr(x), response_format: 'mp3' }) });
-        else res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voice)}?output_format=mp3_44100_64`, { method: 'POST', signal: ctl && ctl.signal, headers: { 'Content-Type': 'application/json', 'xi-api-key': aivKey(), Accept: 'audio/mpeg' }, body: JSON.stringify({ text: txt, model_id: model, voice_settings: x.who === 'N' ? { stability: .55, similarity_boost: .75, style: .15, use_speaker_boost: true } : { stability: x.pri >= 3 || x.song ? .3 : .4, similarity_boost: .75, style: x.pri >= 3 || x.song ? .6 : .4, use_speaker_boost: true } }) });
-      } finally { if (to) clearTimeout(to); }
-      if (!res.ok) { let m = ''; try { m = (await res.text()).slice(0, 300); } catch (e) { } throw Object.assign(new Error(m || ('HTTP ' + res.status)), { st: res.status }); }
-      ab = await res.arrayBuffer(); aivUse(txt.length); aidbPut(ck, ab.slice(0)); { const lat = (Date.now() - t0) / 1000; AIV.lat = AIV.lat ? AIV.lat * .7 + lat * .3 : lat; }
-    }
+    const t0 = Date.now(), pk = typeof pkKey === 'function' ? pkKey(prov, voice, x.txt) : '';
+    // pack de voix déjà téléchargé : instantané, hors connexion, gratuit
+    let ab = pk && PK.have.has(pk) ? await pkGet(pk) : null;
+    if (!ab) ab = await aidbGet(ck);
+    if (!ab) { ab = await aivNet(x, voice); aivUse(txt.length); aidbPut(ck, ab.slice(0)); const lat = (Date.now() - t0) / 1000; AIV.lat = AIV.lat ? AIV.lat * .7 + lat * .3 : lat; }
     return await new Promise((ok, ko) => { try { const r = AU.ctx.decodeAudioData(ab.slice(0), ok, ko); if (r && r.catch) r.catch(ko); } catch (e) { ko(e); } });
   })();
   AIV.cache.set(ck, p); if (AIV.cache.size > 160) AIV.cache.delete(AIV.cache.keys().next().value);
@@ -5871,7 +5898,7 @@ function sayNext() {
     x.ap.then(buf => {
       if (tok !== SAY.tok) return; clearTimeout(SAY.wd);
       if (Date.now() > x.exp + 3000) return done();
-      const c = AU.ctx, src = c.createBufferSource(), g = c.createGain(); src.buffer = buf; g.gain.value = clamp((OPTS.svol ?? .8) * 1.25, 0, 1.4); src.connect(g); g.connect(AU.master);
+      const c = AU.ctx, src = c.createBufferSource(), g = c.createGain(); src.buffer = buf; g.gain.value = clamp((OPTS.svol ?? .8) * (x.who === 'P' ? .95 : 1.25), 0, 1.4); src.connect(g); g.connect(x.who === 'P' && typeof paOut === 'function' && paOut() || AU.master);
       src.onended = () => { if (AIV.src === src) done(); }; AIV.src = src; aivDuck(true); src.start();
       SAY.wd = setTimeout(() => { if (tok === SAY.tok) done(); }, (buf.duration + 3) * 1000);
     }).catch(e => { if (tok !== SAY.tok) return; clearTimeout(SAY.wd); aivFail(e); x.ap = null; SAY.q.unshift(x); SAY.tok++; SAY.cur = null; sayNext(); });
@@ -5880,11 +5907,15 @@ function sayNext() {
   if (!sayInit()) { SAY.cur = null; return; }
   if (x.song && !x.si && x.si !== 0) { const parts = String(x.txt).split('/').map(v => v.trim()).filter(Boolean); if (parts.length > 1) { SAY.q.unshift(...parts.map((txt, si) => ({ txt, pri: x.pri, who: x.who, song: true, si, id: x.id, exp: x.exp + si * 4000 }))); SAY.tok++; SAY.cur = null; return sayNext(); } }
   try {
-    const u = new SpeechSynthesisUtterance(sayNorm(x.txt)), nat = x.who === 'N', v = nat ? (SAY.voice2 || SAY.voice) : SAY.voice;
+    const u = new SpeechSynthesisUtterance(sayNorm(x.txt)), nat = x.who === 'N' || x.who === 'J', v = nat ? (SAY.voice2 || SAY.voice) : SAY.voice;
     u.lang = v ? v.lang : 'fr-FR'; if (v) u.voice = v;
     // une voix de qualité se dégrade vite quand on force la hauteur : petites variations seulement
     const hq = v && sayQual(v) >= 2;
     if (x.song) { u.rate = .9; u.pitch = (hq ? [1.06, 1.16, 1.02, 1.2] : [1.12, 1.3, 1.05, 1.38])[(x.si || 0) % 4]; }
+    else if (x.who === 'P') { u.rate = .9; u.pitch = .82; }
+    else if (x.who === 'C') { u.rate = 1; u.pitch = .9; }
+    else if (x.who === 'A') { u.rate = 1.08; u.pitch = 1.04; }
+    else if (x.who === 'J') { u.rate = 1.02; u.pitch = SAY.voice2 ? 1.06 : 1.25; }
     else if (nat) { u.rate = 1; u.pitch = SAY.voice2 ? 1 : 1.18; }
     else { u.rate = x.pri >= 3 ? 1.1 : x.dig ? .97 : 1.03; u.pitch = x.pri >= 3 ? (hq ? 1.05 : 1.08) : 1; }
     u.volume = clamp((OPTS.svol ?? .8) * 1.15, 0, 1);
@@ -5911,6 +5942,178 @@ function sayPlay(it) {
 function sayBusyWith(id) { const c = SAY.cur; if (!c || c.id !== id) return false; if (AIV.src) return true; try { return SAY.ok && speechSynthesis.speaking; } catch (e) { return false; } }
 function say(txt, pri) { sayPush({ txt, pri: pri || 0, who: 'S' }); }
 function sayStop() { SAY.q = []; SAY.tok++; SAY.cur = null; clearTimeout(SAY.wd); aivDuck(false); if (AIV.src) { try { AIV.src.stop(); } catch (e) { } AIV.src = null; } try { if (SAY.ok) speechSynthesis.cancel(); } catch (e) { } }
+
+// ===================== SONS GÉNÉRÉS PAR TON COMPTE ELEVENLABS (OU OPENAI) =====================
+// 1. Pack de voix : toutes les répliques fixes de Lo Sol et Nathalie (histoires, réactions, analyses…) sont
+//    fabriquées une seule fois avec ta clé puis gardées sur le téléphone : ensuite elles partent instantanément,
+//    même sans réseau, et ne sont plus jamais facturées.
+// 2. Bruitages réalistes : frappe, poteau, filet, sifflet, tacle, arrêt, vitre qui casse (ElevenLabs Sound Effects).
+// 3. Nouvelles voix : le speaker du stade, le coach à la mi-temps, ton agent, la journaliste en conférence de presse.
+const VOX = { S: 'Lo Sol', N: 'Nathalie', P: 'Le speaker', C: 'Le coach', A: 'Ton agent', J: 'La journaliste' };
+// voix ElevenLabs par défaut (Nathalie, coach, agent et journaliste viennent de la bibliothèque ElevenLabs :
+// si ton compte ne peut pas les utiliser, le jeu prend automatiquement une voix de ton compte)
+const VOX_EL = { N: 'vq479zipNPD44hpCdbIh', P: '5l4ttmr4SKNgi0HnOelT', C: 'cEjGxRhK5rId1bacJPJr', A: '9tZ0TkblLDiUBWp2EbTv', J: 'DZeU95FfxvXu8aNMqcMZ' };
+const VOX_ELN = { N: 'Atma', P: 'Paul K', C: 'Bakumba', A: 'Lucas', J: 'Aude' };
+const VOX_OAI = { P: 'onyx', C: 'ash', A: 'verse', J: 'coral' };
+const VOX_G = { S: 'male', N: 'female', P: 'male', C: 'male', A: 'male', J: 'female' };
+const VOX_TEST = {
+  P: 'Mesdames et messieurs, bonsoir et bienvenue au stade ! Le coup d\'envoi sera donné dans quelques instants.',
+  C: 'Écoute-moi bien. On est dans le match, mais j\'ai besoin de plus d\'intensité. Tu peux faire la différence, alors vas-y.',
+  A: 'Salut champion ! J\'ai eu un club au téléphone ce matin. Ils te suivent de près. Reste concentré, je m\'occupe du reste.',
+  J: 'Bonsoir. Une question rapide : comment abordez-vous ce match, après votre dernière performance ?',
+};
+
+// ---------- stockage durable du pack (base à part : jamais vidée par le petit cache des voix) ----------
+const PK = { p: null, have: new Set(), run: false, stop: false, n: 0, tot: 0, fail: 0, err: '', kind: '' };
+function pkdb() {
+  if (PK.p) return PK.p;
+  PK.p = new Promise(res => {
+    try {
+      const r = indexedDB.open('cdo-pack', 1);
+      r.onupgradeneeded = () => { try { r.result.createObjectStore('a'); } catch (e) { } };
+      r.onsuccess = () => { const db = r.result; try { const q = db.transaction('a').objectStore('a').getAllKeys(); q.onsuccess = () => { for (const k of q.result || []) PK.have.add(k); res(db); sfxGenLoad(); }; q.onerror = () => res(db); } catch (e) { res(db); } };
+      r.onerror = () => res(null);
+    } catch (e) { res(null); }
+  });
+  return PK.p;
+}
+function pkGet(k) { return pkdb().then(db => db && new Promise(res => { try { const q = db.transaction('a').objectStore('a').get(k); q.onsuccess = () => res(q.result || null); q.onerror = () => res(null); } catch (e) { res(null); } })); }
+function pkPut(k, v) { return pkdb().then(db => db && new Promise(res => { try { const tx = db.transaction('a', 'readwrite'); tx.objectStore('a').put(v, k); tx.oncomplete = () => { PK.have.add(k); res(true); }; tx.onerror = () => res(false); } catch (e) { res(false); } })); }
+const pkKey = (prov, voice, txt) => prov + '|' + voice + '|' + String(txt).trim();
+
+// ---------- le pack de voix : toutes les répliques sans nom propre ----------
+const PK_HOT = /^(goal|wood|bar|pen|var|red|save|miss|late|added|interrupt|woodOpp|block)/;
+function pkLines() {
+  if (typeof CMX === 'undefined') return [];
+  const out = [], seen = new Set();
+  const add = (raw, key) => {
+    if (typeof raw !== 'string' || raw[0] === '#' || /\{\w+\}/.test(raw)) return;
+    const who = cmIsN(raw) ? 'N' : 'S', txt = cmFill(who === 'N' ? raw.slice(2) : raw, {});
+    if (!txt || seen.has(who + txt)) return; seen.add(who + txt);
+    out.push({ who, txt, pri: PK_HOT.test(key) ? 3 : 2, dig: key === 'dig' || /^intro/.test(key) || key === 'second' });
+  };
+  for (const key of Object.keys(CMX)) { if (key === 'songs') continue; const v = CMX[key]; if (!Array.isArray(v)) continue; for (const e of v) { if (Array.isArray(e)) e.forEach(x => add(x, key)); else add(e, key); } }
+  if (typeof CM_CUT !== 'undefined') CM_CUT.forEach(x => add(x, 'interrupt'));
+  return out;
+}
+function pkStat() {
+  if (!aivKey() || (OPTS.aiv !== 'openai' && OPTS.aiv !== 'eleven')) return { ok: 0, tot: 0, chars: 0 };
+  const L = pkLines(), prov = OPTS.aiv; let ok = 0, chars = 0;
+  for (const x of L) { if (PK.have.has(pkKey(prov, aivVoice(x.who), x.txt))) ok++; else chars += x.txt.length; }
+  return { ok, tot: L.length, chars };
+}
+function pkProg() {
+  const el = typeof document !== 'undefined' && document.getElementById('pkProg'); if (!el) return;
+  el.textContent = PK.run ? `${PK.kind === 'sfx' ? 'Bruitages' : 'Répliques'} : ${PK.n} / ${PK.tot}${PK.fail ? ` · ${PK.fail} en échec` : ''}…` : PK.err || '';
+  const bar = document.getElementById('pkBar'); if (bar) bar.style.width = (PK.tot ? PK.n / PK.tot * 100 : 0).toFixed(1) + '%';
+}
+async function pkRun() {
+  if (PK.run || !aivKey()) return; await pkdb();
+  const prov = OPTS.aiv, todo = pkLines().filter(x => !PK.have.has(pkKey(prov, aivVoice(x.who), x.txt)));
+  Object.assign(PK, { run: true, stop: false, n: 0, tot: todo.length, fail: 0, err: '', kind: 'vox' }); pkProg();
+  let i = 0;
+  const worker = async () => {
+    while (!PK.stop && i < todo.length) {
+      const x = todo[i++], voice = aivVoice(x.who);
+      try { const ab = await aivNet(x, voice); await pkPut(pkKey(prov, voice, x.txt), ab); aivUse(x.txt.length); }
+      catch (e) { PK.fail++; PK.err = 'Dernière erreur : ' + aivErr(e); if (e && (e.st === 401 || e.st === 402 || e.st === 429)) PK.stop = true; }
+      PK.n++; pkProg();
+    }
+  };
+  await Promise.all([worker(), worker(), worker()]);
+  PK.run = false;
+  if (!PK.err) PK.err = PK.stop ? 'Pack en pause.' : 'Pack de voix prêt : les commentaires partent sans attendre, même hors connexion.';
+  pkProg(); if (typeof render === 'function') render();
+}
+
+// ---------- bruitages réalistes (ElevenLabs Sound Effects) ----------
+const SFXG = [
+  ['kick', 'Close-up sound of a soccer ball kicked on grass, a single crisp leather thump, no crowd, no music', .6],
+  ['shot', 'Powerful soccer shot, leather ball struck with full force, deep punchy thump with a short whoosh, no crowd', .8],
+  ['post', 'Soccer ball smashing into a metal goal post, loud ringing clang, no crowd', 1.6],
+  ['net', 'Soccer ball flying into the back of the goal net, net rustle and swish, no crowd', 1.1],
+  ['whistle1', 'Football referee blowing one sharp whistle in an outdoor stadium', 1.0],
+  ['whistle3', 'Football referee final whistle: two short blasts then one long blast, outdoor stadium', 2.6],
+  ['tackle', 'Soccer slide tackle on wet grass, body sliding and boot hitting the ball, no crowd', 1.0],
+  ['header', 'Soccer ball headed by a player, dull leather thud on the forehead, no crowd', .5],
+  ['catch', 'Goalkeeper catching a soccer ball firmly with padded gloves, no crowd', .6],
+  ['glass', 'Smartphone screen glass hit by a ball: sharp crack then shattering, tiny shards tinkling', 1.6],
+];
+AU.gen = AU.gen || {};
+function sfxGenLoad() {
+  if (!AU.ctx) return;
+  for (const [k] of SFXG) if (!AU.gen[k] && PK.have.has('sfx|' + k)) pkGet('sfx|' + k).then(ab => { if (ab) try { AU.ctx.decodeAudioData(ab.slice(0), b => { AU.gen[k] = b; }, () => { }); } catch (e) { } });
+}
+const sfxGenCount = () => SFXG.filter(([k]) => PK.have.has('sfx|' + k)).length;
+async function sfxGenRun() {
+  if (PK.run || !aivKey() || OPTS.aiv !== 'eleven') return; await pkdb();
+  const todo = SFXG.filter(([k]) => !PK.have.has('sfx|' + k));
+  Object.assign(PK, { run: true, stop: false, n: 0, tot: todo.length, fail: 0, err: '', kind: 'sfx' }); pkProg();
+  for (const [k, text, dur] of todo) {
+    if (PK.stop) break;
+    try {
+      const r = await fetch('https://api.elevenlabs.io/v1/sound-generation?output_format=mp3_44100_64', { method: 'POST', headers: { 'Content-Type': 'application/json', 'xi-api-key': aivKey(), Accept: 'audio/mpeg' }, body: JSON.stringify({ text, duration_seconds: dur, prompt_influence: .6 }) });
+      if (!r.ok) { let m = ''; try { m = (await r.text()).slice(0, 300); } catch (e) { } throw Object.assign(new Error(m || ('HTTP ' + r.status)), { st: r.status }); }
+      const ab = await r.arrayBuffer(); await pkPut('sfx|' + k, ab);
+    } catch (e) { PK.fail++; PK.err = 'Dernière erreur : ' + aivErr(e) + (e && (e.st === 401 || e.st === 403) ? ' (autorise « Sound Effects » sur ta clé ElevenLabs)' : ''); if (e && (e.st === 401 || e.st === 402 || e.st === 403 || e.st === 429)) PK.stop = true; }
+    PK.n++; pkProg();
+  }
+  PK.run = false; sfxGenLoad();
+  if (!PK.err) PK.err = 'Bruitages prêts : frappes, poteaux, filets, sifflets et tacles réalistes en match.';
+  pkProg(); if (typeof render === 'function') render();
+}
+// joue un bruitage généré (renvoie false s'il n'existe pas : le son de synthèse prend le relais)
+function sfxG(k, v, at) {
+  const b = AU.gen && AU.gen[k]; if (!b || !AU.ctx || !AU.unlocked || (OPTS.svol ?? .8) <= 0) return false;
+  const c = AU.ctx, src = c.createBufferSource(), g = c.createGain(); src.buffer = b; src.playbackRate.value = .96 + Math.random() * .08;
+  g.gain.value = (v ?? 1) * clamp((OPTS.svol ?? .8) * 1.1, 0, 1.3); src.connect(g); g.connect(AU.fx); src.start(c.currentTime + (at || 0));
+  return true;
+}
+
+// ---------- le speaker : sono de stade (réverbération synthétique) ----------
+function paOut() {
+  if (AU.pa) return AU.pa; const c = AU.ctx; if (!c) return null;
+  const len = Math.floor(c.sampleRate * 2.4), ir = c.createBuffer(2, len, c.sampleRate);
+  for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let i = 0; i < len; i++) { const t = i / c.sampleRate; d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.2) * (t < .06 ? t / .06 : 1) * (1 + (t > .18 && t < .21 ? 1.6 : 0)); } }
+  const inp = c.createGain(), dry = c.createGain(), wet = c.createGain(), conv = c.createConvolver(), hp = c.createBiquadFilter(), lp = c.createBiquadFilter();
+  conv.buffer = ir; hp.type = 'highpass'; hp.frequency.value = 320; lp.type = 'lowpass'; lp.frequency.value = 5200;
+  dry.gain.value = .7; wet.gain.value = .55;
+  inp.connect(hp); hp.connect(lp); lp.connect(dry); lp.connect(conv); conv.connect(wet); dry.connect(AU.master); wet.connect(AU.master);
+  AU.pa = inp; return inp;
+}
+
+// ---------- les autres personnages parlent (voix IA si activée, sinon voix du téléphone) ----------
+const VOSAID = typeof WeakSet !== 'undefined' ? new WeakSet() : null;
+function voOnce(obj, txt, who, aiOnly) {
+  if (!obj || !txt || !VOSAID || VOSAID.has(obj)) return; VOSAID.add(obj);
+  if (aiOnly && !aivOn()) return;
+  setTimeout(() => { try { sayPush({ txt: String(txt).replace(/[«»]/g, ''), pri: 2, who }); } catch (e) { } }, 250);
+}
+function coachHalfLine(M) {
+  const mine = M.side === 'h' ? M.hg : M.ag, th = M.side === 'h' ? M.ag : M.hg, n = S && S.p ? S.p.first : '';
+  return mine < th ? `${n}, écoute-moi. On est menés, mais rien n'est perdu. J'ai besoin de toi en deuxième mi-temps. Dis-moi ce que tu ressens.`
+    : mine > th ? `Bien, ${n}. On mène, mais rien n'est fait. Reste concentré, on ne lâche rien. Alors, comment tu te sens ?`
+      : `C'est serré, ${n}. Le match va se jouer sur un détail. Dis-moi ce dont tu as besoin.`;
+}
+// annonces du speaker
+function paIntro(M) {
+  const C = M.cond || {}; if ((C.att || 0) < 300) return [];
+  const home = M.side === 'h' ? M.my : M.op, away = M.side === 'h' ? M.op : M.my, out = [{ who: 'P', txt: `Mesdames et messieurs, ${C.night ? 'bonsoir' : 'bonjour'} et bienvenue ! ${home} reçoit ${away}. Le coup d'envoi sera donné dans quelques instants.` }];
+  if (M.side === 'h' && M.starter && S && S.p && !M.coach) out.push({ who: 'P', txt: `Et avec le numéro ${S.club.num || 10}… ${S.p.first}… ${String(S.p.last).toUpperCase()} !` });
+  return out;
+}
+function paGoal(M, e, mn) {
+  const homeK = M.side === 'h' ? 0 : 1; if (e.k !== homeK || e.og || !e.n || ((M.cond || {}).att || 0) < 300) return null;
+  const home = M.side === 'h' ? M.my : M.op, me = e.me && e.k === 0 && !M.coach && S && S.p;
+  const who = me ? `le numéro ${S.club.num || 10}, ${S.p.first}… ${String(S.p.last).toUpperCase()}` : `${String(e.n).split(' ').slice(0, -1).join(' ')}… ${LN(e.n).toUpperCase()}`.replace(/^…\s*/, '');
+  return { who: 'P', txt: `But pour ${home}, marqué à la ${mn}e minute par ${who} !`, pri: 2 };
+}
+function paEnd(M) {
+  if (((M.cond || {}).att || 0) < 300) return null;
+  const home = M.side === 'h' ? M.my : M.op, away = M.side === 'h' ? M.op : M.my;
+  return { who: 'P', txt: `Score final : ${home}, ${M.hg}. ${away}, ${M.ag}. Merci de votre présence, et bon retour chez vous !`, pri: 2 };
+}
+if (typeof indexedDB !== 'undefined' && typeof window !== 'undefined') pkdb();
 
 // ===================== AFFICHAGE DU MATCH : Canvas 2D, caméra TV =====================
 // Le moteur calcule quelques secondes d'avance et enregistre une image par pas (10/s).
@@ -6009,6 +6212,8 @@ function lvFrame(now) {
       LV.pt = np;
       if (liveAt(M, LV.pt, now / 1000)) rebuild = true;
       lvVis(M);
+      // le ballon quitte le pied d'un joueur : petit bruit de frappe (pack de bruitages)
+      if (AU.gen && AU.gen.kick && !LV.replay) { const f = lvAt(LV.pt); if (f) { const o = f[6] >= 0 ? f[6] + ':' + f[7] : ''; if (LV.own && o !== LV.own && !f[9] && now - (LV.kickT || 0) > 280) { sfxG('kick', .3); LV.kickT = now; } LV.own = o; } }
     }
     // élaguer les vieilles images (on garde de quoi rejouer une action)
     let cut = 0; while (cut < LV.frames.length - 2 && LV.frames[cut][0] < LV.pt - 14) cut++;
@@ -6033,6 +6238,8 @@ function lvVis(M) {
     if (v.k === 'var') LV.varOn = null;
     const T = { goal: v.mine ? 'BUT !' : 'BUT', save: 'ARRÊT !', miss: 'À CÔTÉ', wood: v.bar ? 'LA BARRE !' : 'POTEAU !', block: 'CONTRÉ', pen: 'PENALTY !', yellow: 'CARTON JAUNE', red: 'CARTON ROUGE', off: 'HORS-JEU', corner: 'CORNER', adv: 'AVANTAGE', var: v.what === 'goal' ? (v.ok ? 'BUT VALIDÉ' : 'BUT REFUSÉ') : v.award ? 'PENALTY ACCORDÉ' : v.ok ? 'PENALTY CONFIRMÉ' : 'PAS DE PENALTY' }[v.k];
     if (!T) continue;
+    // bruits du ballon (pack de bruitages) : filet, poteau, arrêt, frappe
+    if (typeof sfxG === 'function') { const B = { goal: 'net', wood: 'post', save: 'catch', miss: 'shot', block: 'kick' }[v.k]; if (B) { if (v.k === 'goal') sfxG('shot', .75); sfxG(B, v.k === 'block' ? .6 : .95, v.k === 'goal' ? .12 : 0); } }
     const big = v.k === 'goal' || v.k === 'pen' || v.k === 'red' || v.k === 'wood' || v.k === 'var';
     if ((v.k === 'corner' || v.k === 'adv') && !lvHlSpeed(LV.pt)) continue;
     LV.pops.push({ t: T, at: performance.now(), dur: big ? 2400 : 1300, big, col: v.k === 'goal' ? (v.mine ? '#f5c542' : '#e6e6e6') : v.k === 'yellow' ? '#f5c542' : v.k === 'red' || (v.k === 'var' && !v.ok) ? '#e5484d' : v.k === 'var' ? '#4fd28f' : '#ffffff' });
@@ -6357,25 +6564,46 @@ function g3Init() {
 }
 // ---------- Joueurs : un maillage instancié par partie du corps ----------
 const G3N = 25; // 22 joueurs + arbitre + 2 assistants
+// géométrie d'un joueur (avant = +x, côtés = z) ; les teintes de sommets assombrissent col, poignets, sourcils, semelles…
+function g3Body() {
+  const V2 = (a) => a.map(([r, y]) => new THREE.Vector2(r, y)), lathe = (pts, seg) => new THREE.LatheGeometry(V2(pts), seg || 16);
+  const T = (g, c) => g3Tint(g, c == null ? 0xffffff : c), sph = (r, w, h) => new THREE.SphereGeometry(r, w || 12, h || 9);
+  const torso = g3Merge([
+    T(lathe([[.001, 0], [.15, 0], [.153, .07], [.162, .18], [.183, .3], [.2, .4], [.206, .46], [.195, .51], [.15, .545], [.08, .565], [.062, .572]], 18).scale(.64, 1, 1)),
+    T(sph(.074, 12, 9).scale(.85, .8, 1).translate(0, .475, .19)), T(sph(.074, 12, 9).scale(.85, .8, 1).translate(0, .475, -.19)),
+    T(new THREE.TorusGeometry(.062, .016, 6, 18).rotateX(Math.PI / 2).scale(.85, 1, 1).translate(.004, .566, 0), 0x6b6b6b),
+    T(new THREE.CylinderGeometry(.152, .151, .035, 18, 1, true).scale(.64, 1, 1).translate(0, .02, 0), 0x8a8a8a)]);
+  const shorts = lathe([[.001, .075], [.158, .075], [.168, .03], [.182, -.06], [.195, -.15], [.2, -.2]], 16).scale(.78, 1, 1);
+  const head = g3Merge([
+    T(sph(.106, 22, 16).scale(1, 1.12, .9)),
+    T(sph(.016, 8, 6).scale(1.1, 1.5, .9).translate(.103, -.008, 0)), T(sph(.024, 8, 6).scale(.5, 1, .8).translate(-.004, -.004, .1)), T(sph(.024, 8, 6).scale(.5, 1, .8).translate(-.004, -.004, -.1)),
+    T(sph(.0125, 8, 6).translate(.094, .022, .036), 0x1a1a1a), T(sph(.0125, 8, 6).translate(.094, .022, -.036), 0x1a1a1a),
+    T(new THREE.BoxGeometry(.01, .011, .042).translate(.099, .047, .036), 0x3a3a3a), T(new THREE.BoxGeometry(.01, .011, .042).translate(.099, .047, -.036), 0x3a3a3a),
+    T(new THREE.BoxGeometry(.006, .008, .036).translate(.098, -.052, 0), 0x7a4a4a),
+    T(new THREE.CylinderGeometry(.05, .058, .15, 10).translate(-.005, -.125, 0))]);
+  const hair = new THREE.SphereGeometry(.115, 18, 10, 0, Math.PI * 2, 0, Math.PI * .55).scale(1.02, 1, .97).rotateZ(.32).translate(-.01, .018, 0);
+  const uarm = g3Merge([T(sph(.064, 10, 8)), T(new THREE.CylinderGeometry(.064, .058, .15, 10).translate(0, -.075, 0)), T(new THREE.TorusGeometry(.056, .009, 5, 12).rotateX(Math.PI / 2).translate(0, -.148, 0), 0x707070)]);
+  const ubare = new THREE.CylinderGeometry(.051, .045, .17, 10).translate(0, -.215, 0);
+  const farm = g3Merge([T(sph(.046, 9, 7)), T(lathe([[.046, 0], [.048, -.06], [.042, -.14], [.034, -.25], [.032, -.27]], 10))]);
+  const hand = g3Merge([sph(.045, 9, 7).scale(.62, 1.22, .92).translate(0, -.03, 0), sph(.018, 6, 5).translate(.03, -.01, 0)]);
+  const thigh = g3Merge([lathe([[.092, 0], [.094, -.07], [.088, -.19], [.075, -.33], [.062, -.42], [.058, -.45]], 12), sph(.06, 10, 8).scale(1.05, .9, 1).translate(.006, -.45, 0)]);
+  const shin = g3Merge([T(lathe([[.063, 0], [.066, -.05], [.069, -.13], [.06, -.25], [.047, -.37], [.043, -.45]], 12)), T(new THREE.CylinderGeometry(.068, .069, .045, 12, 1, true).translate(0, -.06, 0), 0xb0b0b0)]);
+  const bt = new THREE.BoxGeometry(.26, .075, .1, 4, 2, 2); const pa = bt.attributes.position;
+  for (let i = 0; i < pa.count; i++) { const x = pa.getX(i), y = pa.getY(i); if (x > .05) { const k = 1 - (x - .05) / .1 * .38; pa.setZ(i, pa.getZ(i) * k); if (y > 0) pa.setY(i, y - (x - .05) * .25); } if (x < -.1) pa.setZ(i, pa.getZ(i) * .9); }
+  bt.computeVertexNormals(); bt.translate(.055, -.035, 0);
+  const boot = g3Merge([T(bt), T(new THREE.BoxGeometry(.25, .014, .092).translate(.055, -.077, 0), 0x2a2a2a)]);
+  return { torso, shorts, head, hair, uarm, ubare, farm, hand, thigh, shin, boot };
+}
 function g3Players() {
   const sc = G3.sc, P = {};
   const std = (rough) => new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: rough, metalness: 0 });
   const mk = (geo, mat, n, shadow) => { const m = new THREE.InstancedMesh(geo, mat, n); m.instanceMatrix.setUsage(THREE.DynamicDrawUsage); m.frustumCulled = false; m.castShadow = shadow !== false; m.receiveShadow = false; for (let i = 0; i < n; i++) m.setColorAt(i, new THREE.Color(1, 1, 1)); sc.add(m); return m; };
-  const torso = new THREE.CylinderGeometry(.205, .16, .56, 10, 1); torso.scale(.62, 1, 1); torso.translate(0, .28, 0);
-  const shorts = new THREE.CylinderGeometry(.165, .19, .24, 10, 1); shorts.scale(.75, 1, 1); shorts.translate(0, -.06, 0);
-  const head = new THREE.SphereGeometry(.112, 14, 10); head.scale(1, 1.08, .95);
-  const neck = new THREE.CylinderGeometry(.05, .055, .12, 6); neck.translate(0, -.13, 0);
-  const headM = g3Merge([head, neck]);
-  const hair = new THREE.SphereGeometry(.12, 14, 8, 0, Math.PI * 2, 0, Math.PI * .52); hair.translate(-.012, .012, 0);
-  const uarm = new THREE.CylinderGeometry(.058, .05, .3, 7); uarm.translate(0, -.15, 0);
-  const farm = new THREE.CylinderGeometry(.048, .038, .27, 7); farm.translate(0, -.135, 0);
-  const hand = new THREE.SphereGeometry(.05, 7, 5);
-  const thigh = new THREE.CylinderGeometry(.088, .066, .45, 8); thigh.translate(0, -.225, 0);
-  const shin = new THREE.CylinderGeometry(.066, .044, .45, 8); shin.translate(0, -.225, 0);
-  const boot = new THREE.BoxGeometry(.25, .075, .1); boot.translate(.055, -.035, 0);
-  P.torso = mk(torso, std(.75), G3N); P.shorts = mk(shorts, std(.7), G3N); P.head = mk(headM, std(.6), G3N); P.hair = mk(hair, std(.9), G3N);
-  P.uarm = mk(uarm, std(.75), G3N * 2); P.farm = mk(farm, std(.6), G3N * 2); P.hand = mk(hand, std(.6), G3N * 2);
-  P.thigh = mk(thigh, std(.6), G3N * 2); P.shin = mk(shin, std(.75), G3N * 2); P.boot = mk(boot, std(.45), G3N * 2);
+  // corps plus réaliste (v11) : buste galbé, visage, manches, chaussettes, crampons profilés
+  const B = g3Body(), stdV = rough => new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: rough, metalness: 0, vertexColors: true });
+  const shortM = std(.7); shortM.side = THREE.DoubleSide;
+  P.torso = mk(B.torso, stdV(.78), G3N); P.shorts = mk(B.shorts, shortM, G3N); P.head = mk(B.head, stdV(.55), G3N); P.hair = mk(B.hair, std(.9), G3N);
+  P.uarm = mk(B.uarm, stdV(.78), G3N * 2); P.ubare = mk(B.ubare, std(.55), G3N * 2); P.farm = mk(B.farm, std(.55), G3N * 2); P.hand = mk(B.hand, std(.6), G3N * 2);
+  P.thigh = mk(B.thigh, std(.55), G3N * 2); P.shin = mk(B.shin, stdV(.8), G3N * 2); P.boot = mk(B.boot, stdV(.35), G3N * 2);
   // numéros dans le dos (atlas 10×10)
   const [ac, ax] = g3Canvas(1024, 1024); ax.textAlign = 'center'; ax.textBaseline = 'middle'; ax.font = '900 70px Arial, sans-serif';
   for (let n = 0; n < 100; n++) { const cx = (n % 10) * 102.4 + 51.2, cy = Math.floor(n / 10) * 102.4 + 54; ax.lineWidth = 9; ax.strokeStyle = 'rgba(0,0,0,.55)'; ax.strokeText(String(n), cx, cy); ax.fillStyle = '#fff'; ax.fillText(String(n), cx, cy); }
@@ -6607,7 +6835,7 @@ function g3Pose(P, n, s) {
   if (n < 22) { g3J(G3M.z, G3M.tor, -.128, .33, 0, 0, 0, 0); P.num.setMatrixAt(n, G3M.z); G3M.z.makeScale(0, 0, 0); } else P.num.setMatrixAt(n, G3M.z);
   for (let k = 0; k < 2; k++) {
     const sd = k ? 1 : -1, sh = k ? shR : shL, ab = k ? abR : abL, el = k ? elR : elL;
-    g3J(G3M.ua, G3M.tor, 0, .5, sd * .225, sd * ab, 0, sh); P.uarm.setMatrixAt(sq + k, G3M.ua);
+    g3J(G3M.ua, G3M.tor, 0, .5, sd * .225, sd * ab, 0, sh); P.uarm.setMatrixAt(sq + k, G3M.ua); if (P.ubare) P.ubare.setMatrixAt(sq + k, G3M.ua);
     g3J(G3M.fa, G3M.ua, 0, -.3, 0, 0, 0, el); P.farm.setMatrixAt(sq + k, G3M.fa);
     g3J(G3M.sh, G3M.fa, 0, -.28, 0, 0, 0, 0); P.hand.setMatrixAt(sq + k, G3M.sh);
     const hip = k ? hipR : hipL, kn = k ? kneeR : kneeL;
@@ -6616,17 +6844,17 @@ function g3Pose(P, n, s) {
     g3J(G3M.hip, G3M.sn, 0, -.45, 0, 0, 0, Math.min(.6, kn * .3)); P.boot.setMatrixAt(sq + k, G3M.hip);
   }
 }
-function g3Hide(P, n) { const Z = G3M.z; for (const k of ['torso', 'shorts', 'head', 'hair', 'num']) P[k].setMatrixAt(n, Z); for (const k of ['uarm', 'farm', 'hand', 'thigh', 'shin', 'boot']) { P[k].setMatrixAt(n * 2, Z); P[k].setMatrixAt(n * 2 + 1, Z); } }
+function g3Hide(P, n) { const Z = G3M.z; for (const k of ['torso', 'shorts', 'head', 'hair', 'num']) P[k].setMatrixAt(n, Z); for (const k of ['uarm', 'ubare', 'farm', 'hand', 'thigh', 'shin', 'boot']) if (P[k]) { P[k].setMatrixAt(n * 2, Z); P[k].setMatrixAt(n * 2 + 1, Z); } }
 // couleurs des maillots (une fois par effectif)
 function g3Kits(M, ros) {
   const P = G3.P, E = M.E, key = JSON.stringify(ros.map(t => t.map(r => r.n + r.num)));
   if (G3.kitKey === key) return; G3.kitKey = key;
   const hairC = ['#1b1410', '#2b1d14', '#3b2a1a', '#6b4a2b', '#b48a4a', '#121212'];
-  const set = (n, shirt, shorts, socks, skin, hair, num, gloves) => { P.torso.setColorAt(n, shirt); P.uarm.setColorAt(n * 2, shirt); P.uarm.setColorAt(n * 2 + 1, shirt); P.shorts.setColorAt(n, shorts); for (const k of [0, 1]) { P.thigh.setColorAt(n * 2 + k, skin); P.shin.setColorAt(n * 2 + k, socks); P.farm.setColorAt(n * 2 + k, skin); P.hand.setColorAt(n * 2 + k, gloves || skin); P.boot.setColorAt(n * 2 + k, (n % 3) ? new THREE.Color(0x111111) : new THREE.Color(0xf0f0f0)); } P.head.setColorAt(n, skin); P.hair.setColorAt(n, hair); const a = P.num.geometry.attributes.aNum; const nn = clamp(num | 0, 0, 99); a.setXY(n, (nn % 10) * .1, 1 - (Math.floor(nn / 10) + 1) * .1); a.needsUpdate = true; };
+  const set = (n, shirt, shorts, socks, skin, hair, num, gloves, me) => { P.torso.setColorAt(n, shirt); P.uarm.setColorAt(n * 2, shirt); P.uarm.setColorAt(n * 2 + 1, shirt); P.shorts.setColorAt(n, shorts); for (const k of [0, 1]) { P.thigh.setColorAt(n * 2 + k, skin); P.shin.setColorAt(n * 2 + k, socks); P.farm.setColorAt(n * 2 + k, skin); if (P.ubare) P.ubare.setColorAt(n * 2 + k, skin); P.hand.setColorAt(n * 2 + k, gloves || skin); P.boot.setColorAt(n * 2 + k, me ? g3Lin('#f2b632') : (n % 3) ? new THREE.Color(0x111111) : new THREE.Color(0xf0f0f0)); } P.head.setColorAt(n, skin); P.hair.setColorAt(n, hair); const a = P.num.geometry.attributes.aNum; const nn = clamp(num | 0, 0, 99); a.setXY(n, (nn % 10) * .1, 1 - (Math.floor(nn / 10) + 1) * .1); a.needsUpdate = true; };
   for (let k = 0; k < 2; k++) {
     const T = E.T[k], col = g3Lin(T.col), c2 = g3Lin(T.col2), gk = g3Lin(T.gkc), wShorts = hashN(T.n) % 3 === 0, shortsC = wShorts ? new THREE.Color(0xf2f2f2) : c2, socks = hashN(T.n + 's') % 2 ? col : (wShorts ? new THREE.Color(0xf2f2f2) : c2);
     for (let i = 0; i < 11; i++) { const r = (ros[k] && ros[k][i]) || {}, n = k * 11 + i, skin = g3Lin(SKIN[hashN(r.n || 'x') % SKIN.length]), hair = g3Lin(hairC[hashN((r.n || 'x') + 'h') % hairC.length]);
-      if (r.gk) set(n, gk, new THREE.Color(0x1a1a1a), gk, skin, hair, r.num || 1, new THREE.Color(0xf4f4f4)); else set(n, col, shortsC, socks, skin, hair, r.num || 0); }
+      if (r.gk) set(n, gk, new THREE.Color(0x1a1a1a), gk, skin, hair, r.num || 1, new THREE.Color(0xf4f4f4), r.me); else set(n, col, shortsC, socks, skin, hair, r.num || 0, null, r.me); }
   }
   for (let n = 22; n < 25; n++) set(n, n === 22 ? g3Lin('#e9d22b') : g3Lin('#1e1e24'), new THREE.Color(0x0b0b0b), new THREE.Color(0x0b0b0b), g3Lin(SKIN[(n * 2) % SKIN.length]), new THREE.Color(0x150f0c), 0);
   for (const k of Object.keys(P)) if (P[k].instanceColor) P[k].instanceColor.needsUpdate = true;
@@ -6708,7 +6936,7 @@ function g3Draw(M, t, dt, paused) {
     }
     P.flag.instanceMatrix.needsUpdate = true;
   }
-  for (const k of ['torso', 'shorts', 'head', 'hair', 'num', 'uarm', 'farm', 'hand', 'thigh', 'shin', 'boot']) P[k].instanceMatrix.needsUpdate = true;
+  for (const k of ['torso', 'shorts', 'head', 'hair', 'num', 'uarm', 'ubare', 'farm', 'hand', 'thigh', 'shin', 'boot']) P[k].instanceMatrix.needsUpdate = true;
   // ombres « projecteurs » (nuit) ou ombre douce sous les joueurs (mode rapide)
   { const bl = P.blob, m4 = _m.m4 || (_m.m4 = new THREE.Matrix4()); let c = 0; const lamps = G3.night ? G3.lamps : null, useBlob = G3.night || !G3.sun.castShadow;
     if (useBlob) { const q = _m.q2 || (_m.q2 = new THREE.Quaternion()), v3 = _m.v3 || (_m.v3 = new THREE.Vector3()), sc3 = _m.s3 || (_m.s3 = new THREE.Vector3());
@@ -7169,10 +7397,12 @@ function inSnd(k) {
     } else if (k === 'touch') { inTone(c, 140, 70, .12, .35); inNoise(c, .05, 'bandpass', 1800, 1, .12); }
     else if (k === 'rise') { if (typeof smpHas === 'function' && smpHas('surge')) smpPlay('surge', .45, { rate: 1 }); else { const n = inNoise(c, 1.2, 'bandpass', 500, .6, .25); n.fl.frequency.exponentialRampToValueAtTime(1400, n.t + 1); } }
     else if (k === 'kick') {
+      if (typeof sfxG === 'function') sfxG('shot', 1.1);
       inTone(c, 170, 48, .22, .95); inNoise(c, .06, 'bandpass', 2600, 1.2, .5); inNoise(c, .5, 'lowpass', 300, .7, .25, .02);
       // souffle du ballon qui arrive (ralenti puis accélère)
       const n = inNoise(c, I.flight + .05, 'bandpass', 260, 1.4, .02); n.g.gain.cancelScheduledValues(n.t); n.g.gain.setValueAtTime(.02, n.t); n.g.gain.exponentialRampToValueAtTime(.55, n.t + I.flight); n.fl.frequency.setValueAtTime(260, n.t); n.fl.frequency.exponentialRampToValueAtTime(2800, n.t + I.flight);
     } else if (k === 'glass') {
+      if (typeof sfxG === 'function') sfxG('glass', 1.2);
       if (I.bed) { try { I.bed.g.gain.cancelScheduledValues(c.currentTime); I.bed.g.gain.setTargetAtTime(.0001, c.currentTime, .02); } catch (e) { } }
       inTone(c, 95, 38, .3, 1); inNoise(c, .09, 'highpass', 1800, .7, 1); inNoise(c, .22, 'bandpass', 900, .8, .55); inNoise(c, .7, 'highpass', 5200, .7, .22, .03);
       for (let i = 0; i < 30; i++) { const at = .015 + Math.pow(Math.random(), 1.7) * .95, f = 2600 + Math.random() * 6200, a = .09 * (1 - at); inTone(c, f, f * .985, .05 + Math.random() * .08, a, at, 'sine'); if (Math.random() < .4) inTone(c, f * 2.71, f * 2.7, .04, a * .5, at, 'sine'); }
@@ -8041,6 +8271,17 @@ function vAiVoice() {
   }
   h += `<div class="seg">${seg('aivMode', 'all', 'Tout le commentaire', OPTS.aivMode !== 'eco')}${seg('aivMode', 'eco', 'Économique', OPTS.aivMode === 'eco')}</div>
   <div class="vrow"><button class="btn sm" data-a="vTest" data-v="S"${k ? '' : ' disabled'}>Écouter Lo Sol</button><button class="btn sm" data-a="vTest" data-v="N"${k ? '' : ' disabled'}>Écouter Nathalie</button></div>`;
+  if (typeof pkStat === 'function' && k) {
+    const st = pkStat(), sg = sfxGenCount(), full = st.tot && st.ok >= st.tot;
+    h += `<div class="pack"><div class="lbl">Pack de voix · hors connexion</div><p class="note">Les ${st.tot} répliques fixes de Lo Sol et Nathalie (histoires, réactions, analyses) sont fabriquées une seule fois avec ta clé puis gardées sur ce téléphone : elles partent sans attendre, même sans réseau, et ne sont plus jamais facturées.</p>
+    <div class="pkbar"><i id="pkBar" style="width:${PK.run ? (PK.tot ? PK.n / PK.tot * 100 : 0).toFixed(1) : (st.tot ? st.ok / st.tot * 100 : 0).toFixed(1)}%"></i></div>
+    <p class="note"><b>${st.ok} / ${st.tot}</b> répliques prêtes pour ces voix${full ? ' ✓' : ` · reste environ ${st.chars.toLocaleString('fr-FR')} caractères à fabriquer`}.</p>
+    <div class="vrow">${PK.run ? '<button class="btn sm" data-a="pkStop">Mettre en pause</button>' : `<button class="btn sm" data-a="pkRun"${full ? ' disabled' : ''}>${st.ok ? 'Compléter le pack' : 'Télécharger le pack de voix'}</button>`}</div>
+    ${P === 'eleven' ? `<div class="lbl">Bruitages réalistes</div><p class="note">Frappe, poteau, filet, sifflets, tacle, arrêt du gardien et vitre qui casse, créés par ElevenLabs Sound Effects (quelques centaines de crédits, une seule fois). <b>${sg} / ${SFXG.length}</b> prêts.</p><div class="vrow"><button class="btn sm" data-a="sfxGen"${PK.run || sg >= SFXG.length ? ' disabled' : ''}>${sg ? 'Compléter les bruitages' : 'Créer les bruitages'}</button></div>` : ''}
+    <p class="note" id="pkProg">${esc(PK.run ? '' : PK.err || '')}</p></div>
+    <div class="lbl">Les autres voix</div><p class="note">Le speaker du stade annonce les buts, ton coach te parle à la mi-temps, la journaliste pose ses questions avant le match, ton agent lit ses messages.${P === 'eleven' ? ` Voix choisies : ${['P', 'C', 'A', 'J'].map(w => VOX[w] + ' (' + (VOX_ELN[w] || '') + ')').join(', ')} ; si l'une n'est pas disponible sur ton compte, le jeu prend une de tes voix.` : ''}</p>
+    <div class="vrow wrap">${['P', 'C', 'A', 'J'].map(w => `<button class="btn sm" data-a="vTest" data-v="${w}">${VOX[w]}</button>`).join('')}</div>`;
+  }
   const U = OPTS.aivUse && OPTS.aivUse.m === new Date().toISOString().slice(0, 7) ? OPTS.aivUse.c : 0;
   if (AIV.dead) h += `<div class="alert"><span class="grow"><b>Voix IA en pause</b><span>${esc(AIV.dead)}</span></span><button class="btn sm" data-a="aivRetry">Réessayer</button></div>`;
   if (AIV.last) h += `<p class="note">Dernière erreur du fournisseur : ${esc(AIV.last)}</p>`;
@@ -8376,7 +8617,7 @@ const ACT = {
   permis: () => { const r = permisExam(); save(); render(); openModal({ title: 'Permis de conduire', html: `<p>${esc(r)}</p>`, btns: [{ t: 'OK', fn: flow }] }); },
   marry: () => { const r = marry(); save(); render(); openModal({ title: 'Mariage', html: `<p>${esc(r)}</p>`, btns: [{ t: 'OK', fn: flow }] }); },
   breakup: () => confirmM('Rompre ?', '<p>C\'est définitif.</p>', 'Rompre', () => { toast(breakUp()); save(); render(); }),
-  msg: v => { const m = S.inbox[+v]; if (!m) return; m.read = true; save(); render(); const isOffer = m.k === 'offer' && S.offers.some(o => o.id === m.ref); openModal({ kicker: m.d, title: m.t, html: m.k === 'month' ? m.x : `<p>${esc(m.x)}</p>`, cls: m.k === 'month' ? 'month' : '', btns: (isOffer ? [{ t: 'Voir l\'offre', cls: 'pri', fn: () => ACT.nego(m.ref) }] : []).concat([{ t: 'Fermer', fn: () => { } }]) }); },
+  msg: v => { const m = S.inbox[+v]; if (!m) return; m.read = true; save(); render(); if ((m.k === 'coach' || m.k === 'offer') && typeof voOnce === 'function') voOnce(m, m.x, m.k === 'coach' ? 'C' : 'A', true); const isOffer = m.k === 'offer' && S.offers.some(o => o.id === m.ref); openModal({ kicker: m.d, title: m.t, html: m.k === 'month' ? m.x : `<p>${esc(m.x)}</p>`, cls: m.k === 'month' ? 'month' : '', btns: (isOffer ? [{ t: 'Voir l\'offre', cls: 'pri', fn: () => ACT.nego(m.ref) }] : []).concat([{ t: 'Fermer', fn: () => { } }]) }); },
   msgAll: () => { S.inbox.forEach(m => m.read = true); save(); render(); },
   card: () => { UI.cardImg = null; render(); makeCard(); },
   saveNow: () => { save(); toast('Partie sauvegardée.'); render(); },
@@ -8407,6 +8648,9 @@ const ACT = {
   aivLoad: () => { aivLoadEL().then(ok => { if (ok) toast('Voix ElevenLabs chargées.'); render(); }); },
   aivMode: v => { OPTS.aivMode = v === 'eco' ? 'eco' : 'all'; saveOpts(); render(); },
   aivRetry: () => { AIV.dead = ''; render(); },
+  pkRun: () => { auUnlock(); if (typeof pkRun === 'function') { pkRun(); setTimeout(render, 50); } },
+  pkStop: () => { PK.stop = true; render(); },
+  sfxGen: () => { auUnlock(); if (typeof sfxGenRun === 'function') { sfxGenRun(); setTimeout(render, 50); } },
   optChat: v => { OPTS.chat = v === 'match' ? 'match' : 'all'; saveOpts(); render(); toast(v === 'match' ? 'Commentaires : le match seulement.' : 'Commentaires : Lo Sol peut raconter sa vie.'); },
   optReplay: v => { OPTS.replay = v; saveOpts(); render(); },
   optGfx: v => { OPTS.gfx = v; if (typeof G3 !== 'undefined') { G3.lowAuto = false; G3.fail = false; } saveOpts(); render(); },
@@ -8488,8 +8732,10 @@ function vLivePanel(M, P) {
     return '';
   }
   if (UI.mg && (M.pending || M.shoot)) return vMg(M);
+  if (M.press && typeof voOnce === 'function') voOnce(M.press, M.press.q, 'J');
+  if (M.half && typeof voOnce === 'function') voOnce(M.half, coachHalfLine(M), 'C');
   if (M.press) return `<div class="moment press"><div class="lbl acc">Avant-match · micro tendu</div><p class="q">${esc(M.press.q)}</p><div class="opts">${M.press.a.map((a, i) => `<button class="opt" data-a="lPress" data-v="${i}"><b>${esc(a[0])}</b></button>`).join('')}</div></div>`;
-  if (M.half) return `<div class="moment press"><div class="lbl acc">Mi-temps · vestiaire</div><p class="q">${esc(M.half.q)}</p><div class="opts">${M.half.o.map((o, i) => `<button class="opt" data-a="lHalf" data-v="${i}"><b>${esc(o.t)}</b></button>`).join('')}</div></div>`;
+  if (M.half) return `<div class="moment press"><div class="lbl acc">Mi-temps · vestiaire</div><p class="q">${esc(M.half.q)}</p>${typeof coachHalfLine === 'function' ? `<p class="note">« ${esc(coachHalfLine(M))} »</p>` : ''}<div class="opts">${M.half.o.map((o, i) => `<button class="opt" data-a="lHalf" data-v="${i}"><b>${esc(o.t)}</b></button>`).join('')}</div></div>`;
   if (M.pending) { const m = M.pending; return `<div class="moment"><div class="lbl acc">Moment clé · ${M.min}'</div><p class="q">${esc(m.q)}</p><div class="opts">${m.o.map((o, i) => { const pr = momProb(M, o), [cl, lab] = diffLab(pr, o.out), mk = mgKind(o); return `<button class="opt" data-a="lChoose" data-v="${i}"><b>${esc(o.t)}</b><span>${o.at ? ATTR_N[o.at] + ' ' + Math.floor(S.p.at[o.at]) + ' · ' : ''}<em class="${cl}">${lab}</em> · ${Math.round(pr * 100)} %${o.card ? ' · <em class="d3">risque de carton</em>' : ''}${mk ? ' · mini-jeu' : ''}</span></button>`; }).join('')}</div></div>`; }
   if (M.shoot) return `<div class="moment"><div class="lbl acc">Tirs au but</div><p class="q">${esc(M.shoot.q)}</p>${M.shoot.auto ? `<p class="note">Tu n'es plus sur le terrain : tu regardes depuis le banc.</p><button class="btn pri wide" data-a="lShoot" data-v="-1">Voir la séance</button>` : `<div class="opts">${M.shoot.o.map((o, i) => `<button class="opt" data-a="lShoot" data-v="${i}"><b>${esc(o.t)}</b>${mgKind(o) ? '<span>mini-jeu</span>' : ''}</button>`).join('')}</div>`}</div>`;
   if (M.done) {
@@ -8523,7 +8769,7 @@ function vLive() {
   return `<div class="live lv2">${liveHead(M, P)}<div class="lstage">${view}${sheet}</div>${comBox}<div class="lfoot">${M.done ? '' : liveStatus(M)}${M.cond ? `<span class="lcond">${esc(condTxt(M.cond).replace(/ spectateurs/, ' spect.'))}</span>` : ''}</div>${bar}</div>`;
 }
 // boîte de commentaire : qui parle (Lo Sol / Nathalie), la réplique en cours et la précédente
-function vComL(x) { const n = x.who === 'N', t = x.song ? '♪ ' + String(x.txt).split('/').map(v => v.trim()).join(' ♪ ') + ' ♪' : x.txt; return `<i class="who ${n ? 'n' : 's'}">${typeof CM_WHO !== 'undefined' ? CM_WHO[n ? 'N' : 'S'] : ''}</i>${esc(t)}`; }
+function vComL(x) { const w = x.who === 'N' || x.who === 'P' ? x.who : 'S', t = x.song ? '♪ ' + String(x.txt).split('/').map(v => v.trim()).join(' ♪ ') + ' ♪' : x.txt; return `<i class="who ${w.toLowerCase()}">${typeof CM_WHO !== 'undefined' ? CM_WHO[w] : ''}</i>${esc(t)}`; }
 function vCom(M) { const C = M.com || [], a = C[C.length - 1], b = C[C.length - 2]; if (!a) return ''; return `<span class="mic" aria-hidden="true">🎙</span><span class="grow"><b class="${a.pri >= 3 ? 'hot' : ''}${a.song ? ' song' : ''}">${vComL(a)}</b>${b ? `<span class="prev">${vComL(b)}</span>` : ''}</span>`; }
 // ---------- Fin de match : notes, tirs, carte de chaleur ----------
 const ROLE_FR = { GK: 'GB', CB: 'DC', LB: 'DG', RB: 'DD', DM: 'MDC', CM: 'MC', AM: 'MOC', LW: 'AG', RW: 'AD', ST: 'BU' }, ROLE_ORD = ['GK', 'RB', 'CB', 'LB', 'DM', 'CM', 'AM', 'RW', 'LW', 'ST'];
