@@ -499,6 +499,7 @@ function save() {
     localStorage.setItem(SAVE_PREFIX + slot, JSON.stringify(S, (k, v) => k === 'ref' ? undefined : v));
     const m = slotsMeta(); m[slot] = { name: pName(), age: S.p.age, club: S.club.n, date: fmtShort(today()), ovr: OVR(), over: S.over, ts: Date.now() }; localStorage.setItem(META_KEY, JSON.stringify(m));
   } catch (e) { }
+  try { if (typeof onlAuto === 'function') onlAuto(); } catch (e) { }
 }
 function loadSlot(n) { try { const t = localStorage.getItem(SAVE_PREFIX + n); if (!t) return null; const s = JSON.parse(t); if (!s || s.v !== VERSION) return null; s.slot = n; return s; } catch (e) { return null; } }
 function deleteSlot(n) { try { localStorage.removeItem(SAVE_PREFIX + n); const m = slotsMeta(); delete m[n]; localStorage.setItem(META_KEY, JSON.stringify(m)); } catch (e) { } }

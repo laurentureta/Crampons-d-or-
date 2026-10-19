@@ -34,7 +34,8 @@ const TILES = {
   settings: () => [
     ['options', 'gear', 'Options', { all: 'Tous les matchs en direct', big: 'Grands matchs en direct', none: 'Matchs simulés' }[S.settings.live]],
     ['music', 'note', 'Musique', (AU.playing && OPTS.music ? '♪ ' : '') + TRACKS[AU.cur].n],
-    ['saves', 'save', 'Sauvegardes', 'Emplacement ' + (S.slot || 1)],
+    ['saves', 'save', 'Sauvegardes', 'Emplacement ' + (S.slot || 1) + (S.onl && S.onl.code ? ' · en ligne' : '')],
+    typeof onlOn === 'function' && onlOn() ? ['ranks', 'medal', 'Classement mondial', 'Ta carrière face aux autres'] : null,
     ['help', 'help', 'Comment jouer', 'Les bases en 2 minutes'],
     ['quit', 'grid', 'Menu principal', 'Ta partie est sauvegardée'],
   ],
@@ -49,7 +50,7 @@ const TILES = {
     ['bdo', 'ball', 'Ballon d\'Or', S.bdo.length ? 'Dernier : ' + S.bdo[S.bdo.length - 1].w : 'Cérémonie fin octobre'],
   ],
 };
-const SUB_T = { settings: 'Réglages', goals: 'Objectifs & défi', locker: 'Vestiaire', rival: 'Ton rival', perks: 'Talents', curves: 'Progression', music: 'Musique', recruit: 'Mercato', jobs: 'Offres d\'emploi', mgr: 'Bilan d\'entraîneur', club: 'Mon club', transfers: 'Transferts & contrat', nego: 'Négociation', trials: 'Essais en club', agent: 'Agent', nat: 'Sélection', comps: 'Compétitions', stats: 'Stats & palmarès', world: 'Actualités du foot', money: 'Argent', family: 'Famille', love: 'Amour', friends: 'Amis', assets: 'Patrimoine', invest: 'Placements', staff: 'Staff personnel', school: 'École & permis', sheet: 'Fiche joueur', card: 'Carte joueur', social: 'Réseaux sociaux', ach: 'Succès', inbox: 'Messages', bdo: 'Ballon d\'Or', saves: 'Sauvegardes', options: 'Options', help: 'Comment jouer' };
+const SUB_T = { ranks: 'Classement mondial', settings: 'Réglages', goals: 'Objectifs & défi', locker: 'Vestiaire', rival: 'Ton rival', perks: 'Talents', curves: 'Progression', music: 'Musique', recruit: 'Mercato', jobs: 'Offres d\'emploi', mgr: 'Bilan d\'entraîneur', club: 'Mon club', transfers: 'Transferts & contrat', nego: 'Négociation', trials: 'Essais en club', agent: 'Agent', nat: 'Sélection', comps: 'Compétitions', stats: 'Stats & palmarès', world: 'Actualités du foot', money: 'Argent', family: 'Famille', love: 'Amour', friends: 'Amis', assets: 'Patrimoine', invest: 'Placements', staff: 'Staff personnel', school: 'École & permis', sheet: 'Fiche joueur', card: 'Carte joueur', social: 'Réseaux sociaux', ach: 'Succès', inbox: 'Messages', bdo: 'Ballon d\'Or', saves: 'Sauvegardes', options: 'Options', help: 'Comment jouer' };
 function vTiles(tab) {
   const head = { career: ['Carrière', 'Ton club, ton avenir, tes stats'], life: ['Vie', 'Argent, famille, amour, patrimoine'], profile: ['Profil', 'Ton image, tes succès'] }[tab];
   return `<div class="tabhd"><h2>${head[0]}</h2><span class="note">${head[1]}</span></div>${vTileGrid(tab)}
@@ -61,7 +62,7 @@ function vTileGrid(tab) {
 }
 function vSubParts() { const h = vSub(), k = h.indexOf('</div>') + 6; return [h.slice(0, k), h.slice(k)]; }
 function vSub() {
-  const f = { settings: () => vTileGrid('settings'), goals: vGoals, locker: vLocker, rival: vRival, perks: vPerks, curves: vCurves, music: vMusic, recruit: vRecruit, jobs: vJobs, mgr: vMgr, club: vClub, transfers: vTransfers, nego: vNego, trials: vTrials, agent: vAgent, nat: vNat, comps: vComps, stats: vStats, world: vWorld, money: vMoney, family: vFamily, love: vLove, friends: vFriends, assets: vAssets, invest: vInvest, staff: vStaff, school: vSchool, sheet: vSheet, card: vCard, social: vSocial, ach: vAch, inbox: vInbox, bdo: vBdo, saves: vSaves, options: vOptions, help: vHelp }[UI.sub];
+  const f = { settings: () => vTileGrid('settings'), goals: vGoals, locker: vLocker, rival: vRival, perks: vPerks, curves: vCurves, music: vMusic, recruit: vRecruit, jobs: vJobs, mgr: vMgr, club: vClub, transfers: vTransfers, nego: vNego, trials: vTrials, agent: vAgent, nat: vNat, comps: vComps, stats: vStats, world: vWorld, money: vMoney, family: vFamily, love: vLove, friends: vFriends, assets: vAssets, invest: vInvest, staff: vStaff, school: vSchool, sheet: vSheet, card: vCard, social: vSocial, ach: vAch, inbox: vInbox, bdo: vBdo, saves: vSaves, options: vOptions, help: vHelp, ranks: typeof vRanks === 'function' ? vRanks : () => '' }[UI.sub];
   return `<div class="subhd"><button class="backb" data-a="back" aria-label="Retour">${icon('back')}</button><h2>${SUB_T[UI.sub] || ''}</h2></div>${f ? f() : ''}`;
 }
 const kv = rows => `<dl class="kv">${rows.filter(Boolean).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`;
@@ -293,6 +294,7 @@ function vSaves() {
   return `<section class="stack">${[1, 2, 3].map(n => { const x = m[n], cur = inGame && (S.slot || 1) === n; return `<div class="card slot ${cur ? 'cur' : ''}"><div class="row"><div class="slotn">${n}</div><div class="grow">${x ? `<b>${esc(x.name)}</b><div class="note">${esc(x.club)} · ${x.age} ans · note ${x.ovr} · ${esc(x.date)}${x.over ? ' · carrière terminée' : ''}</div>` : '<span class="note">Emplacement vide</span>'}</div>${cur ? '<span class="chip acc">En cours</span>' : ''}</div>
       ${x && !cur ? `<div class="row"><button class="btn sm grow" data-a="loadSlot" data-v="${n}">Charger</button><button class="btn sm ghost" data-a="delSlot" data-v="${n}">Supprimer</button></div>` : ''}</div>`; }).join('')}</section>
     ${inGame ? '<div class="stack" style="gap:8px"><button class="btn wide" data-a="saveNow">Sauvegarder maintenant</button><button class="btn wide" data-a="export">Exporter ma carrière (code)</button></div>' : ''}
+    ${typeof vOnlineSave === 'function' ? vOnlineSave() : ''}
     <section class="card sec"><h3>Importer un code</h3><p class="note">Colle le code d'une carrière exportée (depuis un autre appareil ou navigateur).</p><textarea id="impCode" rows="3" placeholder="CDO2…" autocomplete="off" spellcheck="false"></textarea><div class="row">${[1, 2, 3].map(n => `<button class="btn sm grow" data-a="import" data-v="${n}">Vers l'emplacement ${n}</button>`).join('')}</div></section>
     <p class="note">La partie est sauvegardée automatiquement dans ce navigateur. Exporte un code de temps en temps pour ne rien perdre.</p>`;
 }

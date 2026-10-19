@@ -1,7 +1,7 @@
 // Pack de voix et bruitages : ElevenLabs simulé (aucun appel réel, aucun crédit)
 const { chromium } = require('playwright');
 const fs = require('fs');
-const MP3 = fs.readFileSync(process.env.MP3);
+const MP3 = fs.readFileSync(process.env.MP3 || __dirname + '/../assets/sons/kick.mp3');
 (async () => {
   const b = await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] });
   const pg = await b.newPage({ viewport: { width: 390, height: 664 }, isMobile: true, hasTouch: true });

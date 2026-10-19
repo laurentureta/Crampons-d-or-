@@ -300,6 +300,7 @@ const ACT = {
   },
   mbtn: v => { const b = MODAL && MODAL.btns[+v]; MODAL = null; if (b && b.fn) b.fn(); if (!MODAL) renderModal(); if (UI.screen !== 'live') render(); },
 };
+if (typeof ONL_ACT !== 'undefined') Object.assign(ACT, ONL_ACT);
 
 document.addEventListener('click', e => {
   if (!AU.unlocked) auUnlock();

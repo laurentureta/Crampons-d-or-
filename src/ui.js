@@ -153,7 +153,8 @@ function vMenu() {
     ${cont ? `<button class="continue" data-a="continue"><span class="lbl">Continuer</span><b>${esc(cont.name)}</b><span class="note">${esc(cont.club)} · ${cont.age} ans · ${esc(cont.date)}</span><span class="go">${icon('play')}</span></button>` : ''}
     <nav class="mlist">
       ${item('newCareer', '', 'star', 'Nouvelle carrière', 'Commence à 14 ans dans le club de ta ville')}
-      ${item('page', 'saves', 'save', 'Sauvegardes', '3 emplacements · code à exporter')}
+      ${item('page', 'saves', 'save', 'Sauvegardes', typeof onlOn === 'function' && onlOn() ? '3 emplacements · sauvegarde en ligne' : '3 emplacements · code à exporter')}
+      ${typeof onlOn === 'function' && onlOn() ? item('page', 'ranks', 'medal', 'Classement mondial', 'Les plus grandes carrières des joueurs') : ''}
       ${item('page', 'help', 'help', 'Comment jouer', 'Les bases en 2 minutes')}
       ${item('page', 'options', 'gear', 'Options', 'Matchs en direct, vitesse')}
       ${item('page', 'credits', 'book', 'Données & crédits', 'Ce qui est réel, ce qui est simulé')}
@@ -163,8 +164,8 @@ function vMenu() {
   </div>`;
 }
 function vMenuPage() {
-  const t = { saves: 'Sauvegardes', help: 'Comment jouer', options: 'Options', credits: 'Données & crédits' }[UI.page];
-  const f = { saves: vSaves, help: vHelp, options: vOptions, credits: vCredits }[UI.page];
+  const t = { saves: 'Sauvegardes', help: 'Comment jouer', options: 'Options', credits: 'Données & crédits', ranks: 'Classement mondial' }[UI.page];
+  const f = { saves: vSaves, help: vHelp, options: vOptions, credits: vCredits, ranks: typeof vRanks === 'function' ? vRanks : () => '' }[UI.page];
   return `<div class="subhd"><button class="backb" data-a="toMenu" aria-label="Retour">${icon('back')}</button><h2>${t}</h2></div><main class="stack scroll">${f()}</main>`;
 }
 

@@ -1,5 +1,5 @@
-/* Crampons d'Or 11.0.0 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
-var GAME_VERSION = "11.0.0";
+/* Crampons d'Or 11.1.0 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
+var GAME_VERSION = "11.1.0";
 var CRWD_FILES = ["chant_2","chant_3","chant_4","cheer_loop","goal_1","goal_2","goal_3","goal_4","ooh_1","roar_1","roar_2","roar_3","roar_4","surge"];
 var SONS_FILES = ["catch","glass","header","kick","net","post","shot","tackle","whistle1","whistle3"];
 var MEDIA_H = {"foule/chant_2":"3ebb4bce","foule/chant_3":"4f555b3f","foule/chant_4":"e9942adb","foule/cheer_loop":"e5b4a150","foule/goal_1":"a49bc043","foule/goal_2":"db0cbb88","foule/goal_3":"05dbbca2","foule/goal_4":"09720ea4","foule/ooh_1":"155d868a","foule/roar_1":"aff56709","foule/roar_2":"a3f978be","foule/roar_3":"6bed5e29","foule/roar_4":"df5f4aa6","foule/surge":"ce5de2be","sons/catch":"082b1f8c","sons/glass":"149bfce3","sons/header":"ac052ba0","sons/kick":"877b4236","sons/net":"fe0694be","sons/post":"ae984141","sons/shot":"9695a8e3","sons/tackle":"601ffa60","sons/whistle1":"cc2e8cf9","sons/whistle3":"dbccf110"};
@@ -1983,6 +1983,7 @@ function save() {
     localStorage.setItem(SAVE_PREFIX + slot, JSON.stringify(S, (k, v) => k === 'ref' ? undefined : v));
     const m = slotsMeta(); m[slot] = { name: pName(), age: S.p.age, club: S.club.n, date: fmtShort(today()), ovr: OVR(), over: S.over, ts: Date.now() }; localStorage.setItem(META_KEY, JSON.stringify(m));
   } catch (e) { }
+  try { if (typeof onlAuto === 'function') onlAuto(); } catch (e) { }
 }
 function loadSlot(n) { try { const t = localStorage.getItem(SAVE_PREFIX + n); if (!t) return null; const s = JSON.parse(t); if (!s || s.v !== VERSION) return null; s.slot = n; return s; } catch (e) { return null; } }
 function deleteSlot(n) { try { localStorage.removeItem(SAVE_PREFIX + n); const m = slotsMeta(); delete m[n]; localStorage.setItem(META_KEY, JSON.stringify(m)); } catch (e) { } }
@@ -6880,6 +6881,129 @@ function introEnd() {
   }, 520);
 }
 
+// ===== src/online.js =====
+// ---------- En ligne (Supabase) : sauvegarde dans le nuage et classement des carrières ----------
+// La clé publiable de Supabase est publique par nature : elle ne permet que ce que les fonctions de tools/supabase.sql autorisent.
+// Tant que l'adresse et la clé sont vides, tout ce qui est « en ligne » reste caché.
+const ONL = {
+  url: 'https://fuhkhyxeytrbxvlqycpj.supabase.co',   // projet Supabase « crampons-dor » (Paris)
+  key: 'sb_publishable_N4BoduZ5wSoiqQxpHcLgvA_lhOXEcnT',   // clé publiable : publique par nature
+  busy: false, last: 0, pubLast: 0, top: null, topAt: 0, err: '',
+};
+const onlOn = () => !!(ONL.url && ONL.key) && typeof fetch === 'function';
+async function onlRpc(fn, args) {
+  const r = await fetch(ONL.url.replace(/\/+$/, '') + '/rest/v1/rpc/' + fn, {
+    // clé publiable (sb_…) : seulement dans « apikey » ; ancienne clé anon (JWT) : aussi dans Authorization
+    method: 'POST', headers: Object.assign({ apikey: ONL.key, 'Content-Type': 'application/json' }, /^sb_/.test(ONL.key) ? {} : { Authorization: 'Bearer ' + ONL.key }), body: JSON.stringify(args || {}),
+  });
+  if (!r.ok) { let m = ''; try { m = (await r.json()).message || ''; } catch (e) { } throw Object.assign(new Error(m || 'HTTP ' + r.status), { st: r.status }); }
+  const t = await r.text(); return t ? JSON.parse(t) : null;
+}
+// code de sauvegarde : 12 caractères faciles à recopier (sans 0/O ni 1/I), environ 60 bits de hasard
+const ONL_ABC = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function onlNewCode() { const a = new Uint8Array(12); crypto.getRandomValues(a); return Array.from(a, x => ONL_ABC[x % 32]).join(''); }
+const onlFmt = c => c ? c.replace(/(.{4})(?=.)/g, '$1-') : '';
+const onlClean = c => String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+function onlId() { if (!S.onl) S.onl = {}; if (!S.onl.id) { const a = new Uint8Array(8); crypto.getRandomValues(a); S.onl.id = Array.from(a, x => x.toString(16).padStart(2, '0')).join(''); } return S.onl.id; }
+
+// sauvegarde dans le nuage (la carrière entière, compressée)
+async function onlSave(silent) {
+  if (!onlOn() || !S || ONL.busy) return false;
+  if (!S.onl) S.onl = {};
+  if (!S.onl.code) S.onl.code = onlNewCode();
+  ONL.busy = true;
+  try {
+    await onlRpc('cdo_sauver', { p_code: S.onl.code, p_data: exportSave(), p_nom: pName(), p_club: S.club.n, p_age: S.p.age });
+    ONL.last = Date.now(); S.onl.at = ONL.last; ONL.err = '';
+    if (!silent) toast('Carrière sauvegardée en ligne.');
+    return true;
+  } catch (e) { ONL.err = e.message; if (!silent) toast('Sauvegarde en ligne impossible : ' + e.message); return false; }
+  finally { ONL.busy = false; }
+}
+async function onlLoad(code, slot) {
+  if (!onlOn()) return 'La sauvegarde en ligne n\'est pas activée.';
+  const c = onlClean(code); if (c.length !== 12) return 'Le code fait 12 caractères (ex. ABCD-EFGH-JKLM).';
+  try {
+    const rows = await onlRpc('cdo_charger', { p_code: c });
+    if (!rows || !rows.length) return 'Aucune carrière avec ce code.';
+    const err = importSave(rows[0].data, slot); if (err) return err;
+    if (!S.onl) S.onl = {}; S.onl.code = c; save(); return null;
+  } catch (e) { return 'Connexion impossible : ' + e.message; }
+}
+// classement : une ligne par carrière (le joueur fictif, pas la personne)
+async function onlPublish(force) {
+  if (!onlOn() || !S || S.onl && S.onl.pub === false) return;
+  if (!force && Date.now() - ONL.pubLast < 10 * 60e3) return;
+  ONL.pubLast = Date.now();
+  const tr = S.trophies || [];
+  try {
+    await onlRpc('cdo_publier', { p: {
+      joueur: onlId(), nom: pName(), poste: S.p.pos, nation: S.p.nat, club: S.club.n, age: S.p.age, saison: typeof today === 'function' ? today().getFullYear() : 0,
+      score: legendScore(), note: OVR(), buts: S.stats.proGoals || 0, selections: S.intl.caps || 0,
+      trophees: tr.length, ballons_or: tr.filter(t => /Ballon d'Or/.test(t.t)).length, fini: !!S.over,
+    } });
+  } catch (e) { ONL.err = e.message; }
+}
+// le classement ne montre pas l'identifiant secret des carrières, seulement une empreinte : on reconnaît la sienne en la recalculant
+async function onlMyKey() {
+  const id = S && S.onl && S.onl.id; if (!id) return null;
+  if (ONL.myKey && ONL.myKeyOf === id) return ONL.myKey;
+  try { const h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(id)); ONL.myKey = Array.from(new Uint8Array(h), x => x.toString(16).padStart(2, '0')).join('').slice(0, 16); ONL.myKeyOf = id; } catch (e) { ONL.myKey = null; }
+  return ONL.myKey;
+}
+async function onlTop(force) {
+  if (!onlOn()) return null;
+  if (!force && ONL.top && Date.now() - ONL.topAt < 60e3) return ONL.top;
+  try { await onlMyKey(); ONL.top = await onlRpc('cdo_top', { n: 50 }) || []; ONL.topAt = Date.now(); ONL.err = ''; } catch (e) { ONL.err = e.message; if (!ONL.top) ONL.top = []; }
+  return ONL.top;
+}
+// masquer / remontrer sa carrière dans le classement
+async function onlSetPub(on) {
+  if (!S) return; if (!S.onl) S.onl = {};
+  S.onl.pub = on; save();
+  try { if (on) await onlPublish(true); else if (S.onl.id) await onlRpc('cdo_retirer', { p_joueur: S.onl.id }); ONL.top = null; } catch (e) { ONL.err = e.message; }
+}
+// appelé après chaque sauvegarde locale : nuage toutes les 5 minutes au plus, classement toutes les 10
+function onlAuto() {
+  if (!onlOn() || !S) return;
+  if (S.onl && S.onl.code && S.onl.auto !== false && Date.now() - ONL.last > 5 * 60e3) onlSave(true);
+  onlPublish(false);
+}
+
+// ---------- écrans ----------
+function vOnlineSave() {
+  if (!onlOn()) return `<section class="card sec"><h3>Sauvegarde en ligne</h3><p class="note">Bientôt : ta carrière gardée dans le nuage, à retrouver sur n'importe quel téléphone avec un simple code.</p></section>`;
+  const inGame = UI.screen === 'game' && S, c = inGame && S.onl && S.onl.code;
+  return `<section class="card sec"><h3>Sauvegarde en ligne</h3>
+    ${inGame ? (c ? `<p class="note">Ton code : <b class="onlcode">${onlFmt(c)}</b>. Note-le : il suffit pour retrouver cette carrière sur un autre téléphone. ${S.onl.at ? 'Dernier envoi : ' + new Date(S.onl.at).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + '.' : ''}</p>
+      <div class="row"><button class="btn sm grow" data-a="onlSave">Envoyer maintenant</button><button class="btn sm ghost" data-a="onlAuto">${S.onl.auto === false ? 'Envoi auto : non' : 'Envoi auto : oui'}</button></div>`
+      : `<p class="note">Garde ta carrière dans le nuage : tu recevras un code de 12 caractères pour la retrouver partout.</p><button class="btn wide" data-a="onlSave">Sauvegarder en ligne</button>`) : ''}
+    ${inGame ? `<p class="note">Classement mondial : le nom de ton joueur, son club et ses chiffres sont visibles par tous.</p><div class="seg"><button data-a="onlPub" data-v="1" class="${S.onl && S.onl.pub === false ? '' : 'on'}">Visible</button><button data-a="onlPub" data-v="0" class="${S.onl && S.onl.pub === false ? 'on' : ''}">Caché</button></div>` : ''}
+    <p class="note">Récupérer une carrière avec son code :</p><input id="onlCode" maxlength="16" placeholder="ABCD-EFGH-JKLM" autocomplete="off" autocapitalize="characters" spellcheck="false">
+    <div class="row">${[1, 2, 3].map(n => `<button class="btn sm grow" data-a="onlLoad" data-v="${n}">Vers l'emplacement ${n}</button>`).join('')}</div>
+    ${ONL.err ? `<p class="note bad">${esc(ONL.err)}</p>` : ''}</section>`;
+}
+function vRanks() {
+  if (!onlOn()) return `<section class="card sec"><h3>Classement mondial</h3><p class="note">Bientôt : compare ta carrière à celles des autres joueurs (score de légende, buts, trophées, Ballons d'Or).</p></section>`;
+  const T = ONL.top, me = S && S.onl && S.onl.id && ONL.myKeyOf === S.onl.id ? ONL.myKey : null;
+  if (!T) { onlTop().then(() => { if (UI.page === 'ranks' || UI.sub === 'ranks') render(); }); return '<section class="card sec"><p class="note">Chargement du classement…</p></section>'; }
+  if (!T.length) return '<section class="card sec"><p class="note">Personne n\'est encore classé. Sois le premier !</p></section>';
+  return `<section class="card sec"><h3>Les plus grandes carrières</h3><p class="note">Score de légende : trophées, buts et sélections. Mis à jour pendant que chacun joue.</p>
+    <div class="ranks">${T.map((r, i) => `<div class="rk ${me && r.cle === me ? 'me' : ''}"><span class="rkn">${i + 1}</span><span class="grow"><b>${esc(r.nom)}</b><span class="note">${esc(r.poste || '')} · ${esc(r.nation || '')} · ${esc(r.club || '')} · ${r.age} ans${r.fini ? ' · retraité' : ''}</span></span><span class="rks"><b>${r.score}</b><span class="note">${r.buts} buts · ${r.trophees} 🏆${r.ballons_or ? ' · ' + r.ballons_or + ' Ballon' + (r.ballons_or > 1 ? 's' : '') + " d'Or" : ''}</span></span></div>`).join('')}</div>
+    <button class="btn sm ghost wide" data-a="onlTop">Actualiser</button></section>`;
+}
+const ONL_ACT = {
+  onlSave: async () => { if (await onlSave(false)) { save(); render(); } },
+  onlAuto: () => { S.onl.auto = S.onl.auto === false; save(); render(); },
+  onlLoad: async v => {
+    const el = $('#onlCode'), code = el ? el.value : ''; if (!code.trim()) return toast('Entre d\'abord ton code.');
+    toast('Recherche de la carrière…'); const err = await onlLoad(code, +v); if (err) return toast(err);
+    runLoading('Chargement', ['Téléchargement de la carrière…', 'Reconstruction du monde…', 'Coup d\'envoi'], null, enterGame);
+  },
+  onlTop: async () => { await onlTop(true); render(); },
+  onlPub: async v => { await onlSetPub(v === '1'); toast(v === '1' ? 'Ta carrière apparaît dans le classement.' : 'Ta carrière est retirée du classement.'); render(); },
+};
+
 // ===== src/ui.js =====
 // ===================== INTERFACE : base, démarrage, menus, accueil, agenda =====================
 const $ = s => document.querySelector(s);
@@ -7036,7 +7160,8 @@ function vMenu() {
     ${cont ? `<button class="continue" data-a="continue"><span class="lbl">Continuer</span><b>${esc(cont.name)}</b><span class="note">${esc(cont.club)} · ${cont.age} ans · ${esc(cont.date)}</span><span class="go">${icon('play')}</span></button>` : ''}
     <nav class="mlist">
       ${item('newCareer', '', 'star', 'Nouvelle carrière', 'Commence à 14 ans dans le club de ta ville')}
-      ${item('page', 'saves', 'save', 'Sauvegardes', '3 emplacements · code à exporter')}
+      ${item('page', 'saves', 'save', 'Sauvegardes', typeof onlOn === 'function' && onlOn() ? '3 emplacements · sauvegarde en ligne' : '3 emplacements · code à exporter')}
+      ${typeof onlOn === 'function' && onlOn() ? item('page', 'ranks', 'medal', 'Classement mondial', 'Les plus grandes carrières des joueurs') : ''}
       ${item('page', 'help', 'help', 'Comment jouer', 'Les bases en 2 minutes')}
       ${item('page', 'options', 'gear', 'Options', 'Matchs en direct, vitesse')}
       ${item('page', 'credits', 'book', 'Données & crédits', 'Ce qui est réel, ce qui est simulé')}
@@ -7046,8 +7171,8 @@ function vMenu() {
   </div>`;
 }
 function vMenuPage() {
-  const t = { saves: 'Sauvegardes', help: 'Comment jouer', options: 'Options', credits: 'Données & crédits' }[UI.page];
-  const f = { saves: vSaves, help: vHelp, options: vOptions, credits: vCredits }[UI.page];
+  const t = { saves: 'Sauvegardes', help: 'Comment jouer', options: 'Options', credits: 'Données & crédits', ranks: 'Classement mondial' }[UI.page];
+  const f = { saves: vSaves, help: vHelp, options: vOptions, credits: vCredits, ranks: typeof vRanks === 'function' ? vRanks : () => '' }[UI.page];
   return `<div class="subhd"><button class="backb" data-a="toMenu" aria-label="Retour">${icon('back')}</button><h2>${t}</h2></div><main class="stack scroll">${f()}</main>`;
 }
 
@@ -7363,7 +7488,8 @@ const TILES = {
   settings: () => [
     ['options', 'gear', 'Options', { all: 'Tous les matchs en direct', big: 'Grands matchs en direct', none: 'Matchs simulés' }[S.settings.live]],
     ['music', 'note', 'Musique', (AU.playing && OPTS.music ? '♪ ' : '') + TRACKS[AU.cur].n],
-    ['saves', 'save', 'Sauvegardes', 'Emplacement ' + (S.slot || 1)],
+    ['saves', 'save', 'Sauvegardes', 'Emplacement ' + (S.slot || 1) + (S.onl && S.onl.code ? ' · en ligne' : '')],
+    typeof onlOn === 'function' && onlOn() ? ['ranks', 'medal', 'Classement mondial', 'Ta carrière face aux autres'] : null,
     ['help', 'help', 'Comment jouer', 'Les bases en 2 minutes'],
     ['quit', 'grid', 'Menu principal', 'Ta partie est sauvegardée'],
   ],
@@ -7378,7 +7504,7 @@ const TILES = {
     ['bdo', 'ball', 'Ballon d\'Or', S.bdo.length ? 'Dernier : ' + S.bdo[S.bdo.length - 1].w : 'Cérémonie fin octobre'],
   ],
 };
-const SUB_T = { settings: 'Réglages', goals: 'Objectifs & défi', locker: 'Vestiaire', rival: 'Ton rival', perks: 'Talents', curves: 'Progression', music: 'Musique', recruit: 'Mercato', jobs: 'Offres d\'emploi', mgr: 'Bilan d\'entraîneur', club: 'Mon club', transfers: 'Transferts & contrat', nego: 'Négociation', trials: 'Essais en club', agent: 'Agent', nat: 'Sélection', comps: 'Compétitions', stats: 'Stats & palmarès', world: 'Actualités du foot', money: 'Argent', family: 'Famille', love: 'Amour', friends: 'Amis', assets: 'Patrimoine', invest: 'Placements', staff: 'Staff personnel', school: 'École & permis', sheet: 'Fiche joueur', card: 'Carte joueur', social: 'Réseaux sociaux', ach: 'Succès', inbox: 'Messages', bdo: 'Ballon d\'Or', saves: 'Sauvegardes', options: 'Options', help: 'Comment jouer' };
+const SUB_T = { ranks: 'Classement mondial', settings: 'Réglages', goals: 'Objectifs & défi', locker: 'Vestiaire', rival: 'Ton rival', perks: 'Talents', curves: 'Progression', music: 'Musique', recruit: 'Mercato', jobs: 'Offres d\'emploi', mgr: 'Bilan d\'entraîneur', club: 'Mon club', transfers: 'Transferts & contrat', nego: 'Négociation', trials: 'Essais en club', agent: 'Agent', nat: 'Sélection', comps: 'Compétitions', stats: 'Stats & palmarès', world: 'Actualités du foot', money: 'Argent', family: 'Famille', love: 'Amour', friends: 'Amis', assets: 'Patrimoine', invest: 'Placements', staff: 'Staff personnel', school: 'École & permis', sheet: 'Fiche joueur', card: 'Carte joueur', social: 'Réseaux sociaux', ach: 'Succès', inbox: 'Messages', bdo: 'Ballon d\'Or', saves: 'Sauvegardes', options: 'Options', help: 'Comment jouer' };
 function vTiles(tab) {
   const head = { career: ['Carrière', 'Ton club, ton avenir, tes stats'], life: ['Vie', 'Argent, famille, amour, patrimoine'], profile: ['Profil', 'Ton image, tes succès'] }[tab];
   return `<div class="tabhd"><h2>${head[0]}</h2><span class="note">${head[1]}</span></div>${vTileGrid(tab)}
@@ -7390,7 +7516,7 @@ function vTileGrid(tab) {
 }
 function vSubParts() { const h = vSub(), k = h.indexOf('</div>') + 6; return [h.slice(0, k), h.slice(k)]; }
 function vSub() {
-  const f = { settings: () => vTileGrid('settings'), goals: vGoals, locker: vLocker, rival: vRival, perks: vPerks, curves: vCurves, music: vMusic, recruit: vRecruit, jobs: vJobs, mgr: vMgr, club: vClub, transfers: vTransfers, nego: vNego, trials: vTrials, agent: vAgent, nat: vNat, comps: vComps, stats: vStats, world: vWorld, money: vMoney, family: vFamily, love: vLove, friends: vFriends, assets: vAssets, invest: vInvest, staff: vStaff, school: vSchool, sheet: vSheet, card: vCard, social: vSocial, ach: vAch, inbox: vInbox, bdo: vBdo, saves: vSaves, options: vOptions, help: vHelp }[UI.sub];
+  const f = { settings: () => vTileGrid('settings'), goals: vGoals, locker: vLocker, rival: vRival, perks: vPerks, curves: vCurves, music: vMusic, recruit: vRecruit, jobs: vJobs, mgr: vMgr, club: vClub, transfers: vTransfers, nego: vNego, trials: vTrials, agent: vAgent, nat: vNat, comps: vComps, stats: vStats, world: vWorld, money: vMoney, family: vFamily, love: vLove, friends: vFriends, assets: vAssets, invest: vInvest, staff: vStaff, school: vSchool, sheet: vSheet, card: vCard, social: vSocial, ach: vAch, inbox: vInbox, bdo: vBdo, saves: vSaves, options: vOptions, help: vHelp, ranks: typeof vRanks === 'function' ? vRanks : () => '' }[UI.sub];
   return `<div class="subhd"><button class="backb" data-a="back" aria-label="Retour">${icon('back')}</button><h2>${SUB_T[UI.sub] || ''}</h2></div>${f ? f() : ''}`;
 }
 const kv = rows => `<dl class="kv">${rows.filter(Boolean).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`;
@@ -7622,6 +7748,7 @@ function vSaves() {
   return `<section class="stack">${[1, 2, 3].map(n => { const x = m[n], cur = inGame && (S.slot || 1) === n; return `<div class="card slot ${cur ? 'cur' : ''}"><div class="row"><div class="slotn">${n}</div><div class="grow">${x ? `<b>${esc(x.name)}</b><div class="note">${esc(x.club)} · ${x.age} ans · note ${x.ovr} · ${esc(x.date)}${x.over ? ' · carrière terminée' : ''}</div>` : '<span class="note">Emplacement vide</span>'}</div>${cur ? '<span class="chip acc">En cours</span>' : ''}</div>
       ${x && !cur ? `<div class="row"><button class="btn sm grow" data-a="loadSlot" data-v="${n}">Charger</button><button class="btn sm ghost" data-a="delSlot" data-v="${n}">Supprimer</button></div>` : ''}</div>`; }).join('')}</section>
     ${inGame ? '<div class="stack" style="gap:8px"><button class="btn wide" data-a="saveNow">Sauvegarder maintenant</button><button class="btn wide" data-a="export">Exporter ma carrière (code)</button></div>' : ''}
+    ${typeof vOnlineSave === 'function' ? vOnlineSave() : ''}
     <section class="card sec"><h3>Importer un code</h3><p class="note">Colle le code d'une carrière exportée (depuis un autre appareil ou navigateur).</p><textarea id="impCode" rows="3" placeholder="CDO2…" autocomplete="off" spellcheck="false"></textarea><div class="row">${[1, 2, 3].map(n => `<button class="btn sm grow" data-a="import" data-v="${n}">Vers l'emplacement ${n}</button>`).join('')}</div></section>
     <p class="note">La partie est sauvegardée automatiquement dans ce navigateur. Exporte un code de temps en temps pour ne rien perdre.</p>`;
 }
@@ -8041,6 +8168,7 @@ const ACT = {
   },
   mbtn: v => { const b = MODAL && MODAL.btns[+v]; MODAL = null; if (b && b.fn) b.fn(); if (!MODAL) renderModal(); if (UI.screen !== 'live') render(); },
 };
+if (typeof ONL_ACT !== 'undefined') Object.assign(ACT, ONL_ACT);
 
 document.addEventListener('click', e => {
   if (!AU.unlocked) auUnlock();

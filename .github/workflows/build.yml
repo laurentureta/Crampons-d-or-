@@ -35,6 +35,13 @@ jobs:
         run: node tools/build.js
       - name: Vérifier les menus et les sauvegardes
         run: node tests/menu_test.js
+      - name: Vérifier le service en ligne (classement, lecture seule)
+        continue-on-error: true
+        run: |
+          URL=$(node -p "require('fs').readFileSync('src/online.js','utf8').match(/url: '([^']*)'/)[1]")
+          KEY=$(node -p "require('fs').readFileSync('src/online.js','utf8').match(/key: '([^']*)'/)[1]")
+          if [ -z "$URL" ]; then echo "En ligne pas configuré."; exit 0; fi
+          curl -sS -f -X POST "$URL/rest/v1/rpc/cdo_top" -H "apikey: $KEY" -H "Content-Type: application/json" -H "Origin: https://laurentureta.github.io" -d '{"n":3}' -D -
       - name: Enregistrer la version construite
         run: |
           git config user.name "Robot Crampons d'Or"

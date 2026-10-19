@@ -1,4 +1,4 @@
-/* Crampons d'Or 11.0.0 — GÉNÉRÉ à partir de src/style.css */
+/* Crampons d'Or 11.1.0 — GÉNÉRÉ à partir de src/style.css */
 html,body{margin:0;height:100%}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 [hidden]{display:none!important}
@@ -752,3 +752,14 @@ details.alert.vhelp>span{display:block;margin-top:6px;font-size:13px;color:var(-
 #maj b{display:block;font-size:14px}#maj span span{display:block;font-size:12px;opacity:.75}
 #maj .majx{background:none;border:0;color:var(--fg);font-size:22px;line-height:1;padding:4px 6px;opacity:.6}
 .menu .ver{opacity:.5;font-size:11px;margin-top:-6px}
+
+/* en ligne */
+.onlcode{font-family:ui-monospace,Menlo,monospace;letter-spacing:.06em;color:var(--gold)}
+#onlCode{width:100%;box-sizing:border-box;font-family:ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase}
+.ranks{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.rk{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:var(--card2)}
+.rk.me{outline:1.5px solid var(--gold)}
+.rk .rkn{width:24px;text-align:center;font-weight:700;color:var(--mut)}
+.rk .grow{min-width:0}.rk .grow b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk .note{display:block;font-size:11px}.rks{text-align:right}.rks b{font-size:18px;color:var(--gold)}
+.note.bad{color:var(--bad)}
