@@ -3,12 +3,12 @@
 // Images (textures photo libres de droits CC0 de Poly Haven) : on peut ajouter de quoi les réduire avant de les ranger,
 //   { "url": "https://dl.polyhaven.org/…", "out": "assets/textures/ciel_jour.jpg", "resize": "4096x2048", "crop": "4096x1024+0+0", "quality": 84 }
 //   (le fichier d'origine, souvent énorme, n'est jamais enregistré dans le dépôt : seulement la version réduite)
-// Sécurité : seulement des liens https vers ElevenLabs / Google Cloud Storage / Poly Haven, seulement vers assets/ ou media-raw/,
+// Sécurité : seulement des liens https vers ElevenLabs / Google Cloud Storage / Poly Haven / Pexels / Unsplash (photos libres), seulement vers assets/ ou media-raw/,
 // seulement des fichiers audio ou image (vérifiés à leurs premiers octets).
 'use strict';
 const fs = require('fs'), path = require('path');
 const ROOT = path.join(__dirname, '..'), Q = path.join(ROOT, 'media-queue');
-const HOSTS = [/\.elevenlabs\.io$/, /^elevenlabs\.io$/, /^storage\.googleapis\.com$/, /\.storage\.googleapis\.com$/, /\.googleusercontent\.com$/, /^dl\.polyhaven\.org$/];
+const HOSTS = [/\.elevenlabs\.io$/, /^elevenlabs\.io$/, /^storage\.googleapis\.com$/, /\.storage\.googleapis\.com$/, /\.googleusercontent\.com$/, /^dl\.polyhaven\.org$/, /^images\.pexels\.com$/, /^images\.unsplash\.com$/];
 const MAX = 45 * 1024 * 1024, MAX_OUT = 8 * 1024 * 1024;
 let sharp = null; try { sharp = require('sharp'); } catch (e) { }
 
