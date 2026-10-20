@@ -1,2 +1,9 @@
 2026-10-19T18:41:02.422Z · 15 importé(s), 0 échec(s)
 2026-10-19T18:44:35.969Z · 1 importé(s), 0 échec(s)
+2026-10-20T15:44:10.335Z · 6 importé(s), 0 échec(s)
+      assets/textures/ciel_jour.jpg : 21643 Ko → 231 Ko
+      assets/textures/ciel_gris.jpg : 16496 Ko → 101 Ko
+      assets/textures/herbe.jpg : 1167 Ko → 269 Ko
+      assets/textures/pre.jpg : 651 Ko → 181 Ko
+      assets/textures/asphalte.jpg : 681 Ko → 12 Ko
+      assets/textures/beton.jpg : 904 Ko → 35 Ko
