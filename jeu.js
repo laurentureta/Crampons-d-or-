@@ -1,5 +1,5 @@
-/* Crampons d'Or 11.4.0 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
-var GAME_VERSION = "11.4.0";
+/* Crampons d'Or 11.4.1 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
+var GAME_VERSION = "11.4.1";
 var CRWD_FILES = ["chant_2","chant_3","chant_4","cheer_loop","goal_1","goal_2","goal_3","goal_4","ooh_1","roar_1","roar_2","roar_3","roar_4","surge"];
 var SONS_FILES = ["catch","glass","header","kick","net","post","shot","tackle","whistle1","whistle3"];
 var MEDIA_H = {"foule/chant_2":"3ebb4bce","foule/chant_3":"4f555b3f","foule/chant_4":"e9942adb","foule/cheer_loop":"e5b4a150","foule/goal_1":"a49bc043","foule/goal_2":"db0cbb88","foule/goal_3":"05dbbca2","foule/goal_4":"09720ea4","foule/ooh_1":"155d868a","foule/roar_1":"aff56709","foule/roar_2":"a3f978be","foule/roar_3":"6bed5e29","foule/roar_4":"df5f4aa6","foule/surge":"ce5de2be","sons/catch":"082b1f8c","sons/glass":"149bfce3","sons/header":"ac052ba0","sons/kick":"877b4236","sons/net":"fe0694be","sons/post":"ae984141","sons/shot":"9695a8e3","sons/tackle":"601ffa60","sons/whistle1":"cc2e8cf9","sons/whistle3":"dbccf110","decor":"49ccd40b","stade":"180b7b01","joueur":"cbcc8acf"};
@@ -7631,8 +7631,8 @@ function introFit() {
 function introLoad() {
   const I = INTRO, bar = I.el.querySelector('.iload i'), lt = I.el.querySelector('.ilt');
   if (I.seek != null) { I.seekLoad = true; return; } // images fixes (bande-annonce, tests) : la barre suit le temps de l'animation
-  const nL = typeof LEAGUES !== 'undefined' ? LEAGUES.length : 15, nC = typeof LEAGUES !== 'undefined' ? Object.values(LEAGUES).reduce((a, l) => a + (l.clubs ? l.clubs.length : 0), 0) : 0, nN = typeof NATIONS !== 'undefined' ? Object.keys(NATIONS).length : 0;
-  const steps = I.replay ? [['Prêt !', 100]] : [['Préparation du terrain…', 12], [`${nL} championnats…`, 34], [nC ? `${nC} clubs et leurs entraîneurs…` : 'Clubs et entraîneurs…', 55], ['Joueurs et effectifs 2026…', 74], [nN ? `${nN} sélections…` : 'Sélections…', 90], ['Prêt !', 100]];
+  // le chargement a déjà eu lieu sur l'écran du stade (loading.js) : plus de barre ici, le titre reste affiché un instant
+  const steps = [['Prêt !', 100], ['Prêt !', 100], ['Prêt !', 100], ['Prêt !', 100]];
   let i = 0; const tick = () => { if (!I.on || I.done) return; const [t, p] = steps[i]; if (bar) bar.style.width = p + '%'; if (lt) lt.textContent = t; i++; if (i < steps.length) setTimeout(tick, 230 + Math.random() * 120); else { I.el.classList.add('ready'); const hint = I.el.querySelector('.ihint'); if (hint) hint.textContent = 'Touche pour jouer'; I.auto = setTimeout(() => introEnd(), 2400); } };
   setTimeout(tick, 250);
 }
@@ -7678,9 +7678,37 @@ function ldStart() {
   LD.rm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   // le titre tient toujours sur la largeur de l'écran
   const lg = document.querySelector('.ldx-logo'); if (lg) { lg.style.fontSize = ''; const cw = lg.parentElement.clientWidth - 40; lg.style.display = 'inline-block'; const sw = lg.offsetWidth; lg.style.display = ''; if (sw > cw && sw > 0) lg.style.fontSize = (parseFloat(getComputedStyle(lg).fontSize) * cw / sw) + 'px'; }
-  if (!LD.raf) { LD.t0 = performance.now(); LD.last = LD.t0; LD.shown = 0; LD.sparks = []; LD.flash = []; LD.roll = 0; LD.raf = requestAnimationFrame(ldFrame); }
+  // écran déjà affiché (nouveau rendu, ou relais de l'écran de démarrage) : l'animation continue sans repartir de zéro
+  const now = performance.now(), cont = !!(LD.raf || LD.boot);
+  if (LD.raf) cancelAnimationFrame(LD.raf); LD.raf = 0;
+  if (!cont) { LD.t0 = now; LD.shown = 0; LD.sparks = []; LD.flash = []; LD.roll = 0; }
+  LD.boot = false; LD.last = now;
+  const sp = lg && lg.querySelector('span'); if (sp && cont) sp.style.animationDelay = -(((now - LD.t0) / 1000) % 2.8) + 's';
+  ldFrame(now); // dessin immédiat : pas d'image vide entre deux rendus
 }
 function ldStop() { if (LD.raf) cancelAnimationFrame(LD.raf); LD.raf = 0; LD.cv = null; }
+// fin de l'écran de démarrage (dessiné par index.html avant même que le jeu soit chargé) : le jeu reprend la même scène,
+// au même instant, et termine la barre avant d'ouvrir le menu
+function ldBootFinish(done) {
+  const B = typeof window !== 'undefined' ? window.__ldBoot : null; if (!B || !B.t0 || !B.cv || !B.cv.isConnected || typeof render !== 'function') return false;
+  window.__ldBoot = null; B.stop = true;
+  Object.assign(LD, { t0: B.t0, shown: B.shown, tip: B.tip, tipFor: B.tipFor, roll: B.roll, bootDust: B.dust, boot: true });
+  const p0 = Math.max(1, Math.round(B.shown)), L0 = B.load || {};
+  UI.load = { title: L0.title || '', t: L0.t || '', p: p0, kick: 'Simulateur de carrière' }; UI.screen = 'loading'; render();
+  const nL = typeof LEAGUES !== 'undefined' ? LEAGUES.length : 0, nC = nL ? Object.values(LEAGUES).reduce((a, l) => a + (l.clubs ? l.clubs.length : 0), 0) : 0;
+  const steps = [nL ? `${nL} championnats…` : 'Championnats…', nC ? `${nC} clubs et leurs entraîneurs…` : 'Clubs et entraîneurs…', 'Joueurs et effectifs 2026…', 'Coup d\'envoi !'];
+  let i = 0;
+  const tick = () => {
+    if (UI.screen !== 'loading') return;
+    UI.load.t = steps[i]; UI.load.p = Math.round(p0 + (100 - p0) * (i + 1) / steps.length);
+    const lt = document.getElementById('lt'); if (lt) { lt.textContent = UI.load.t; if (lt.classList) { lt.classList.remove('in'); void lt.offsetWidth; lt.classList.add('in'); } }
+    i++;
+    if (i < steps.length) setTimeout(tick, 210 + Math.random() * 120);
+    else setTimeout(() => { const d = document.getElementById('ldx'); if (d && d.classList) d.classList.add('out'); setTimeout(done, d && d.classList ? 280 : 0); }, 480);
+  };
+  setTimeout(tick, 140);
+  return true;
+}
 function ldRnd(seed) { let s = seed >>> 0; return () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 // géométrie commune (en pixels CSS)
 function ldGeo() {
@@ -7731,6 +7759,7 @@ function ldResize() {
   LD.bg = bg;
   // poussière d'or
   LD.dust = []; const nd = LD.rm ? 20 : 70; for (let i = 0; i < nd; i++) LD.dust.push({ x: R() * w, y: R() * h, s: .6 + R() * 1.8, v: 6 + R() * 18, ph: R() * 6.28, a: .25 + R() * .6 });
+  if (LD.bootDust) { if (LD.bootDust.length === LD.dust.length) LD.dust = LD.bootDust; LD.bootDust = null; } // relais de l'écran de démarrage : la poussière reste où elle était
   // halo pré-rendu (réutilisé pour lampes, flashs, étincelles)
   if (!LD.glow) { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), r = x.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(.25, 'rgba(255,236,190,.55)'); r.addColorStop(1, 'rgba(255,200,120,0)'); x.fillStyle = r; x.fillRect(0, 0, 64, 64); LD.glow = c; }
 }
@@ -7753,7 +7782,7 @@ function ldBall(g, x, y, r, th) {
   g.restore();
 }
 function ldFrame(now) {
-  if (!LD.cv || !LD.cv.isConnected || !ldOn()) { LD.raf = 0; LD.cv = null; return; }
+  if (LD.stop || !LD.cv || !LD.cv.isConnected || !ldOn()) { LD.raf = 0; LD.cv = null; return; }
   LD.raf = requestAnimationFrame(ldFrame);
   const dt = Math.min(.05, (now - LD.last) / 1000); LD.last = now; const t = (now - LD.t0) / 1000;
   ldResize(); const g = LD.g, G = ldGeo(), { w, h } = G, dpr = LD.dpr, glow = LD.glow;
@@ -7803,8 +7832,8 @@ function ldFrame(now) {
 }
 // l'écran lui-même (le texte reste en HTML pour rester net)
 function vLoadScreen(L, kicker) {
-  if (!LD.tip || !UI.load || UI.load.tipFor !== UI.load.title) { LD.tip = LD_TIPS[Math.floor(Math.random() * LD_TIPS.length)]; if (UI.load) UI.load.tipFor = UI.load.title; }
-  return `<div class="ldx" id="ldx"><canvas id="ldCv" aria-hidden="true"></canvas>
+  const ttl = UI.load ? UI.load.title : ''; if (!LD.tip || LD.tipFor !== ttl) { LD.tip = LD_TIPS[Math.floor(Math.random() * LD_TIPS.length)]; LD.tipFor = ttl; }
+  return `<div class="ldx${LD.raf || LD.boot ? ' cont' : ''}" id="ldx"><canvas id="ldCv" aria-hidden="true"></canvas>
     <div class="ldx-top"><div class="ldx-kick">${esc(kicker || 'Chargement')}</div><h1 class="ldx-logo">Crampons<span>d'Or</span></h1>${L.title && L.title !== 'Chargement' ? `<div class="ldx-title">${esc(L.title)}</div>` : ''}</div>
     <div class="ldx-bot"><div class="ldx-row"><span id="lt" class="ldx-step">${esc(L.t)}</span><span id="lp" class="ldx-pct">${Math.round(LD.shown || 0)} %</span></div>
     <p class="ldx-tip"><b>Astuce</b> ${esc(LD.tip)}</p></div><div class="ldx-flash"></div></div>`;
@@ -8256,6 +8285,7 @@ function render() {
 
 // ---------- Écran de démarrage ----------
 function vSplash() {
+  if (typeof vLoadScreen === 'function') return vLoadScreen(UI.load || { title: 'Saison 2026-27', t: 'Préparation du stade…', p: 0 }, 'Simulateur de carrière');
   return `<div class="splash">
     <div class="spl-top"><div class="lbl">Simulateur de carrière</div><h1 class="logo">Crampons<span>d'Or</span></h1></div>
     <div class="pitch" aria-hidden="true"><div class="ball"></div></div>
@@ -8293,7 +8323,7 @@ function runLoading(title, steps, work, done) {
 }
 function vLoading() {
   const L = UI.load || { title: '', t: '', p: 0 };
-  return typeof vLoadScreen === 'function' ? vLoadScreen(L) : `<div class="splash"><h2 class="logo sm">${esc(L.title)}</h2><span id="lt">${esc(L.t)}</span><span id="lp"></span></div>`;
+  return typeof vLoadScreen === 'function' ? vLoadScreen(L, L.kick) : `<div class="splash"><h2 class="logo sm">${esc(L.title)}</h2><span id="lt">${esc(L.t)}</span><span id="lp"></span></div>`;
 }
 
 // ---------- Menu principal ----------
@@ -9345,8 +9375,9 @@ document.addEventListener('input', e => { if (e.target.id === 'mvol' || e.target
 function start(data) {
   if (typeof shopApply === 'function') shopApply();
   if (data && data.S) { hydrate(data.S); UI.screen = data.screen === 'live' && S.live ? 'live' : 'game'; render(); if (UI.screen === 'live') liveRun(); return; }
-  UI.screen = 'menu'; render();
-  if (typeof introPlay === 'function') introPlay(false);
+  const go = () => { UI.screen = 'menu'; render(); if (typeof introPlay === 'function') introPlay(false); };
+  if (typeof ldBootFinish === 'function' && ldBootFinish(go)) return; // l'écran de démarrage (stade de nuit) termine sa barre, puis le menu
+  go();
 }
 if (window.claude && window.claude.hot && window.claude.hot.snapshot) window.claude.hot.snapshot(() => ({ S: S ? JSON.parse(JSON.stringify(S, (k, v) => k === 'ref' ? undefined : v)) : null, screen: UI.screen }));
 // app installable : copie hors connexion (seulement sur un vrai site, ex. GitHub Pages)

@@ -28,9 +28,37 @@ function ldStart() {
   LD.rm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   // le titre tient toujours sur la largeur de l'écran
   const lg = document.querySelector('.ldx-logo'); if (lg) { lg.style.fontSize = ''; const cw = lg.parentElement.clientWidth - 40; lg.style.display = 'inline-block'; const sw = lg.offsetWidth; lg.style.display = ''; if (sw > cw && sw > 0) lg.style.fontSize = (parseFloat(getComputedStyle(lg).fontSize) * cw / sw) + 'px'; }
-  if (!LD.raf) { LD.t0 = performance.now(); LD.last = LD.t0; LD.shown = 0; LD.sparks = []; LD.flash = []; LD.roll = 0; LD.raf = requestAnimationFrame(ldFrame); }
+  // écran déjà affiché (nouveau rendu, ou relais de l'écran de démarrage) : l'animation continue sans repartir de zéro
+  const now = performance.now(), cont = !!(LD.raf || LD.boot);
+  if (LD.raf) cancelAnimationFrame(LD.raf); LD.raf = 0;
+  if (!cont) { LD.t0 = now; LD.shown = 0; LD.sparks = []; LD.flash = []; LD.roll = 0; }
+  LD.boot = false; LD.last = now;
+  const sp = lg && lg.querySelector('span'); if (sp && cont) sp.style.animationDelay = -(((now - LD.t0) / 1000) % 2.8) + 's';
+  ldFrame(now); // dessin immédiat : pas d'image vide entre deux rendus
 }
 function ldStop() { if (LD.raf) cancelAnimationFrame(LD.raf); LD.raf = 0; LD.cv = null; }
+// fin de l'écran de démarrage (dessiné par index.html avant même que le jeu soit chargé) : le jeu reprend la même scène,
+// au même instant, et termine la barre avant d'ouvrir le menu
+function ldBootFinish(done) {
+  const B = typeof window !== 'undefined' ? window.__ldBoot : null; if (!B || !B.t0 || !B.cv || !B.cv.isConnected || typeof render !== 'function') return false;
+  window.__ldBoot = null; B.stop = true;
+  Object.assign(LD, { t0: B.t0, shown: B.shown, tip: B.tip, tipFor: B.tipFor, roll: B.roll, bootDust: B.dust, boot: true });
+  const p0 = Math.max(1, Math.round(B.shown)), L0 = B.load || {};
+  UI.load = { title: L0.title || '', t: L0.t || '', p: p0, kick: 'Simulateur de carrière' }; UI.screen = 'loading'; render();
+  const nL = typeof LEAGUES !== 'undefined' ? LEAGUES.length : 0, nC = nL ? Object.values(LEAGUES).reduce((a, l) => a + (l.clubs ? l.clubs.length : 0), 0) : 0;
+  const steps = [nL ? `${nL} championnats…` : 'Championnats…', nC ? `${nC} clubs et leurs entraîneurs…` : 'Clubs et entraîneurs…', 'Joueurs et effectifs 2026…', 'Coup d\'envoi !'];
+  let i = 0;
+  const tick = () => {
+    if (UI.screen !== 'loading') return;
+    UI.load.t = steps[i]; UI.load.p = Math.round(p0 + (100 - p0) * (i + 1) / steps.length);
+    const lt = document.getElementById('lt'); if (lt) { lt.textContent = UI.load.t; if (lt.classList) { lt.classList.remove('in'); void lt.offsetWidth; lt.classList.add('in'); } }
+    i++;
+    if (i < steps.length) setTimeout(tick, 210 + Math.random() * 120);
+    else setTimeout(() => { const d = document.getElementById('ldx'); if (d && d.classList) d.classList.add('out'); setTimeout(done, d && d.classList ? 280 : 0); }, 480);
+  };
+  setTimeout(tick, 140);
+  return true;
+}
 function ldRnd(seed) { let s = seed >>> 0; return () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 // géométrie commune (en pixels CSS)
 function ldGeo() {
@@ -81,6 +109,7 @@ function ldResize() {
   LD.bg = bg;
   // poussière d'or
   LD.dust = []; const nd = LD.rm ? 20 : 70; for (let i = 0; i < nd; i++) LD.dust.push({ x: R() * w, y: R() * h, s: .6 + R() * 1.8, v: 6 + R() * 18, ph: R() * 6.28, a: .25 + R() * .6 });
+  if (LD.bootDust) { if (LD.bootDust.length === LD.dust.length) LD.dust = LD.bootDust; LD.bootDust = null; } // relais de l'écran de démarrage : la poussière reste où elle était
   // halo pré-rendu (réutilisé pour lampes, flashs, étincelles)
   if (!LD.glow) { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), r = x.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(.25, 'rgba(255,236,190,.55)'); r.addColorStop(1, 'rgba(255,200,120,0)'); x.fillStyle = r; x.fillRect(0, 0, 64, 64); LD.glow = c; }
 }
@@ -103,7 +132,7 @@ function ldBall(g, x, y, r, th) {
   g.restore();
 }
 function ldFrame(now) {
-  if (!LD.cv || !LD.cv.isConnected || !ldOn()) { LD.raf = 0; LD.cv = null; return; }
+  if (LD.stop || !LD.cv || !LD.cv.isConnected || !ldOn()) { LD.raf = 0; LD.cv = null; return; }
   LD.raf = requestAnimationFrame(ldFrame);
   const dt = Math.min(.05, (now - LD.last) / 1000); LD.last = now; const t = (now - LD.t0) / 1000;
   ldResize(); const g = LD.g, G = ldGeo(), { w, h } = G, dpr = LD.dpr, glow = LD.glow;
@@ -153,8 +182,8 @@ function ldFrame(now) {
 }
 // l'écran lui-même (le texte reste en HTML pour rester net)
 function vLoadScreen(L, kicker) {
-  if (!LD.tip || !UI.load || UI.load.tipFor !== UI.load.title) { LD.tip = LD_TIPS[Math.floor(Math.random() * LD_TIPS.length)]; if (UI.load) UI.load.tipFor = UI.load.title; }
-  return `<div class="ldx" id="ldx"><canvas id="ldCv" aria-hidden="true"></canvas>
+  const ttl = UI.load ? UI.load.title : ''; if (!LD.tip || LD.tipFor !== ttl) { LD.tip = LD_TIPS[Math.floor(Math.random() * LD_TIPS.length)]; LD.tipFor = ttl; }
+  return `<div class="ldx${LD.raf || LD.boot ? ' cont' : ''}" id="ldx"><canvas id="ldCv" aria-hidden="true"></canvas>
     <div class="ldx-top"><div class="ldx-kick">${esc(kicker || 'Chargement')}</div><h1 class="ldx-logo">Crampons<span>d'Or</span></h1>${L.title && L.title !== 'Chargement' ? `<div class="ldx-title">${esc(L.title)}</div>` : ''}</div>
     <div class="ldx-bot"><div class="ldx-row"><span id="lt" class="ldx-step">${esc(L.t)}</span><span id="lp" class="ldx-pct">${Math.round(LD.shown || 0)} %</span></div>
     <p class="ldx-tip"><b>Astuce</b> ${esc(LD.tip)}</p></div><div class="ldx-flash"></div></div>`;

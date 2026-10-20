@@ -106,6 +106,7 @@ function render() {
 
 // ---------- Écran de démarrage ----------
 function vSplash() {
+  if (typeof vLoadScreen === 'function') return vLoadScreen(UI.load || { title: 'Saison 2026-27', t: 'Préparation du stade…', p: 0 }, 'Simulateur de carrière');
   return `<div class="splash">
     <div class="spl-top"><div class="lbl">Simulateur de carrière</div><h1 class="logo">Crampons<span>d'Or</span></h1></div>
     <div class="pitch" aria-hidden="true"><div class="ball"></div></div>
@@ -143,7 +144,7 @@ function runLoading(title, steps, work, done) {
 }
 function vLoading() {
   const L = UI.load || { title: '', t: '', p: 0 };
-  return typeof vLoadScreen === 'function' ? vLoadScreen(L) : `<div class="splash"><h2 class="logo sm">${esc(L.title)}</h2><span id="lt">${esc(L.t)}</span><span id="lp"></span></div>`;
+  return typeof vLoadScreen === 'function' ? vLoadScreen(L, L.kick) : `<div class="splash"><h2 class="logo sm">${esc(L.title)}</h2><span id="lt">${esc(L.t)}</span><span id="lp"></span></div>`;
 }
 
 // ---------- Menu principal ----------

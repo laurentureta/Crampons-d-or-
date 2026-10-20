@@ -326,8 +326,9 @@ document.addEventListener('input', e => { if (e.target.id === 'mvol' || e.target
 function start(data) {
   if (typeof shopApply === 'function') shopApply();
   if (data && data.S) { hydrate(data.S); UI.screen = data.screen === 'live' && S.live ? 'live' : 'game'; render(); if (UI.screen === 'live') liveRun(); return; }
-  UI.screen = 'menu'; render();
-  if (typeof introPlay === 'function') introPlay(false);
+  const go = () => { UI.screen = 'menu'; render(); if (typeof introPlay === 'function') introPlay(false); };
+  if (typeof ldBootFinish === 'function' && ldBootFinish(go)) return; // l'écran de démarrage (stade de nuit) termine sa barre, puis le menu
+  go();
 }
 if (window.claude && window.claude.hot && window.claude.hot.snapshot) window.claude.hot.snapshot(() => ({ S: S ? JSON.parse(JSON.stringify(S, (k, v) => k === 'ref' ? undefined : v)) : null, screen: UI.screen }));
 // app installable : copie hors connexion (seulement sur un vrai site, ex. GitHub Pages)

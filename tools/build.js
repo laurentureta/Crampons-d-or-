@@ -26,7 +26,16 @@ const code = ORDER.map(f => `// ===== src/${f} =====\n` + read('src/' + f)).join
 const css = read('src/style.css');
 const FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=Big+Shoulders+Display:wght@700;800&family=Graduate&family=Protest+Strike&display=swap">';
 const LZ = 'https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js';
-const SHELL = '<div id="app"><div class="boot" aria-label="Chargement"><div class="boot-l">Crampons<span>d\'Or</span></div><div class="boot-bar"><i></i></div></div></div><nav id="nav" class="nav"></nav><div id="adv"></div><div id="ov"></div><div id="toast" aria-live="polite"></div>';
+// écran de démarrage : le même stade de nuit que l'écran de chargement du jeu (src/loading.js), dessiné dès l'ouverture de la page,
+// avant que le jeu soit téléchargé ; le jeu reprend ensuite la même scène au même instant (ldBootFinish)
+const BOOT_JS = '(function(){try{if(!window.requestAnimationFrame||!window.performance)return;var c0=document.createElement("canvas");if(!c0.getContext||!c0.getContext("2d"))return;\n'
+  + 'var UI={screen:"splash",load:{title:"Saison 2026-27",t:"Préparation du stade…",p:0}};var clamp=function(v,a,b){return v<a?a:v>b?b:v};var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\\"":"&quot;"}[c]})};\n'
+  + read('src/loading.js') + '\n'
+  + 'var app=document.getElementById("app");if(!app)return;app.innerHTML=vLoadScreen(UI.load,"Simulateur de carrière");LD.load=UI.load;window.__ldBoot=LD;\n'
+  + 'var T0=performance.now(),ST=[[0,"Préparation du stade…"],[22,"Chargement du moteur 3D…"],[40,"Chargement des données…"]];\n'
+  + '(function prog(){if(LD.stop||!document.getElementById("ldx"))return;var t=(performance.now()-T0)/1000;UI.load.p=Math.round(58*(1-Math.exp(-t/1.7)));var s=ST[0][1];for(var i=0;i<ST.length;i++)if(UI.load.p>=ST[i][0])s=ST[i][1];if(s!==UI.load.t){UI.load.t=s;var lt=document.getElementById("lt");if(lt){lt.textContent=s;lt.classList.remove("in");void lt.offsetWidth;lt.classList.add("in");}}setTimeout(prog,150);})();\n'
+  + 'ldStart();}catch(e){}})();';
+const SHELL = '<div id="app"><div class="boot" aria-label="Chargement"><div class="boot-l">Crampons<span>d\'Or</span></div><div class="boot-bar"><i></i></div></div></div><script>' + BOOT_JS + '</script><nav id="nav" class="nav"></nav><div id="adv"></div><div id="ov"></div><div id="toast" aria-live="polite"></div>';
 const HEAD = (icon, extra) => `<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">

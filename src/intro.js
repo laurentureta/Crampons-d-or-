@@ -515,8 +515,8 @@ function introFit() {
 function introLoad() {
   const I = INTRO, bar = I.el.querySelector('.iload i'), lt = I.el.querySelector('.ilt');
   if (I.seek != null) { I.seekLoad = true; return; } // images fixes (bande-annonce, tests) : la barre suit le temps de l'animation
-  const nL = typeof LEAGUES !== 'undefined' ? LEAGUES.length : 15, nC = typeof LEAGUES !== 'undefined' ? Object.values(LEAGUES).reduce((a, l) => a + (l.clubs ? l.clubs.length : 0), 0) : 0, nN = typeof NATIONS !== 'undefined' ? Object.keys(NATIONS).length : 0;
-  const steps = I.replay ? [['Prêt !', 100]] : [['Préparation du terrain…', 12], [`${nL} championnats…`, 34], [nC ? `${nC} clubs et leurs entraîneurs…` : 'Clubs et entraîneurs…', 55], ['Joueurs et effectifs 2026…', 74], [nN ? `${nN} sélections…` : 'Sélections…', 90], ['Prêt !', 100]];
+  // le chargement a déjà eu lieu sur l'écran du stade (loading.js) : plus de barre ici, le titre reste affiché un instant
+  const steps = [['Prêt !', 100], ['Prêt !', 100], ['Prêt !', 100], ['Prêt !', 100]];
   let i = 0; const tick = () => { if (!I.on || I.done) return; const [t, p] = steps[i]; if (bar) bar.style.width = p + '%'; if (lt) lt.textContent = t; i++; if (i < steps.length) setTimeout(tick, 230 + Math.random() * 120); else { I.el.classList.add('ready'); const hint = I.el.querySelector('.ihint'); if (hint) hint.textContent = 'Touche pour jouer'; I.auto = setTimeout(() => introEnd(), 2400); } };
   setTimeout(tick, 250);
 }
