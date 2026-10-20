@@ -25,6 +25,7 @@ function ldOn() { return UI.screen === 'loading' || UI.screen === 'splash'; }
 function ldStart() {
   const cv = document.getElementById('ldCv'); if (!cv || !cv.getContext) return;
   LD.cv = cv; LD.g = cv.getContext('2d'); LD.w = 0; LD.out = false;
+  try { if (typeof inPreload === 'function' && typeof introOk === 'function' && introOk(false)) inPreload(); } catch (e) { } // photos de l'écran d'ouverture, en avance
   LD.rm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   // le titre tient toujours sur la largeur de l'écran
   const lg = document.querySelector('.ldx-logo'); if (lg) { lg.style.fontSize = ''; const cw = lg.parentElement.clientWidth - 40; lg.style.display = 'inline-block'; const sw = lg.offsetWidth; lg.style.display = ''; if (sw > cw && sw > 0) lg.style.fontSize = (parseFloat(getComputedStyle(lg).fontSize) * cw / sw) + 'px'; }

@@ -1,0 +1,39 @@
+{
+ "stade": {
+  "f": "stade.jpg",
+  "w": 1200,
+  "h": 1600,
+  "fx": 0.5,
+  "hz": 0.595,
+  "st": [
+   0.46,
+   0.58
+  ]
+ },
+ "joueur": {
+  "f": "joueur.webp",
+  "w": 927,
+  "h": 1228,
+  "cx": 0.5,
+  "cy": 0.5,
+  "ball": [
+   0.3909,
+   0.0627,
+   0.0762
+  ],
+  "foot": [
+   0.5045,
+   0.1496
+  ],
+  "px": 0.5333,
+  "py": 0.611
+ },
+ "ballon": {
+  "f": "ballon.png",
+  "w": 320
+ },
+ "credits": [
+  "Joueur : photo de Chaim Weingarten (Unsplash, licence Unsplash)",
+  "Stade : Parc des Princes, photo de Chris Kursikowski (Unsplash, licence Unsplash)"
+ ]
+}

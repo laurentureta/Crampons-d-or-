@@ -94,6 +94,10 @@ Ciel et sols photographiés (`src/m3dgfx.js`, `assets/textures/`) : les matchs d
 
 Les filets de but (`src/m3dnet.js`) sont une toile de nœuds qui ondule : le ballon la creuse, l'onde se propage puis s'amortit, un ballon sur le toit ou dans le petit filet l'enfonce de l'extérieur, et le vent la fait respirer (plus fort sous la pluie). Caméras au choix pendant le match : TV, Large, Tactique, Mon joueur, Derrière le but, Bord du terrain, Drone.
 
+## Écran d'ouverture
+
+Au lancement (`src/intro.js`), un vrai retourné en photo : un joueur photographié de nuit en plein retourné (photo de **Chaim Weingarten**, [Unsplash](https://unsplash.com/photos/man-performs-acrobatic-kick-with-soccer-ball-on-beach-5WzxI2voAfg)), détouré par le robot médias (`rembg`), posé devant le **Parc des Princes** de nuit vu du bord du terrain (photo de **Chris Kursikowski**, [Unsplash](https://unsplash.com/photos/a-soccer-field-at-night-with-the-lights-on-5IS7UghgoMA)), flouté comme par un objectif. Les deux photos sont sous [licence Unsplash](https://unsplash.com/license) (usage libre). Travelling lent, flashs des photographes dans les tribunes, puis la frappe : le vrai ballon de la photo fonce vers l'objectif et brise la vitre du téléphone — les éclats décalent l'image comme du verre cassé, fissures, flash, écran qui bave — et le titre apparaît derrière la vitre. Tout est dessiné en canvas 2D. `tools/intro_photos.py` prépare les images de `assets/intro/` (joueur sans le ballon, ballon seul, stade flouté, repères dans `intro.json`) à partir des originaux de `media-raw/intro/`.
+
 ## Pépites et Boutique
 
 Les Pépites se gagnent uniquement en jouant (matchs, buts, passes, notes, trophées, succès, bonus du jour) et n'achètent que du style : crampons, ballons, célébrations et effets de but en 3D, halos, cartes de joueur, thèmes de couleurs (`src/shop.js`). Le porte-monnaie est commun à toutes les carrières et voyage avec les sauvegardes exportées ou en ligne.
