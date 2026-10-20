@@ -39,43 +39,41 @@ function g3Terraces(len, dep, h0, h1, rows, night) {
 function g3StTex(kind) {
   const K = '_t' + kind; if (G3ST[K]) return G3ST[K];
   const [c, x] = g3Canvas(64, 64); x.clearRect(0, 0, 64, 64);
-  if (kind === 'grille') { x.strokeStyle = 'rgba(176,186,182,.95)'; x.lineWidth = 3.2; x.beginPath(); x.moveTo(0, 32); x.lineTo(32, 0); x.lineTo(64, 32); x.lineTo(32, 64); x.closePath(); x.stroke(); }
+  if (kind === 'panneau') { x.fillStyle = 'rgba(196,204,208,.95)'; x.fillRect(0, 0, 3, 64); x.fillRect(0, 0, 64, 2.5); x.fillRect(0, 32, 64, 2.5); }
+  else if (kind === 'grille') { x.strokeStyle = 'rgba(176,186,182,.95)'; x.lineWidth = 3.2; x.beginPath(); x.moveTo(0, 32); x.lineTo(32, 0); x.lineTo(64, 32); x.lineTo(32, 64); x.closePath(); x.stroke(); }
   else { x.strokeStyle = 'rgba(28,40,34,.95)'; x.lineWidth = 3; x.strokeRect(1.5, 1.5, 61, 61); }
   const t = g3Tex(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; G3ST[K] = t; return t;
 }
-// clôtures des petits stades : main courante bleue, grillage, et grands filets pare-ballons derrière les buts
+// clôtures des petits stades
+//  - stade amateur (moins de 900 spectateurs) : le city-stade du modèle — muret, panneaux grillagés de 6 m tout autour,
+//    lisses horizontales et poteaux, mâts d'éclairage dans les coins (voir g3StDress), écran du score sur la clôture ;
+//  - stade moyen : grands filets pare-ballons derrière les buts.
 function g3StFence(S3, cls, night) {
-  const low = g3Low(), blue = g3Lin('#1f4f8f'), gray = new THREE.MeshLambertMaterial({ color: night ? 0x3a4046 : 0x5c646b });
-  const tubes = [], posts = [];
-  const rail = (x1, z1, x2, z2, step) => { const L = Math.hypot(x2 - x1, z2 - z1), n = Math.max(1, Math.round(L / step)); for (const y of [1.05, .55]) tubes.push([x1, z1, x2, z2, y]); for (let i = 0; i <= n; i++) posts.push([x1 + (x2 - x1) * i / n, z1 + (z2 - z1) * i / n, 1.1]); };
-  if (cls === 0) { rail(-59.5, -38.2, 59.5, -38.2, 2.5); rail(-59.5, 38.6, 59.5, 38.6, 2.5); rail(-59.5, -38.2, -59.5, 38.6, 2.5); rail(59.5, -38.2, 59.5, 38.6, 2.5); }
-  if (tubes.length) {
-    const tm = new THREE.MeshLambertMaterial({ color: blue }), geos = [];
-    for (const [x1, z1, x2, z2, y] of tubes) { const L = Math.hypot(x2 - x1, z2 - z1), g = new THREE.CylinderGeometry(.03, .03, L, 5, 1, true); g.rotateZ(Math.PI / 2); g.rotateY(-Math.atan2(z2 - z1, x2 - x1)); g.translate((x1 + x2) / 2, y, (z1 + z2) / 2); geos.push(g); }
-    S3.add(new THREE.Mesh(g3Merge(geos), tm));
-    const pm = new THREE.InstancedMesh(new THREE.CylinderGeometry(.035, .035, 1.1, 6).translate(0, .55, 0), tm, posts.length), m4 = new THREE.Matrix4();
-    posts.forEach(([x, z], i) => { m4.makeTranslation(x, 0, z); pm.setMatrixAt(i, m4); }); S3.add(pm);
-  }
-  // grillage (losanges) et filet pare-ballons : plans transparents tendus entre des poteaux
-  const panel = (kind, x1, z1, x2, z2, y0, y1, cell) => {
+  const low = g3Low(), metal = new THREE.MeshLambertMaterial({ color: night ? 0x3d464c : 0x6d787e }), posts = [], tubes = [];
+  const panel = (kind, x1, z1, x2, z2, y0, y1, cell, step, op) => {
     const L = Math.hypot(x2 - x1, z2 - z1), g = new THREE.PlaneGeometry(L, y1 - y0); g.rotateY(-Math.atan2(z2 - z1, x2 - x1)); g.translate((x1 + x2) / 2, (y0 + y1) / 2, (z1 + z2) / 2);
     const t = g3StTex(kind).clone(); t.needsUpdate = true; t.repeat.set(L / cell, (y1 - y0) / cell);
-    const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ map: t, transparent: true, side: THREE.DoubleSide, depthWrite: false, opacity: kind === 'grille' ? .85 : .5 })); m.renderOrder = 2; S3.add(m);
-    const n = Math.max(1, Math.round(L / (kind === 'grille' ? 3 : 6))); for (let i = 0; i <= n; i++) posts.push([x1 + (x2 - x1) * i / n, z1 + (z2 - z1) * i / n, y1, 1]);
+    const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ map: t, transparent: true, side: THREE.DoubleSide, depthWrite: false, opacity: op })); m.renderOrder = 2; S3.add(m);
+    const n = Math.max(1, Math.round(L / step)); for (let i = 0; i <= n; i++) posts.push([x1 + (x2 - x1) * i / n, z1 + (z2 - z1) * i / n, y1]);
   };
-  posts.length = 0;
-  if (cls <= 1) {
-    const ex = cls === 0 ? 62 : 61, hb = cls === 0 ? 8 : 10;
-    for (const s of [-1, 1]) {
-      if (cls === 0) panel('grille', s * ex, -44, s * ex, 44, 0, 3, .16);
-      panel('filet', s * ex, -24, s * ex, 24, cls === 0 ? 3 : 0, hb, .14);
-    }
-    if (cls === 0) panel('grille', -62, 44, 62, 44, 0, 2.5, .16);
-    const pm = new THREE.InstancedMesh(new THREE.CylinderGeometry(.05, .06, 1, 6).translate(0, .5, 0), gray, posts.length), m4 = new THREE.Matrix4(), v = new THREE.Vector3(), q = new THREE.Quaternion(), sc = new THREE.Vector3();
-    posts.forEach(([x, z, h], i) => { m4.compose(v.set(x, 0, z), q, sc.set(1, h, 1)); pm.setMatrixAt(i, m4); }); S3.add(pm);
-    // câble en haut des pare-ballons
-    if (!low) for (const s of [-1, 1]) { const c = new THREE.Mesh(new THREE.CylinderGeometry(.015, .015, 48, 4, 1, true).rotateX(Math.PI / 2), gray); c.position.set(s * ex, hb, 0); S3.add(c); }
+  if (cls === 0) {
+    const X = 59, Z = 40.5, H = 6, sides = [[-X, -Z, X, -Z], [-X, Z, X, Z], [-X, -Z, -X, Z], [X, -Z, X, Z]];
+    // muret en béton au pied de la clôture
+    const wall = new THREE.MeshLambertMaterial({ color: night ? 0x4a4e54 : 0x9a9c9e }), wg = [];
+    for (const [x1, z1, x2, z2] of sides) { const L = Math.hypot(x2 - x1, z2 - z1) + .3, b = new THREE.BoxGeometry(L, 1, .25); b.rotateY(-Math.atan2(z2 - z1, x2 - x1)); b.translate((x1 + x2) / 2, .5, (z1 + z2) / 2); wg.push(b); }
+    const wm = new THREE.Mesh(g3Merge(wg), wall); wm.receiveShadow = !low; S3.add(wm);
+    // panneaux grillagés + lisses (en bas, au milieu, en haut)
+    for (const [x1, z1, x2, z2] of sides) { panel('panneau', x1, z1, x2, z2, 1, H, .2, 2.5, .8); for (const y of [1.05, 3.5, H]) tubes.push([x1, z1, x2, z2, y]); }
+  } else if (cls === 1) for (const s of [-1, 1]) panel('filet', s * 61, -24, s * 61, 24, 0, 10, .14, 6, .5);
+  if (tubes.length) {
+    const geos = []; for (const [x1, z1, x2, z2, y] of tubes) { const L = Math.hypot(x2 - x1, z2 - z1), g = new THREE.CylinderGeometry(.04, .04, L, 5, 1, true); g.rotateZ(Math.PI / 2); g.rotateY(-Math.atan2(z2 - z1, x2 - x1)); g.translate((x1 + x2) / 2, y, (z1 + z2) / 2); geos.push(g); }
+    S3.add(new THREE.Mesh(g3Merge(geos), metal));
   }
+  if (posts.length) {
+    const pm = new THREE.InstancedMesh(new THREE.CylinderGeometry(.05, .06, 1, 6).translate(0, .5, 0), metal, posts.length), m4 = new THREE.Matrix4(), v = new THREE.Vector3(), q = new THREE.Quaternion(), sc = new THREE.Vector3();
+    posts.forEach(([x, z, h], i) => { m4.compose(v.set(x, 0, z), q, sc.set(1, h, 1)); pm.setMatrixAt(i, m4); }); S3.add(pm);
+  }
+  if (cls === 1 && !low) for (const s of [-1, 1]) { const c = new THREE.Mesh(new THREE.CylinderGeometry(.015, .015, 48, 4, 1, true).rotateX(Math.PI / 2), metal); c.position.set(s * 61, 10, 0); S3.add(c); }
 }
 // banc de touche : deux modules de 10 sièges du modèle, abri en polycarbonate
 function g3Dugout(S3, md, x, z, night) {
@@ -105,7 +103,7 @@ function g3StDress(S3) {
     // mâts d'éclairage du modèle, projecteurs tournés vers le rond central
     if (cls <= 2 && md.pylone) {
       if (st.mastG) { S3.remove(st.mastG); g3Dispose(st.mastG); st.mastG = null; }
-      const pts = cls === 0 ? [[-57, -47], [57, -47], [-57, 47], [57, 47]] : [[-66, -52], [66, -52], [-66, 52], [66, 52]], H = cls === 0 ? 19 : cls === 1 ? 29 : 40;
+      const pts = cls === 0 ? [[-56.5, -38], [56.5, -38], [-56.5, 38], [56.5, 38]] : [[-66, -52], [66, -52], [-66, 52], [66, 52]], H = cls === 0 ? 18 : cls === 1 ? 29 : 40;
       const head = md.pylone.find(p => p.mat === 'light_cold'), hc = head ? head.geo.boundingBox.getCenter(new THREE.Vector3()) : new THREE.Vector3(0, .97, 0);
       for (const p of md.pylone) {
         const im = new THREE.InstancedMesh(p.geo, g3StMat(p, night), pts.length);

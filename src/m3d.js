@@ -275,7 +275,11 @@ function g3Stands(S3, M, cls, rnd, night) {
   // ce qu'il faut pour « habiller » le stade avec les vraies pièces 3D (mâts, sièges, bancs) dès qu'elles sont chargées
   S3.userData.st = { cls, night, seats: seats.length ? new Float32Array(seats) : null, seatCol: hc.clone().multiplyScalar(.6), mastG };
   // écran géant (grands stades)
-  if (cls >= 2) { const [c, x] = g3Canvas(512, 160); G3.sb = { c, x, t: g3Tex(c) }; const scr = new THREE.Mesh(new THREE.PlaneGeometry(16, 5), new THREE.MeshBasicMaterial({ map: G3.sb.t })); scr.position.set(-(cls === 3 ? 59 + 30 : 59 + 17), cls === 3 ? 30 : 17, -10); scr.rotation.y = Math.PI / 2; S3.add(scr); } else G3.sb = null;
+  if (cls === 0) { // écran du score accroché à la clôture du city-stade (comme sur le modèle)
+    const [c, x] = g3Canvas(512, 160); G3.sb = { c, x, t: g3Tex(c) }; G3.sbKey = '';
+    const fr = new THREE.Mesh(new THREE.BoxGeometry(5.1, 1.75, .14), new THREE.MeshLambertMaterial({ color: 0x15181c })); fr.position.set(14, 4.55, -40.36); S3.add(fr);
+    const scr = new THREE.Mesh(new THREE.PlaneGeometry(4.8, 1.5), new THREE.MeshBasicMaterial({ map: G3.sb.t })); scr.position.set(14, 4.55, -40.28); S3.add(scr);
+  } else if (cls >= 2) { const [c, x] = g3Canvas(512, 160); G3.sb = { c, x, t: g3Tex(c) }; const scr = new THREE.Mesh(new THREE.PlaneGeometry(16, 5), new THREE.MeshBasicMaterial({ map: G3.sb.t })); scr.position.set(-(cls === 3 ? 59 + 30 : 59 + 17), cls === 3 ? 30 : 17, -10); scr.rotation.y = Math.PI / 2; S3.add(scr); } else G3.sb = null;
   // fumigènes (derbies)
   G3.flares = []; if (LV.fx && LV.fx.flares.length && cls >= 1) { for (const [fx, fy, col] of LV.fx.flares) { const z = 44 + fy * 8, x = (fx - .5) * 90; const s = g3Glow(S3, x, 2 + fy * 6, z * (rnd() < .5 ? -1 : 1), 5, 'rgb(' + col + ')'); G3.flares.push(s); } }
 }
@@ -420,8 +424,8 @@ function g3Camera(M, t, dt, bx, bz, by, paused, celeb) {
   else if (view === 'drone') { const sw = Math.sin(t * .05) * 7; px = C.tx * .9 + sw; py = 25; pz = C.tz + 21; lx = C.tx; ly = 0; lz = C.tz - 2; fov = 46; }
   else if (view === 'but') { // derrière le but du côté du ballon (change de côté quand le jeu bascule)
     if (!C.gs || Math.abs(C.tx) > 10 && Math.sign(C.tx) !== C.gs) C.gs = Math.sign(C.tx) || 1; const e = C.gs;
-    px = e * 60; py = 5.4; pz = clamp(C.tz * .25, -6, 6); lx = C.tx * .9 + e * 3; ly = 0; lz = C.tz * .8; fov = 48; }
-  else if (view === 'bord') { px = clamp(C.tx * .92, -50, 50); py = 3.3; pz = 40.5; lx = C.tx; ly = .8; lz = C.tz * .85; fov = 40 + Math.min(8, Math.max(0, 15 - Math.abs(41 - C.tz)) * .5); }
+    px = e * 57.5; py = 5.4; pz = clamp(C.tz * .25, -6, 6); lx = C.tx * .9 + e * 3; ly = 0; lz = C.tz * .8; fov = 48; }
+  else if (view === 'bord') { px = clamp(C.tx * .92, -50, 50); py = 3.3; pz = 39.4; lx = C.tx; ly = .8; lz = C.tz * .85; fov = 40 + Math.min(8, Math.max(0, 15 - Math.abs(41 - C.tz)) * .5); }
   else if (view === 'tac') { const cx = clamp(C.tx * .6, -22, 22); px = cx; py = 92; pz = 30; lx = cx; ly = 0; lz = 3; fov = 46; }
   else if (view === 'large') { const cx = clamp(C.tx * .85, -34, 34), B = G3.camB || [74, 16]; px = cx * .9; py = (B[1] + 8) * (1 + .6 * pf); pz = (B[0] + 2) * (1 - .1 * pf); lx = cx; ly = 0; lz = C.tz * .35 - pf * 7; fov = 33; }
   else { const cx = clamp(C.tx, -40, 40), near = Math.abs(bx) > 34 ? 1 : 0, B = G3.camB || [74, 16], fd = Math.hypot(B[0], B[1]) / 78; px = cx * .9; py = B[1] * (1 + .85 * pf); pz = B[0] * (1 - .1 * pf); lx = cx; ly = Math.min(3, by * .3); lz = C.tz * .55 - 2 + pf * 4; fov = (18.5 - near * 1.5 + Math.min(3, Math.abs(bz) * .04) + (LV.spd > 6 ? 4 : 0) + (paused ? -1 : 0)) / fd; }

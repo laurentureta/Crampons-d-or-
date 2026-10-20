@@ -1,5 +1,5 @@
-/* Crampons d'Or 11.3.0 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
-var GAME_VERSION = "11.3.0";
+/* Crampons d'Or 11.3.1 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
+var GAME_VERSION = "11.3.1";
 var CRWD_FILES = ["chant_2","chant_3","chant_4","cheer_loop","goal_1","goal_2","goal_3","goal_4","ooh_1","roar_1","roar_2","roar_3","roar_4","surge"];
 var SONS_FILES = ["catch","glass","header","kick","net","post","shot","tackle","whistle1","whistle3"];
 var MEDIA_H = {"foule/chant_2":"3ebb4bce","foule/chant_3":"4f555b3f","foule/chant_4":"e9942adb","foule/cheer_loop":"e5b4a150","foule/goal_1":"a49bc043","foule/goal_2":"db0cbb88","foule/goal_3":"05dbbca2","foule/goal_4":"09720ea4","foule/ooh_1":"155d868a","foule/roar_1":"aff56709","foule/roar_2":"a3f978be","foule/roar_3":"6bed5e29","foule/roar_4":"df5f4aa6","foule/surge":"ce5de2be","sons/catch":"082b1f8c","sons/glass":"149bfce3","sons/header":"ac052ba0","sons/kick":"877b4236","sons/net":"fe0694be","sons/post":"ae984141","sons/shot":"9695a8e3","sons/tackle":"601ffa60","sons/whistle1":"cc2e8cf9","sons/whistle3":"dbccf110","stade":"180b7b01","joueur":"cbcc8acf"};
@@ -6159,7 +6159,11 @@ function g3Stands(S3, M, cls, rnd, night) {
   // ce qu'il faut pour « habiller » le stade avec les vraies pièces 3D (mâts, sièges, bancs) dès qu'elles sont chargées
   S3.userData.st = { cls, night, seats: seats.length ? new Float32Array(seats) : null, seatCol: hc.clone().multiplyScalar(.6), mastG };
   // écran géant (grands stades)
-  if (cls >= 2) { const [c, x] = g3Canvas(512, 160); G3.sb = { c, x, t: g3Tex(c) }; const scr = new THREE.Mesh(new THREE.PlaneGeometry(16, 5), new THREE.MeshBasicMaterial({ map: G3.sb.t })); scr.position.set(-(cls === 3 ? 59 + 30 : 59 + 17), cls === 3 ? 30 : 17, -10); scr.rotation.y = Math.PI / 2; S3.add(scr); } else G3.sb = null;
+  if (cls === 0) { // écran du score accroché à la clôture du city-stade (comme sur le modèle)
+    const [c, x] = g3Canvas(512, 160); G3.sb = { c, x, t: g3Tex(c) }; G3.sbKey = '';
+    const fr = new THREE.Mesh(new THREE.BoxGeometry(5.1, 1.75, .14), new THREE.MeshLambertMaterial({ color: 0x15181c })); fr.position.set(14, 4.55, -40.36); S3.add(fr);
+    const scr = new THREE.Mesh(new THREE.PlaneGeometry(4.8, 1.5), new THREE.MeshBasicMaterial({ map: G3.sb.t })); scr.position.set(14, 4.55, -40.28); S3.add(scr);
+  } else if (cls >= 2) { const [c, x] = g3Canvas(512, 160); G3.sb = { c, x, t: g3Tex(c) }; const scr = new THREE.Mesh(new THREE.PlaneGeometry(16, 5), new THREE.MeshBasicMaterial({ map: G3.sb.t })); scr.position.set(-(cls === 3 ? 59 + 30 : 59 + 17), cls === 3 ? 30 : 17, -10); scr.rotation.y = Math.PI / 2; S3.add(scr); } else G3.sb = null;
   // fumigènes (derbies)
   G3.flares = []; if (LV.fx && LV.fx.flares.length && cls >= 1) { for (const [fx, fy, col] of LV.fx.flares) { const z = 44 + fy * 8, x = (fx - .5) * 90; const s = g3Glow(S3, x, 2 + fy * 6, z * (rnd() < .5 ? -1 : 1), 5, 'rgb(' + col + ')'); G3.flares.push(s); } }
 }
@@ -6304,8 +6308,8 @@ function g3Camera(M, t, dt, bx, bz, by, paused, celeb) {
   else if (view === 'drone') { const sw = Math.sin(t * .05) * 7; px = C.tx * .9 + sw; py = 25; pz = C.tz + 21; lx = C.tx; ly = 0; lz = C.tz - 2; fov = 46; }
   else if (view === 'but') { // derrière le but du côté du ballon (change de côté quand le jeu bascule)
     if (!C.gs || Math.abs(C.tx) > 10 && Math.sign(C.tx) !== C.gs) C.gs = Math.sign(C.tx) || 1; const e = C.gs;
-    px = e * 60; py = 5.4; pz = clamp(C.tz * .25, -6, 6); lx = C.tx * .9 + e * 3; ly = 0; lz = C.tz * .8; fov = 48; }
-  else if (view === 'bord') { px = clamp(C.tx * .92, -50, 50); py = 3.3; pz = 40.5; lx = C.tx; ly = .8; lz = C.tz * .85; fov = 40 + Math.min(8, Math.max(0, 15 - Math.abs(41 - C.tz)) * .5); }
+    px = e * 57.5; py = 5.4; pz = clamp(C.tz * .25, -6, 6); lx = C.tx * .9 + e * 3; ly = 0; lz = C.tz * .8; fov = 48; }
+  else if (view === 'bord') { px = clamp(C.tx * .92, -50, 50); py = 3.3; pz = 39.4; lx = C.tx; ly = .8; lz = C.tz * .85; fov = 40 + Math.min(8, Math.max(0, 15 - Math.abs(41 - C.tz)) * .5); }
   else if (view === 'tac') { const cx = clamp(C.tx * .6, -22, 22); px = cx; py = 92; pz = 30; lx = cx; ly = 0; lz = 3; fov = 46; }
   else if (view === 'large') { const cx = clamp(C.tx * .85, -34, 34), B = G3.camB || [74, 16]; px = cx * .9; py = (B[1] + 8) * (1 + .6 * pf); pz = (B[0] + 2) * (1 - .1 * pf); lx = cx; ly = 0; lz = C.tz * .35 - pf * 7; fov = 33; }
   else { const cx = clamp(C.tx, -40, 40), near = Math.abs(bx) > 34 ? 1 : 0, B = G3.camB || [74, 16], fd = Math.hypot(B[0], B[1]) / 78; px = cx * .9; py = B[1] * (1 + .85 * pf); pz = B[0] * (1 - .1 * pf); lx = cx; ly = Math.min(3, by * .3); lz = C.tz * .55 - 2 + pf * 4; fov = (18.5 - near * 1.5 + Math.min(3, Math.abs(bz) * .04) + (LV.spd > 6 ? 4 : 0) + (paused ? -1 : 0)) / fd; }
@@ -6768,43 +6772,41 @@ function g3Terraces(len, dep, h0, h1, rows, night) {
 function g3StTex(kind) {
   const K = '_t' + kind; if (G3ST[K]) return G3ST[K];
   const [c, x] = g3Canvas(64, 64); x.clearRect(0, 0, 64, 64);
-  if (kind === 'grille') { x.strokeStyle = 'rgba(176,186,182,.95)'; x.lineWidth = 3.2; x.beginPath(); x.moveTo(0, 32); x.lineTo(32, 0); x.lineTo(64, 32); x.lineTo(32, 64); x.closePath(); x.stroke(); }
+  if (kind === 'panneau') { x.fillStyle = 'rgba(196,204,208,.95)'; x.fillRect(0, 0, 3, 64); x.fillRect(0, 0, 64, 2.5); x.fillRect(0, 32, 64, 2.5); }
+  else if (kind === 'grille') { x.strokeStyle = 'rgba(176,186,182,.95)'; x.lineWidth = 3.2; x.beginPath(); x.moveTo(0, 32); x.lineTo(32, 0); x.lineTo(64, 32); x.lineTo(32, 64); x.closePath(); x.stroke(); }
   else { x.strokeStyle = 'rgba(28,40,34,.95)'; x.lineWidth = 3; x.strokeRect(1.5, 1.5, 61, 61); }
   const t = g3Tex(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; G3ST[K] = t; return t;
 }
-// clôtures des petits stades : main courante bleue, grillage, et grands filets pare-ballons derrière les buts
+// clôtures des petits stades
+//  - stade amateur (moins de 900 spectateurs) : le city-stade du modèle — muret, panneaux grillagés de 6 m tout autour,
+//    lisses horizontales et poteaux, mâts d'éclairage dans les coins (voir g3StDress), écran du score sur la clôture ;
+//  - stade moyen : grands filets pare-ballons derrière les buts.
 function g3StFence(S3, cls, night) {
-  const low = g3Low(), blue = g3Lin('#1f4f8f'), gray = new THREE.MeshLambertMaterial({ color: night ? 0x3a4046 : 0x5c646b });
-  const tubes = [], posts = [];
-  const rail = (x1, z1, x2, z2, step) => { const L = Math.hypot(x2 - x1, z2 - z1), n = Math.max(1, Math.round(L / step)); for (const y of [1.05, .55]) tubes.push([x1, z1, x2, z2, y]); for (let i = 0; i <= n; i++) posts.push([x1 + (x2 - x1) * i / n, z1 + (z2 - z1) * i / n, 1.1]); };
-  if (cls === 0) { rail(-59.5, -38.2, 59.5, -38.2, 2.5); rail(-59.5, 38.6, 59.5, 38.6, 2.5); rail(-59.5, -38.2, -59.5, 38.6, 2.5); rail(59.5, -38.2, 59.5, 38.6, 2.5); }
-  if (tubes.length) {
-    const tm = new THREE.MeshLambertMaterial({ color: blue }), geos = [];
-    for (const [x1, z1, x2, z2, y] of tubes) { const L = Math.hypot(x2 - x1, z2 - z1), g = new THREE.CylinderGeometry(.03, .03, L, 5, 1, true); g.rotateZ(Math.PI / 2); g.rotateY(-Math.atan2(z2 - z1, x2 - x1)); g.translate((x1 + x2) / 2, y, (z1 + z2) / 2); geos.push(g); }
-    S3.add(new THREE.Mesh(g3Merge(geos), tm));
-    const pm = new THREE.InstancedMesh(new THREE.CylinderGeometry(.035, .035, 1.1, 6).translate(0, .55, 0), tm, posts.length), m4 = new THREE.Matrix4();
-    posts.forEach(([x, z], i) => { m4.makeTranslation(x, 0, z); pm.setMatrixAt(i, m4); }); S3.add(pm);
-  }
-  // grillage (losanges) et filet pare-ballons : plans transparents tendus entre des poteaux
-  const panel = (kind, x1, z1, x2, z2, y0, y1, cell) => {
+  const low = g3Low(), metal = new THREE.MeshLambertMaterial({ color: night ? 0x3d464c : 0x6d787e }), posts = [], tubes = [];
+  const panel = (kind, x1, z1, x2, z2, y0, y1, cell, step, op) => {
     const L = Math.hypot(x2 - x1, z2 - z1), g = new THREE.PlaneGeometry(L, y1 - y0); g.rotateY(-Math.atan2(z2 - z1, x2 - x1)); g.translate((x1 + x2) / 2, (y0 + y1) / 2, (z1 + z2) / 2);
     const t = g3StTex(kind).clone(); t.needsUpdate = true; t.repeat.set(L / cell, (y1 - y0) / cell);
-    const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ map: t, transparent: true, side: THREE.DoubleSide, depthWrite: false, opacity: kind === 'grille' ? .85 : .5 })); m.renderOrder = 2; S3.add(m);
-    const n = Math.max(1, Math.round(L / (kind === 'grille' ? 3 : 6))); for (let i = 0; i <= n; i++) posts.push([x1 + (x2 - x1) * i / n, z1 + (z2 - z1) * i / n, y1, 1]);
+    const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ map: t, transparent: true, side: THREE.DoubleSide, depthWrite: false, opacity: op })); m.renderOrder = 2; S3.add(m);
+    const n = Math.max(1, Math.round(L / step)); for (let i = 0; i <= n; i++) posts.push([x1 + (x2 - x1) * i / n, z1 + (z2 - z1) * i / n, y1]);
   };
-  posts.length = 0;
-  if (cls <= 1) {
-    const ex = cls === 0 ? 62 : 61, hb = cls === 0 ? 8 : 10;
-    for (const s of [-1, 1]) {
-      if (cls === 0) panel('grille', s * ex, -44, s * ex, 44, 0, 3, .16);
-      panel('filet', s * ex, -24, s * ex, 24, cls === 0 ? 3 : 0, hb, .14);
-    }
-    if (cls === 0) panel('grille', -62, 44, 62, 44, 0, 2.5, .16);
-    const pm = new THREE.InstancedMesh(new THREE.CylinderGeometry(.05, .06, 1, 6).translate(0, .5, 0), gray, posts.length), m4 = new THREE.Matrix4(), v = new THREE.Vector3(), q = new THREE.Quaternion(), sc = new THREE.Vector3();
-    posts.forEach(([x, z, h], i) => { m4.compose(v.set(x, 0, z), q, sc.set(1, h, 1)); pm.setMatrixAt(i, m4); }); S3.add(pm);
-    // câble en haut des pare-ballons
-    if (!low) for (const s of [-1, 1]) { const c = new THREE.Mesh(new THREE.CylinderGeometry(.015, .015, 48, 4, 1, true).rotateX(Math.PI / 2), gray); c.position.set(s * ex, hb, 0); S3.add(c); }
+  if (cls === 0) {
+    const X = 59, Z = 40.5, H = 6, sides = [[-X, -Z, X, -Z], [-X, Z, X, Z], [-X, -Z, -X, Z], [X, -Z, X, Z]];
+    // muret en béton au pied de la clôture
+    const wall = new THREE.MeshLambertMaterial({ color: night ? 0x4a4e54 : 0x9a9c9e }), wg = [];
+    for (const [x1, z1, x2, z2] of sides) { const L = Math.hypot(x2 - x1, z2 - z1) + .3, b = new THREE.BoxGeometry(L, 1, .25); b.rotateY(-Math.atan2(z2 - z1, x2 - x1)); b.translate((x1 + x2) / 2, .5, (z1 + z2) / 2); wg.push(b); }
+    const wm = new THREE.Mesh(g3Merge(wg), wall); wm.receiveShadow = !low; S3.add(wm);
+    // panneaux grillagés + lisses (en bas, au milieu, en haut)
+    for (const [x1, z1, x2, z2] of sides) { panel('panneau', x1, z1, x2, z2, 1, H, .2, 2.5, .8); for (const y of [1.05, 3.5, H]) tubes.push([x1, z1, x2, z2, y]); }
+  } else if (cls === 1) for (const s of [-1, 1]) panel('filet', s * 61, -24, s * 61, 24, 0, 10, .14, 6, .5);
+  if (tubes.length) {
+    const geos = []; for (const [x1, z1, x2, z2, y] of tubes) { const L = Math.hypot(x2 - x1, z2 - z1), g = new THREE.CylinderGeometry(.04, .04, L, 5, 1, true); g.rotateZ(Math.PI / 2); g.rotateY(-Math.atan2(z2 - z1, x2 - x1)); g.translate((x1 + x2) / 2, y, (z1 + z2) / 2); geos.push(g); }
+    S3.add(new THREE.Mesh(g3Merge(geos), metal));
   }
+  if (posts.length) {
+    const pm = new THREE.InstancedMesh(new THREE.CylinderGeometry(.05, .06, 1, 6).translate(0, .5, 0), metal, posts.length), m4 = new THREE.Matrix4(), v = new THREE.Vector3(), q = new THREE.Quaternion(), sc = new THREE.Vector3();
+    posts.forEach(([x, z, h], i) => { m4.compose(v.set(x, 0, z), q, sc.set(1, h, 1)); pm.setMatrixAt(i, m4); }); S3.add(pm);
+  }
+  if (cls === 1 && !low) for (const s of [-1, 1]) { const c = new THREE.Mesh(new THREE.CylinderGeometry(.015, .015, 48, 4, 1, true).rotateX(Math.PI / 2), metal); c.position.set(s * 61, 10, 0); S3.add(c); }
 }
 // banc de touche : deux modules de 10 sièges du modèle, abri en polycarbonate
 function g3Dugout(S3, md, x, z, night) {
@@ -6834,7 +6836,7 @@ function g3StDress(S3) {
     // mâts d'éclairage du modèle, projecteurs tournés vers le rond central
     if (cls <= 2 && md.pylone) {
       if (st.mastG) { S3.remove(st.mastG); g3Dispose(st.mastG); st.mastG = null; }
-      const pts = cls === 0 ? [[-57, -47], [57, -47], [-57, 47], [57, 47]] : [[-66, -52], [66, -52], [-66, 52], [66, 52]], H = cls === 0 ? 19 : cls === 1 ? 29 : 40;
+      const pts = cls === 0 ? [[-56.5, -38], [56.5, -38], [-56.5, 38], [56.5, 38]] : [[-66, -52], [66, -52], [-66, 52], [66, 52]], H = cls === 0 ? 18 : cls === 1 ? 29 : 40;
       const head = md.pylone.find(p => p.mat === 'light_cold'), hc = head ? head.geo.boundingBox.getCenter(new THREE.Vector3()) : new THREE.Vector3(0, .97, 0);
       for (const p of md.pylone) {
         const im = new THREE.InstancedMesh(p.geo, g3StMat(p, night), pts.length);
