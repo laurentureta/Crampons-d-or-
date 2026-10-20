@@ -15,6 +15,7 @@ Sur iPhone, ouvre le lien dans Safari puis *Partager → Sur l'écran d'accueil*
 | `assets/voix/` | Répliques enregistrées des commentateurs et personnages + `index.json` |
 | `assets/joueur/` | Le modèle 3D des joueurs (géométrie, textures, squelette) préparé par `tools/joueur3d.py` |
 | `assets/stade/` | Les pièces 3D du stade (mâts d'éclairage, sièges, bancs de touche) préparées par `tools/stade3d.py` |
+| `assets/decor/` | Les arbres et textures des décors autour du stade, préparés par `tools/decor3d.py` |
 | `assets/icones/` | Icônes de l'app |
 | `lib/` | Three.js (3D) |
 | `tools/build.js` | Fabrique le jeu publié à partir de `src/` et `assets/` |
@@ -80,6 +81,12 @@ Les mâts d'éclairage, les sièges des tribunes et les bancs de touche viennent
 ```sh
 GLTFPACK=chemin/vers/gltfpack python3 tools/stade3d.py football_stade.glb
 node tools/build.js
+```
+
+Autour du stade (`src/m3ddeco.js`) : un terrain, une route goudronnée avec ses lampadaires (allumés la nuit), un chemin forestier, et une forêt de chênes et de sapins avec du sous-bois (herbes, fougères, buissons). Les chênes viennent de **« Oak trees pack (17var, LODs, seasons) »** par **LOLIPOP** ([Sketchfab](https://sketchfab.com/3d-models/oak-trees-pack-17var-lods-seasons-gameready-a5e4e64f9f1d4089bdcc6170a9333393)), le sapin, le sous-bois et le chemin de **« a forest (3) with a road at night for game »** par **dasy444** ([Sketchfab](https://sketchfab.com/3d-models/a-forest-3-with-a-road-at-night-for-game-61f8c7817fe6457fb26e4814cfc48a3f)), tous deux sous licence [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/). `tools/decor3d.py` en extrait les arbres (versions allégées) et les textures (`assets/decor/`, WebP) ; les chênes changent de feuillage avec la saison du match et tous les feuillages bougent au vent.
+
+```sh
+python3 tools/decor3d.py --chenes oak_trees_pack.glb --foret a_forest_with_a_road.glb
 ```
 
 Les filets de but (`src/m3dnet.js`) sont une toile de nœuds qui ondule : le ballon la creuse, l'onde se propage puis s'amortit, un ballon sur le toit ou dans le petit filet l'enfonce de l'extérieur, et le vent la fait respirer (plus fort sous la pluie). Caméras au choix pendant le match : TV, Large, Tactique, Mon joueur, Derrière le but, Bord du terrain, Drone.

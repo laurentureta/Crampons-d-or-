@@ -1,11 +1,12 @@
-/* Crampons d'Or 11.3.1 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
-var GAME_VERSION = "11.3.1";
+/* Crampons d'Or 11.4.0 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
+var GAME_VERSION = "11.4.0";
 var CRWD_FILES = ["chant_2","chant_3","chant_4","cheer_loop","goal_1","goal_2","goal_3","goal_4","ooh_1","roar_1","roar_2","roar_3","roar_4","surge"];
 var SONS_FILES = ["catch","glass","header","kick","net","post","shot","tackle","whistle1","whistle3"];
-var MEDIA_H = {"foule/chant_2":"3ebb4bce","foule/chant_3":"4f555b3f","foule/chant_4":"e9942adb","foule/cheer_loop":"e5b4a150","foule/goal_1":"a49bc043","foule/goal_2":"db0cbb88","foule/goal_3":"05dbbca2","foule/goal_4":"09720ea4","foule/ooh_1":"155d868a","foule/roar_1":"aff56709","foule/roar_2":"a3f978be","foule/roar_3":"6bed5e29","foule/roar_4":"df5f4aa6","foule/surge":"ce5de2be","sons/catch":"082b1f8c","sons/glass":"149bfce3","sons/header":"ac052ba0","sons/kick":"877b4236","sons/net":"fe0694be","sons/post":"ae984141","sons/shot":"9695a8e3","sons/tackle":"601ffa60","sons/whistle1":"cc2e8cf9","sons/whistle3":"dbccf110","stade":"180b7b01","joueur":"cbcc8acf"};
+var MEDIA_H = {"foule/chant_2":"3ebb4bce","foule/chant_3":"4f555b3f","foule/chant_4":"e9942adb","foule/cheer_loop":"e5b4a150","foule/goal_1":"a49bc043","foule/goal_2":"db0cbb88","foule/goal_3":"05dbbca2","foule/goal_4":"09720ea4","foule/ooh_1":"155d868a","foule/roar_1":"aff56709","foule/roar_2":"a3f978be","foule/roar_3":"6bed5e29","foule/roar_4":"df5f4aa6","foule/surge":"ce5de2be","sons/catch":"082b1f8c","sons/glass":"149bfce3","sons/header":"ac052ba0","sons/kick":"877b4236","sons/net":"fe0694be","sons/post":"ae984141","sons/shot":"9695a8e3","sons/tackle":"601ffa60","sons/whistle1":"cc2e8cf9","sons/whistle3":"dbccf110","decor":"49ccd40b","stade":"180b7b01","joueur":"cbcc8acf"};
 var VOIX_INDEX = {"S|Ah, les matchs du soir… Les projecteurs, l'herbe qui brille comme un miroir, l'odeur des frites. C'est ma madeleine de Proust, ça !":"S/033043fb565a.mp3","S|Chacun ses madeleines, Nathalie.":"S/184ed733a2a2.mp3","S|De la neige ! Regardez-moi ça, on se croirait au Canigou en plein mois de janvier !":"S/3330ac9a394b.mp3","S|Il pleut, mes amis ! Il pleut des cordes, des ficelles, des lacets !":"S/e5474d79c72a.mp3","S|Je le salue aussi ! Les petits matchs, c'est là que naissent les grands joueurs. Ne l'oubliez jamais.":"S/51e8f0b12016.mp3","S|La tête, les jambes, le cœur, les tripes, tout compte ! Ce soir, les familles sont divisées et les voisins ne se parlent plus jusqu'à lundi !":"S/d08542c8b556.mp3","S|Le ballon orange ! Comme une mandarine posée sur un gâteau à la crème. Magnifique.":"S/bcbce0b09960.mp3","S|Le papier, Nathalie ! Le papier ne court pas, le papier ne transpire pas ! C'est le terrain qui va parler !":"S/c5a3ec573ddf.mp3","S|Moi je sens des buts, des larmes, de la sueur et de la poésie ! On verra qui a raison !":"S/8daba191eb47.mp3","S|On va voir du ski nautique ce soir. Sortez les bouées !":"S/380bb6427e7c.mp3","S|Si vous êtes chez vous, montez le son. Si vous êtes au stade, vous n'entendez rien de ce que je dis… bonsoir quand même !":"S/56d80e607aac.mp3","S|Un derby ! Un DERBY ! J'ai des frissons jusque dans les chaussettes !":"S/665153ff867c.mp3"};
 var JOUEUR_3D = {"name":"A footballer 3d model","auteur":"AP 3d models (https://sketchfab.com/jeetu.143p)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/a-footballer-3d-model-afd601d0e0ea471f90b26c0d3b6c1cb7","bin":"joueur.bin","parts":[{"name":"corps","tris":12577,"alpha":false,"arr":{"pos":[0,22554],"nor":[90216,22554],"uv":[180432,15036],"bi":[240576,30072],"bw":[360864,30072],"reg":[481152,7518],"idx":[511224,37731]},"map":"corps.jpg","nmap":"corps_n.jpg"},{"name":"cheveux","tris":3669,"alpha":true,"arr":{"pos":[662148,11472],"nor":[708036,11472],"uv":[753924,7648],"bi":[784516,15296],"bw":[845700,15296],"reg":[906884,3824],"idx":[922180,11007]},"map":"cheveux.png"}],"bind":[[1,0,0,0,0,1,0,0,0,0,1,0,0,0.9561621074541208,0,1],[1,0,0,0,0,1,0,0,0,0,1,0,0,1.1114961124377731,0,1],[1,0,0,0,0,1,0,0,0,0,1,0,0,1.5915074134701013,0,1],[1,0,0,0,0,0.06507265101264002,0.9978805289663624,0,0,-0.9978805289663624,0.06507265101264002,0,0,1.4698137585331512,-0.19810914412195205,1],[1,0,0,0,0,0.06507265101264002,0.9978805289663624,0,0,-0.9978805289663624,0.06507265101264002,0,0,1.451196050022711,-0.483609250963011,1],[1,0,0,0,0,0.06507265101264002,0.9978805289663624,0,0,-0.9978805289663624,0.06507265101264002,0,0,1.436920698147589,-0.7025198909730603,1],[1,0,0,0,0,0.06876318803696509,-0.9976330106662434,0,0,0.9976330106662434,0.06876318803696509,0,0,1.4698137585331512,0.19810914412195205,1],[1,0,0,0,0,0.06876318803696509,-0.9976330106662434,0,0,0.9976330106662434,0.06876318803696509,0,0,1.4501401633868256,0.48353843436816046,1],[1,0,0,0,0,0.06876318803696509,-0.9976330106662434,0,0,0.9976330106662434,0.06876318803696509,0,0,1.4350551977367836,0.7023947749025508,1],[0.9982234212070645,-0.059581887798754285,0,0,0.059318219422530634,0.9938059722422536,0.0939736046992415,0,-0.0055991247712346955,-0.09380665318603713,0.9955746891217306,0,0,0.9017922101197102,-0.09436051729552487,1],[0.9982234212070645,-0.059581887798754285,0,0,0.059318219422530634,0.9938059722422536,0.0939736046992415,0,-0.0055991247712346955,-0.09380665318603713,0.9955746891217306,0,-0.021932103902617326,0.5343459844162471,-0.1291059780061074,1],[0.9982234212070645,-0.059581887798754285,0,0,0.059318219422530634,0.9938059722422536,0.0939736046992415,0,-0.0055991247712346955,-0.09380665318603713,0.9955746891217306,0,-0.046543159907541404,0.122017113472557,-0.16809551057726158,1],[0.9987227153012338,-0.05052660627165251,0,0,0.05030278712397283,0.9942986448282388,-0.09402039406579786,0,0.0047505314324681825,0.09390030325508565,0.9955702715025756,0,0,0.9017922101197102,0.09436051729552487,1],[0.9987227153012338,-0.05052660627165251,0,0,0.05030278712397283,0.9942986448282388,-0.09402039406579786,0,0.0047505314324681825,0.09390030325508565,0.9955702715025756,0,-0.01859877057225307,0.5341638254362409,0.12912327773726662,1],[0.9987227153012338,-0.05052660627165251,0,0,0.05030278712397283,0.9942986448282388,-0.09402039406579786,0,0.0047505314324681825,0.09390030325508565,0.9955702715025756,0,-0.03946933484683819,0.12163054524487249,0.16813222315883952,1]],"rig":{"hp":0.9562,"hipY":-0.0544,"hipW":0.0944,"thigh":0.3697,"shin":0.4149,"torY":0.1553,"shY":0.3583,"shW":0.1981,"ua":0.2861,"fa":0.2194,"neck":0.48,"numX":-0.1502,"numY":0.2222},"lum":[0.469,0.765,0.747,0.842,0.231,0.5]};
 var STADE_3D = {"name":"football stade","auteur":"mohamed ouartassi (https://sketchfab.com/mohamedouartassi)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/football-stade-cda2fcbaefb84fa280a5bf7213c67a71","bin":"stade.bin","pieces":{"pylone":[{"mat":"metal_dark.002","col":[0.3131,0.3131,0.3131],"rough":0,"metal":1,"tris":801,"arr":{"pos":[0,1320],"nor":[5280,1320],"idx":[6600,2403]}},{"mat":"metal_clear","col":[0.0593,0.0593,0.0593],"rough":0.98,"metal":0,"tris":462,"arr":{"pos":[11408,1206],"nor":[16232,1206],"idx":[17440,1386]}},{"mat":"metal_dark","col":[0.0593,0.0593,0.0593],"rough":0.98,"metal":0,"tris":294,"arr":{"pos":[20212,573],"nor":[22504,573],"idx":[23080,882]}},{"mat":"light_cold","col":[0.8,0.8,0.8],"rough":0.8,"metal":0,"tris":172,"arr":{"pos":[24844,378],"nor":[26356,378],"idx":[26736,516]}}],"siege":[{"mat":"PlasticRAL3018","col":[0.6627,0.0235,0.0235],"rough":0.98,"metal":0,"tris":210,"arr":{"pos":[27768,321],"nor":[29052,321],"idx":[29376,630]}}],"banc":[{"mat":"PlasticRAL3018","col":[0.6627,0.0235,0.0235],"rough":0.98,"metal":0,"tris":2100,"arr":{"pos":[30636,3210],"nor":[43476,3210],"idx":[46688,6300]}},{"mat":"MetalPaint_RAL5010_riffl","col":[0.004,0.0158,0.0671],"rough":0.96,"metal":0,"tris":4,"arr":{"pos":[59288,12],"nor":[59336,12],"idx":[59348,12]}},{"mat":"MetalPaint_RAL5010","col":[0.004,0.0158,0.0671],"rough":0.96,"metal":0,"tris":202,"arr":{"pos":[59372,228],"nor":[60284,228],"idx":[60512,606]}}],"siege_b":[{"mat":"PlasticRAL3018","col":[0.6627,0.0235,0.0235],"rough":0.98,"metal":0,"tris":42,"arr":{"pos":[61724,69],"nor":[62000,69],"idx":[62072,126]}}]}};
+var DECOR_3D = {"bin":"decor.bin","tex":{"feuilles_ete":"feuilles_ete.webp","feuilles_printemps":"feuilles_printemps.webp","feuilles_automne":"feuilles_automne.webp","feuilles_fin_automne":"feuilles_fin_automne.webp","feuilles_hiver":"feuilles_hiver.webp","ecorce_chene":"ecorce_chene.jpg","foret":"foret.webp","ecorce_sapin":"ecorce_sapin.jpg","chemin":"chemin.jpg"},"credits":[{"nom":"Oak trees pack (17var, LODs, seasons, gameready)","auteur":"LOLIPOP (https://sketchfab.com/lolipop_1707)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/oak-trees-pack-17var-lods-seasons-gameready-a5e4e64f9f1d4089bdcc6170a9333393"},{"nom":"a forest (3) with a road at night for game","auteur":"dasy444 (https://sketchfab.com/dasy444)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/a-forest-3-with-a-road-at-night-for-game-61f8c7817fe6457fb26e4814cfc48a3f"}],"pieces":{"chene_a":{"unit":"m","parts":[{"tex":"ecorce_chene","alpha":false,"tris":478,"arr":{"pos":[0,1122],"nor":[4488,1122],"uv":[5612,748],"idx":[8604,1434]}},{"tex":"feuilles","alpha":true,"tris":2630,"arr":{"pos":[11472,10680],"nor":[54192,10680],"uv":[64872,7120],"idx":[93352,7890]}}],"size":[13.645,20.29,17.289]},"chene_b":{"unit":"m","parts":[{"tex":"ecorce_chene","alpha":false,"tris":476,"arr":{"pos":[109132,1107],"nor":[113560,1107],"uv":[114668,738],"idx":[117620,1428]}},{"tex":"feuilles","alpha":true,"tris":2717,"arr":{"pos":[120476,11040],"nor":[164636,11040],"uv":[175676,7360],"idx":[205116,8151]}}],"size":[20.532,19.472,15.675]},"chene_c":{"unit":"m","parts":[{"tex":"ecorce_chene","alpha":false,"tris":364,"arr":{"pos":[221420,762],"nor":[224468,762],"uv":[225232,508],"idx":[227264,1092]}},{"tex":"feuilles","alpha":true,"tris":1030,"arr":{"pos":[229448,4179],"nor":[246164,4179],"uv":[250344,2786],"idx":[261488,3090]}}],"size":[8.993,10.238,8.566]},"chene_d":{"unit":"m","parts":[{"tex":"ecorce_chene","alpha":false,"tris":350,"arr":{"pos":[267668,726],"nor":[270572,726],"uv":[271300,484],"idx":[273236,1050]}},{"tex":"feuilles","alpha":true,"tris":1144,"arr":{"pos":[275336,4638],"nor":[293888,4638],"uv":[298528,3092],"idx":[310896,3432]}}],"size":[9.354,12.697,9.229]},"chene_e":{"unit":"m","parts":[{"tex":"ecorce_chene","alpha":false,"tris":137,"arr":{"pos":[317760,273],"nor":[318852,273],"uv":[319128,182],"idx":[319856,411]}},{"tex":"feuilles","alpha":true,"tris":68,"arr":{"pos":[320680,246],"nor":[321664,246],"uv":[321912,164],"idx":[322568,204]}}],"size":[3.321,5.385,3.775]},"sapin":{"unit":"h","parts":[{"tex":"ecorce_sapin","alpha":false,"tris":84,"arr":{"pos":[322976,282],"nor":[324104,282],"uv":[324388,188],"idx":[325140,252]}},{"tex":"foret","alpha":true,"tris":264,"arr":{"pos":[325644,522],"nor":[327732,522],"uv":[328256,348],"idx":[329648,792]}}],"size":[0.379,1,0.379]},"herbe":{"unit":"h","parts":[{"tex":"foret","alpha":true,"tris":24,"arr":{"pos":[331232,48],"nor":[331424,48],"uv":[331472,32],"idx":[331600,72]}}],"size":[0.807,1,0.807]},"buisson":{"unit":"h","parts":[{"tex":"foret","alpha":true,"tris":152,"arr":{"pos":[331744,336],"nor":[333088,336],"uv":[333424,224],"idx":[334320,456]}}],"size":[0.471,1,0.471]},"fougere":{"unit":"h","parts":[{"tex":"foret","alpha":true,"tris":144,"arr":{"pos":[335232,288],"nor":[336384,288],"uv":[336672,192],"idx":[337440,432]}}],"size":[1.269,1,1.168]}}};
 (function(){
 // ===== src/data.js =====
 // ===== DONNÉES RÉELLES — saison 2026-27 (après le mercato d'été 2026, état au 11/10/2026) =====
@@ -3580,7 +3581,7 @@ function matchCond(prep) {
   const hs = prep.h.s || 60, cap = clamp(4000 + (hs - 60) * 3000, 3000, 81000);
   const att = youth ? ri(40, 400) : amateur ? ri(150, 1500) : prep.intl || prep.tour ? ri(30000, 78000) : Math.round(Math.min(cap, cap * rf(.7, 1.02) * (big ? 1.1 : 1)) / 100) * 100;
   const temp = Math.round((winter ? 4 : cold ? 10 : m >= 5 && m <= 7 ? 26 : 17) + rf(-4, 4) - (night ? 3 : 0));
-  return { night, rain, snow, wear: Math.round(wear * 100) / 100, att, derby: !!prep.derby, big, youth, seed: hueOf(prep.h.n), temp };
+  return { night, rain, snow, mo: m, wear: Math.round(wear * 100) / 100, att, derby: !!prep.derby, big, youth, seed: hueOf(prep.h.n), temp };
 }
 function condTxt(c) { if (!c) return ''; const a = []; if (c.night) a.push('Nocturne'); a.push(c.snow ? 'Neige' : c.rain ? 'Pluie' : c.night ? 'Ciel dégagé' : 'Soleil'); a.push(c.temp + ' °C'); if (c.wear > .45) a.push('Pelouse abîmée'); a.push(c.att.toLocaleString('fr-FR') + ' spectateurs'); return a.join(' · '); }
 
@@ -6079,6 +6080,8 @@ function g3Match(M) {
   }
   // tribunes et public
   g3Stands(S3, M, cls, rnd, night);
+  // décors autour du stade : terrain, route, chemin ; la forêt arrive avec g3DcDress (m3ddeco.js)
+  S3.userData.deco = Object.assign(g3DcGround(S3, cls, C, rnd), { night, low, seed: C.seed || 7, treeG: S3.userData.st ? S3.userData.st.treeG : null });
   // météo
   if (wet || snow) g3Weather(snow, low);
   G3.sbKey = ''; G3.M = M; G3.cm.init = false; G3.lastT = null;
@@ -6149,15 +6152,16 @@ function g3Stands(S3, M, cls, rnd, night) {
     for (const [x, z] of pts) { const m = new THREE.Mesh(new THREE.CylinderGeometry(.25, .45, hgt, 8), mastM); m.position.set(x, hgt / 2, z); mg.add(m); const p = new THREE.Mesh(new THREE.BoxGeometry(cls === 0 ? 1.5 : 5, cls === 0 ? 1 : 3.5, .4), lampM); p.position.set(x, hgt + 1, z); p.lookAt(0, 0, 0); mg.add(p); if (night) g3Glow(mg, x * .98, hgt + 1, z * .98, cls === 0 ? 10 : 26); }
     G3.lamps = pts.map(([x, z]) => [x, hgt, z]);
   } else { G3.lamps = [[-58, 30, -46], [58, 30, -46], [-58, 30, 46], [58, 30, 46]]; if (night) for (const [x, y, z] of G3.lamps) g3Glow(S3, x, y, z, 20); }
-  // petits terrains : arbres et barrière
+  // petits terrains : arbres (remplacés par la vraie forêt du décor dès qu'elle est chargée)
+  let treeG = null;
   if (cls === 0) {
     const tr = new THREE.InstancedMesh(g3Merge([g3Tint(new THREE.CylinderGeometry(.2, .3, 3, 6).translate(0, 1.5, 0), 0x5a4026), g3Tint(new THREE.ConeGeometry(2.4, 6, 8).translate(0, 5.5, 0), 0x2f5a2c)]), new THREE.MeshLambertMaterial({ vertexColors: true }), 40);
-    const m4 = new THREE.Matrix4(); for (let i = 0; i < 40; i++) { const a = i / 40 * Math.PI * 2, rr = 78 + rnd() * 20; m4.makeTranslation(Math.cos(a) * rr, 0, Math.sin(a) * rr * .75); tr.setMatrixAt(i, m4); } S3.add(tr);
+    const m4 = new THREE.Matrix4(); for (let i = 0; i < 40; i++) { const a = i / 40 * Math.PI * 2, rr = 78 + rnd() * 20; m4.makeTranslation(Math.cos(a) * rr, 0, Math.sin(a) * rr * .75); tr.setMatrixAt(i, m4); } S3.add(tr); treeG = tr;
   }
   // main courante, grillage et pare-ballons (petits stades)
   if (cls <= 1) g3StFence(S3, cls, night);
   // ce qu'il faut pour « habiller » le stade avec les vraies pièces 3D (mâts, sièges, bancs) dès qu'elles sont chargées
-  S3.userData.st = { cls, night, seats: seats.length ? new Float32Array(seats) : null, seatCol: hc.clone().multiplyScalar(.6), mastG };
+  S3.userData.st = { cls, night, seats: seats.length ? new Float32Array(seats) : null, seatCol: hc.clone().multiplyScalar(.6), mastG, treeG };
   // écran géant (grands stades)
   if (cls === 0) { // écran du score accroché à la clôture du city-stade (comme sur le modèle)
     const [c, x] = g3Canvas(512, 160); G3.sb = { c, x, t: g3Tex(c) }; G3.sbKey = '';
@@ -6334,7 +6338,7 @@ function g3Draw(M, t, dt, paused) {
   const pr = lvPair(t); if (!pr) return false;
   const [fa, fb, a] = pr, L = i => fa[i] + (fb[i] - fa[i]) * a, mir = fa[2] === 2, E = M.E, P = G3.P;
   const X = x => (mir ? PL - x : x) - 52.5, Z = y => (mir ? PW - y : y) - 34, YAW = f => mir ? f + Math.PI : f;
-  g3SkAttach(P); g3StDress(G3.stad);
+  g3SkAttach(P); g3StDress(G3.stad); g3DcDress(G3.stad);
   const ros = LV.ros[fa[8]] || LV.ros[Object.keys(LV.ros).pop()] || meRoster(E); g3Kits(M, ros);
   // temps de jeu écoulé depuis l'image précédente (phases de course)
   const snap = G3.lastT == null || Math.abs(t - G3.lastT) > 1;
@@ -6402,6 +6406,7 @@ function g3Draw(M, t, dt, paused) {
   const now = performance.now() / 1000;
   if (G3.crowdU) { G3.crowdU.uT.value = now; const hot = lvHlSpeed(t) ? .55 : 0, gl = celeb ? 1 : 0; G3.crowdExc = (G3.crowdExc || 0) + ((Math.max(hot, gl, .08)) - (G3.crowdExc || 0)) * Math.min(1, dt * 2); G3.crowdU.uE.value = G3.crowdExc; }
   if (G3.adT) G3.adT.offset.x = (now * .04) % 1;
+  G3DC.wind.uT.value = now;
   if (G3.wxU) { G3.wxU.uT.value = now; G3.wx.position.set(G3.cm.p ? G3.cm.p[3] : 0, 0, 0); }
   for (const s of G3.flares || []) s.material.opacity = .6 + .4 * Math.sin(now * 9 + s.position.x);
   if (G3.sb) { const key = M.hg + '-' + M.ag + '-' + M.min; if (key !== G3.sbKey) { G3.sbKey = key; const { c, x } = G3.sb, h0 = M.side === 'h'; x.fillStyle = '#05070b'; x.fillRect(0, 0, 512, 160); x.fillStyle = '#ffd166'; x.font = '900 30px Arial'; x.textAlign = 'center'; x.fillText(M.min + "'", 256, 40); x.fillStyle = '#fff'; x.font = '800 30px Arial'; const hn = String(h0 ? M.my : M.op).slice(0, 12).toUpperCase(), an = String(h0 ? M.op : M.my).slice(0, 12).toUpperCase(); x.fillText(hn, 128, 100); x.fillText(an, 384, 100); x.font = '900 56px Arial'; x.fillText(M.hg + ' - ' + M.ag, 256, 112); G3.sb.t.needsUpdate = true; } }
@@ -6964,6 +6969,148 @@ function g3NetUpdate(dt, bx, by, bz, rb) {
     for (const S of N.sheets) for (let k = 0; k < S.n; k++) { const o = (S.off + k) * 3, dd = S.d[k]; pa[o] = N.s * (S.rest[k * 3] + S.nrm[k * 3] * dd); pa[o + 1] = S.rest[k * 3 + 1] + S.nrm[k * 3 + 1] * dd; pa[o + 2] = S.rest[k * 3 + 2] + S.nrm[k * 3 + 2] * dd; }
     N.geo.attributes.position.needsUpdate = true; N.geo.computeVertexNormals();
   }
+}
+
+// ===== src/m3ddeco.js =====
+// ---------- Décors autour du stade : terrain, route éclairée, chemin forestier, forêt de chênes et de sapins, sous-bois ----------
+// Arbres et plantes : « Oak trees pack » de LOLIPOP et « a forest (3) with a road at night » de dasy444 (CC BY 4.0),
+// préparés par tools/decor3d.py. Le terrain, la route et les lampadaires sont dessinés ici. Les chênes changent de feuillage
+// avec la saison du match (printemps, été, automne, fin d'automne, hiver) et tous les feuillages bougent au vent.
+const G3DC = { model: null, loading: null, fail: false, tex: {}, wind: { uT: { value: 0 } } };
+function g3DcLoad() {
+  if (G3DC.model || G3DC.loading || G3DC.fail) return G3DC.loading;
+  if (typeof DECOR_3D === 'undefined' || !DECOR_3D || !DECOR_3D.pieces) { G3DC.fail = true; return null; }
+  const J = DECOR_3D, q = typeof MEDIA_H !== 'undefined' && MEDIA_H.decor ? '?h=' + MEDIA_H.decor : '';
+  G3DC.loading = fetch('assets/decor/' + J.bin + q).then(r => { if (!r.ok) throw new Error('décor'); return r.arrayBuffer(); })
+    .then(buf => {
+      const out = {};
+      for (const [k, pc] of Object.entries(J.pieces)) out[k] = { unit: pc.unit, size: pc.size, parts: pc.parts.map(p => {
+        const g = new THREE.BufferGeometry(), A = p.arr;
+        g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(buf, A.pos[0], A.pos[1]), 3));
+        g.setAttribute('normal', new THREE.BufferAttribute(new Int8Array(buf, A.nor[0], A.nor[1]), 3, true));
+        g.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(buf, A.uv[0], A.uv[1]), 2));
+        g.setIndex(new THREE.BufferAttribute(new Uint16Array(buf, A.idx[0], A.idx[1]), 1)); g.computeBoundingSphere();
+        return { tex: p.tex, alpha: p.alpha, geo: g };
+      }) };
+      G3DC.model = out; return out;
+    }).catch(() => { G3DC.fail = true; return null; });
+  return G3DC.loading;
+}
+// texture du dossier assets/decor (chargée une seule fois ; se met à jour toute seule une fois l'image arrivée)
+function g3DcTex(name) {
+  if (G3DC.tex[name]) return G3DC.tex[name];
+  const J = DECOR_3D, f = J.tex[name], q = typeof MEDIA_H !== 'undefined' && MEDIA_H.decor ? '?h=' + MEDIA_H.decor : '';
+  const t = new THREE.Texture(); t.encoding = THREE.sRGBEncoding; t.flipY = false; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = G3.r ? Math.min(4, G3.r.capabilities.getMaxAnisotropy()) : 1;
+  if (f) { const im = new Image(); im.onload = () => { t.image = im; t.needsUpdate = true; }; im.src = 'assets/decor/' + f + q; }
+  G3DC.tex[name] = t; return t;
+}
+// saison du match (mois de la date du jeu) → feuillage des chênes et couleur des prés
+function g3DcSeason(C) {
+  if (C.snow) return 'hiver';
+  const m = C.mo != null ? C.mo : (typeof today === 'function' ? today().getMonth() : 5);
+  return m === 11 || m <= 1 ? 'hiver' : m <= 3 ? 'printemps' : m <= 7 ? 'ete' : m <= 9 ? 'automne' : 'fin_automne';
+}
+function g3DcMat(p, season, night) {
+  const tn = p.tex === 'feuilles' ? 'feuilles_' + season : p.tex, K = tn + (night ? 'n' : 'd') + (p.alpha ? 'a' : '');
+  if (G3DC['_m' + K]) return G3DC['_m' + K];
+  const m = new THREE.MeshLambertMaterial({ map: g3DcTex(tn), side: p.alpha ? THREE.DoubleSide : THREE.FrontSide, alphaTest: p.alpha ? .42 : 0, color: night ? 0x8a93a0 : 0xffffff });
+  if (p.alpha) m.onBeforeCompile = s => { // le feuillage se balance au vent (plus fort en haut de l'arbre)
+    s.uniforms.uT = G3DC.wind.uT;
+    s.vertexShader = s.vertexShader.replace('#include <common>', '#include <common>\nuniform float uT;').replace('#include <begin_vertex>', '#include <begin_vertex>\n#ifdef USE_INSTANCING\nfloat gPh = instanceMatrix[3].x * 0.07 + instanceMatrix[3].z * 0.05;\n#else\nfloat gPh = 0.0;\n#endif\nfloat gW = max(0.0, position.y) * 0.012; transformed.x += sin(uT * 1.2 + gPh) * gW; transformed.z += cos(uT * 0.9 + gPh * 1.7) * gW * 0.6;');
+  };
+  G3DC['_m' + K] = m; return m;
+}
+// terrain et route : dessinés tout de suite (sans fichier), les arbres arrivent avec g3DcDress
+function g3DcGround(S3, cls, C, rnd) {
+  const night = !!C.night, season = g3DcSeason(C), low = g3Low();
+  const E = [[66, 50], [72, 57], [80, 66], [95, 80]][cls], zr = -(E[1] + 22);
+  // prés autour du stade (couleur selon la saison, neige l'hiver)
+  const base = C.snow ? ['#dfe6e8', '#cdd6d9', '#eef3f4'] : { printemps: ['#4d7a33', '#41692b', '#5e8a3c'], ete: ['#4a7232', '#3d6229', '#5a8139'], automne: ['#55703a', '#485f30', '#6b7a3f'], fin_automne: ['#5d653c', '#4e5532', '#6e6e44'], hiver: ['#56614a', '#4a5440', '#646c55'] }[season];
+  const [gc, gx] = g3Canvas(256, 256); gx.fillStyle = base[0]; gx.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < 2600; i++) { gx.fillStyle = base[1 + (i % 2)]; gx.globalAlpha = .25 + rnd() * .35; const r = 1 + rnd() * 5; gx.beginPath(); gx.arc(rnd() * 256, rnd() * 256, r, 0, 7); gx.fill(); }
+  gx.globalAlpha = .18; for (let i = 0; i < 260; i++) { gx.fillStyle = C.snow ? '#b8c2c6' : '#7a6a4a'; gx.fillRect(rnd() * 256, rnd() * 256, 1 + rnd() * 3, 1 + rnd() * 3); } gx.globalAlpha = 1;
+  const gt = g3Tex(gc, [300, 300]), gg = new THREE.PlaneGeometry(3600, 3600, 72, 72), gn = gg.attributes.position.count, gcol = new Float32Array(gn * 3);
+  for (let i = 0; i < gn; i++) { const x = gg.attributes.position.getX(i), y = gg.attributes.position.getY(i), n = .5 + .5 * Math.sin(x * .021 + Math.sin(y * .013) * 2.1) * Math.cos(y * .017 - x * .006), f = .82 + n * .3 + (rnd() - .5) * .08; gcol[i * 3] = f * (C.snow ? 1 : 1.02); gcol[i * 3 + 1] = f; gcol[i * 3 + 2] = f * (C.snow ? 1 : .94); }
+  gg.setAttribute('color', new THREE.BufferAttribute(gcol, 3));
+  const ground = new THREE.Mesh(gg, new THREE.MeshLambertMaterial({ map: gt, vertexColors: true, color: night ? 0x56606b : 0xffffff })); ground.rotation.x = -Math.PI / 2; ground.position.y = -.04; ground.receiveShadow = false; S3.add(ground);
+  // grands stades : parvis en béton autour de l'enceinte
+  if (cls >= 2) { // en 4 bandes autour de la pelouse (jamais par-dessus)
+    const X = E[0] + 8, Z = E[1] + 8, gx2 = 62.5, gz2 = 44, pm2 = new THREE.MeshLambertMaterial({ color: night ? 0x3b3f45 : 0x9a9a96, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 });
+    for (const [w2, d2, x2, z2] of [[2 * X, Z - gz2, 0, (Z + gz2) / 2], [2 * X, Z - gz2, 0, -(Z + gz2) / 2], [X - gx2, 2 * gz2, (X + gx2) / 2, 0], [X - gx2, 2 * gz2, -(X + gx2) / 2, 0]]) { const pv = new THREE.Mesh(new THREE.PlaneGeometry(w2, d2), pm2); pv.rotation.x = -Math.PI / 2; pv.position.set(x2, -.03, z2); S3.add(pv); }
+  }
+  // route goudronnée derrière la tribune principale : bandes blanches, accotements, lampadaires
+  const [rc, rx] = g3Canvas(128, 256); rx.fillStyle = '#3a3c3f'; rx.fillRect(0, 0, 128, 256);
+  for (let i = 0; i < 900; i++) { rx.fillStyle = rnd() < .5 ? '#2f3134' : '#45484b'; rx.fillRect(rnd() * 128, rnd() * 256, 1 + rnd() * 2, 1 + rnd() * 2); }
+  rx.fillStyle = '#d9d9d2'; rx.fillRect(4, 0, 4, 256); rx.fillRect(120, 0, 4, 256); rx.fillRect(62, 0, 4, 150); // rives continues, ligne médiane pointillée
+  const rt = g3Tex(rc); rt.wrapS = rt.wrapT = THREE.RepeatWrapping; rt.repeat.set(1, 1600 / 14);
+  const road = new THREE.Mesh(new THREE.PlaneGeometry(7.5, 1600), new THREE.MeshLambertMaterial({ map: rt, color: night ? 0x8a929c : 0xffffff, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 })); road.rotation.set(-Math.PI / 2, 0, Math.PI / 2); road.position.set(0, -.02, zr); S3.add(road);
+  for (const s of [-1, 1]) { const sh = new THREE.Mesh(new THREE.PlaneGeometry(1600, 1.6), new THREE.MeshLambertMaterial({ color: C.snow ? 0xc9d0d2 : night ? 0x4a4436 : 0x8a7c5e, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 })); sh.rotation.x = -Math.PI / 2; sh.position.set(0, -.025, zr + s * 4.5); S3.add(sh); }
+  const lamps = [], step = 32; for (let x = -320; x <= 320; x += step) lamps.push([x + 6, zr - 5.2]);
+  const pole = g3Merge([new THREE.CylinderGeometry(.08, .12, 8, 6).translate(0, 4, 0), new THREE.BoxGeometry(.12, .12, 2.2).translate(0, 7.9, 1.05), new THREE.BoxGeometry(.5, .16, .9).translate(0, 7.8, 2.0)]);
+  const pm = new THREE.InstancedMesh(pole, new THREE.MeshLambertMaterial({ color: night ? 0x3a3f45 : 0x6c7278 }), lamps.length), m4 = new THREE.Matrix4();
+  lamps.forEach(([x, z], i) => { m4.makeTranslation(x, 0, z); pm.setMatrixAt(i, m4); }); S3.add(pm);
+  if (night) { const hm = new THREE.InstancedMesh(new THREE.BoxGeometry(.42, .04, .8).translate(0, 7.71, 2.0), new THREE.MeshBasicMaterial({ color: 0xffe3a6 }), lamps.length); lamps.forEach(([x, z], i) => { m4.makeTranslation(x, 0, z); hm.setMatrixAt(i, m4); }); S3.add(hm); if (!low) for (const [x, z] of lamps) if (Math.abs(x) < 220) g3Glow(S3, x, 7.6, z + 2, 7, '#ffd9a0'); }
+  // chemin forestier (texture du modèle) qui part de la route dans les bois
+  const cx0 = 42, [pc, px] = g3Canvas(512, 512), pt = g3Tex(pc), img = new Image();
+  img.onload = () => { px.drawImage(img, 0, 0, 512, 512); px.globalCompositeOperation = 'destination-in'; const gr = px.createRadialGradient(256, 256, 120, 256, 256, 256); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); px.fillStyle = gr; px.fillRect(0, 0, 512, 512); px.globalCompositeOperation = 'source-over'; pt.needsUpdate = true; };
+  if (typeof DECOR_3D !== 'undefined' && DECOR_3D && DECOR_3D.tex && DECOR_3D.tex.chemin && !C.snow) { img.src = 'assets/decor/' + DECOR_3D.tex.chemin + (typeof MEDIA_H !== 'undefined' && MEDIA_H.decor ? '?h=' + MEDIA_H.decor : '');
+    const path = new THREE.Mesh(new THREE.PlaneGeometry(34, 34), new THREE.MeshLambertMaterial({ map: pt, transparent: true, depthWrite: false, color: night ? 0x7f8a96 : 0xffffff, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 })); path.rotation.x = -Math.PI / 2; path.position.set(cx0, -.015, zr - 21); S3.add(path); }
+  return { E, zr, season, path: [cx0, zr - 21] };
+}
+// forêt et sous-bois (quand les arbres sont chargés)
+function g3DcDress(S3) {
+  const U = S3 && S3.userData, D = U && U.deco; if (!D || U.decoDone) return;
+  const md = G3DC.model; if (!md) { if (G3DC.fail) U.decoDone = true; else g3DcLoad(); return; }
+  U.decoDone = true;
+  try {
+    const { E, zr, season, night, low, seed } = D; let rs = seed * 7919 + 13; const rnd = () => (rs = (rs * 9301 + 49297) % 233280) / 233280;
+    if (D.treeG) { S3.remove(D.treeG); g3Dispose(D.treeG); D.treeG = null; }
+    const out = (x, z, m) => Math.abs(x) > E[0] + m || Math.abs(z) > E[1] + m;
+    const free = (x, z) => out(x, z, 6) && Math.abs(z - zr) > 8.5 && !(Math.abs(x - D.path[0]) < 9 && z < zr - 4 && z > zr - 40);
+    const inst = {}; const add = (k, x, z, s, ry) => (inst[k] = inst[k] || []).push([x, z, s, ry]);
+    // arbres : forêt dense au-delà de la route, bosquets ailleurs ; plus clairsemé en allant vers l'horizon
+    const N = low ? 150 : 300; let tries = 0, n = 0;
+    while (n < N && tries++ < N * 30) {
+      const a = rnd() * Math.PI * 2, r = 40 + Math.pow(rnd(), .75) * 340, x = Math.cos(a) * r, z = Math.sin(a) * r * .85;
+      if (!free(x, z)) continue;
+      const forest = z < zr - 8.5;
+      if (!forest && rnd() > .45) continue; // moins d'arbres autour du stade qu'en forêt
+      const near = Math.hypot(x, z) < 170, u = rnd();
+      const k = near ? (u < .1 ? 'chene_a' : u < .17 ? 'chene_b' : u < .33 ? 'chene_c' : u < .45 ? 'chene_d' : u < .5 ? 'chene_e' : 'sapin') : (u < .05 ? 'chene_a' : u < .14 ? 'chene_c' : 'sapin');
+      add(k, x, z, k === 'sapin' ? 11 + rnd() * 11 : .8 + rnd() * .45, rnd() * Math.PI * 2); n++;
+      // sous-bois au pied des arbres proches
+      if (near && !low) { const c = 1 + Math.floor(rnd() * 3); for (let i = 0; i < c; i++) { const bx = x + (rnd() - .5) * 9, bz = z + (rnd() - .5) * 9; if (!free(bx, bz)) continue; const v = rnd(); add(v < .45 ? 'herbe' : v < .75 ? 'fougere' : 'buisson', bx, bz, v < .45 ? .45 + rnd() * .35 : v < .75 ? .7 + rnd() * .5 : 1.1 + rnd() * .9, rnd() * 7); } }
+    }
+    // touffes d'herbe et buissons le long du stade et de la route
+    const tufts = low ? 90 : 260; for (let i = 0; i < tufts; i++) {
+      const side = rnd(); let x, z;
+      if (side < .55) { const t = rnd() * 2 - 1, f = rnd() < .5; x = f ? t * (E[0] + 4) : Math.sign(rnd() - .5) * (E[0] + 3 + rnd() * 6); z = f ? Math.sign(rnd() - .5) * (E[1] + 3 + rnd() * 6) : t * (E[1] + 4); }
+      else { x = (rnd() - .5) * 400; z = zr + Math.sign(rnd() - .5) * (5.5 + rnd() * 2.5); }
+      if (!out(x, z, 2) || Math.abs(z - zr) < 4.6) continue;
+      const v = rnd(); add(v < .7 ? 'herbe' : v < .88 ? 'fougere' : 'buisson', x, z, v < .7 ? .4 + rnd() * .35 : .6 + rnd() * .6, rnd() * 7);
+    }
+    // un maillage instancié par pièce, par matériau et par secteur (6 parts de gâteau autour du stade) :
+    // chaque secteur a sa propre sphère englobante, la caméra ne dessine que les secteurs qu'elle voit
+    const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), v = new THREE.Vector3(), sc = new THREE.Vector3(), Y = new THREE.Vector3(0, 1, 0);
+    const sector = (x, z) => Math.floor((Math.atan2(z, x) + Math.PI) / (Math.PI * 2) * 6) % 6;
+    for (const [k, all] of Object.entries(inst)) {
+      const pc = md[k]; if (!pc) continue;
+      const h = pc.unit === 'h' ? 1 : pc.size[1], rad = Math.max(pc.size[0], pc.size[2]) / (pc.unit === 'h' ? 1 : 1) * .6;
+      for (let sct = 0; sct < 6; sct++) {
+        const list = all.filter(([x, z]) => sector(x, z) === sct); if (!list.length) continue;
+        let cx = 0, cz = 0, sm = 0; for (const [x, z, s] of list) { cx += x; cz += z; sm = Math.max(sm, s); } cx /= list.length; cz /= list.length;
+        let r = 0; for (const [x, z] of list) r = Math.max(r, Math.hypot(x - cx, z - cz)); r += (rad + h) * sm;
+        for (const p of pc.parts) {
+          const g = new THREE.BufferGeometry(); for (const a of ['position', 'normal', 'uv']) g.setAttribute(a, p.geo.attributes[a]); g.setIndex(p.geo.index);
+          g.boundingSphere = new THREE.Sphere(new THREE.Vector3(cx, h * sm / 2, cz), r);
+          const im = new THREE.InstancedMesh(g, g3DcMat(p, season, night), list.length);
+          list.forEach(([x, z, s, ry], i) => { q.setFromAxisAngle(Y, ry); m4.compose(v.set(x, 0, z), q, sc.set(s, s, s)); im.setMatrixAt(i, m4); });
+          S3.add(im);
+        }
+      }
+    }
+    D.count = Object.fromEntries(Object.entries(inst).map(([k, l]) => [k, l.length]));
+  } catch (e) { console.warn('décor 3D', e); }
 }
 
 // ===== src/intro.js =====
@@ -8846,7 +8993,7 @@ function vHelp() {
 function vCredits() {
   return `<section class="card sec"><h3>Ce qui est réel</h3><p class="note">Clubs, entraîneurs, sélectionneurs et effectifs principaux de la saison 2026-27, mis à jour au 11 octobre 2026 (mercato d'été 2026 compris). Coupe du monde 2026 : ${REAL_FACTS.wc2026}. Ballon d'Or 2025 : ${REAL_FACTS.bdo2025}.</p></section>
   <section class="card sec"><h3>Ce qui est simulé</h3><p class="note">Tous les résultats à partir du début de ta carrière, le Ballon d'Or 2026 (cérémonie réelle le ${REAL_FACTS.bdo2026date}), les transferts futurs, les jeunes joueurs générés, les sponsors (marques fictives) et ta vie.</p></section>
-  ${typeof JOUEUR_3D !== 'undefined' && JOUEUR_3D ? `<section class="card sec"><h3>Joueurs en 3D</h3><p class="note">Modèle « ${esc(JOUEUR_3D.name)} » par ${esc(String(JOUEUR_3D.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(JOUEUR_3D.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(JOUEUR_3D.source || 'Sketchfab')}. Adapté pour le jeu : allégé, squelette et animations du jeu, couleurs des clubs.</p></section>` : ''}${typeof STADE_3D !== 'undefined' && STADE_3D ? `<section class="card sec"><h3>Stade en 3D</h3><p class="note">Mâts d'éclairage, sièges et bancs de touche tirés du modèle « ${esc(STADE_3D.name)} » par ${esc(String(STADE_3D.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(STADE_3D.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(STADE_3D.source || 'Sketchfab')}. Adapté pour le jeu : pièces allégées et remises à l'échelle, placées autour du terrain.</p></section>` : ''}
+  ${typeof JOUEUR_3D !== 'undefined' && JOUEUR_3D ? `<section class="card sec"><h3>Joueurs en 3D</h3><p class="note">Modèle « ${esc(JOUEUR_3D.name)} » par ${esc(String(JOUEUR_3D.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(JOUEUR_3D.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(JOUEUR_3D.source || 'Sketchfab')}. Adapté pour le jeu : allégé, squelette et animations du jeu, couleurs des clubs.</p></section>` : ''}${typeof STADE_3D !== 'undefined' && STADE_3D ? `<section class="card sec"><h3>Stade en 3D</h3><p class="note">Mâts d'éclairage, sièges et bancs de touche tirés du modèle « ${esc(STADE_3D.name)} » par ${esc(String(STADE_3D.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(STADE_3D.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(STADE_3D.source || 'Sketchfab')}. Adapté pour le jeu : pièces allégées et remises à l'échelle, placées autour du terrain.</p></section>` : ''}${typeof DECOR_3D !== 'undefined' && DECOR_3D && DECOR_3D.credits ? `<section class="card sec"><h3>Décors autour du stade</h3>${DECOR_3D.credits.map(c => `<p class="note">« ${esc(c.nom)} » par ${esc(String(c.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(c.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(c.source || 'Sketchfab')}.</p>`).join('')}<p class="note">Adapté pour le jeu : arbres allégés, feuillages selon la saison, plantés autour du stade avec une route et un chemin forestier.</p></section>` : ''}
   <section class="card sec"><h3>Crampons d'Or</h3><p class="note">Un simulateur de carrière pensé pour iPhone. Ajoute-le à l'écran d'accueil depuis Safari pour l'avoir comme une app : il marche aussi hors connexion et se met à jour tout seul.</p><p class="note">Version ${typeof GAME_VERSION !== 'undefined' ? GAME_VERSION : 'dev'}${typeof VOIX_INDEX !== 'undefined' ? ' · ' + Object.keys(VOIX_INDEX).length + ' répliques enregistrées' : ''}</p></section>`;
 }
 

@@ -195,6 +195,8 @@ function g3Match(M) {
   }
   // tribunes et public
   g3Stands(S3, M, cls, rnd, night);
+  // décors autour du stade : terrain, route, chemin ; la forêt arrive avec g3DcDress (m3ddeco.js)
+  S3.userData.deco = Object.assign(g3DcGround(S3, cls, C, rnd), { night, low, seed: C.seed || 7, treeG: S3.userData.st ? S3.userData.st.treeG : null });
   // météo
   if (wet || snow) g3Weather(snow, low);
   G3.sbKey = ''; G3.M = M; G3.cm.init = false; G3.lastT = null;
@@ -265,15 +267,16 @@ function g3Stands(S3, M, cls, rnd, night) {
     for (const [x, z] of pts) { const m = new THREE.Mesh(new THREE.CylinderGeometry(.25, .45, hgt, 8), mastM); m.position.set(x, hgt / 2, z); mg.add(m); const p = new THREE.Mesh(new THREE.BoxGeometry(cls === 0 ? 1.5 : 5, cls === 0 ? 1 : 3.5, .4), lampM); p.position.set(x, hgt + 1, z); p.lookAt(0, 0, 0); mg.add(p); if (night) g3Glow(mg, x * .98, hgt + 1, z * .98, cls === 0 ? 10 : 26); }
     G3.lamps = pts.map(([x, z]) => [x, hgt, z]);
   } else { G3.lamps = [[-58, 30, -46], [58, 30, -46], [-58, 30, 46], [58, 30, 46]]; if (night) for (const [x, y, z] of G3.lamps) g3Glow(S3, x, y, z, 20); }
-  // petits terrains : arbres et barrière
+  // petits terrains : arbres (remplacés par la vraie forêt du décor dès qu'elle est chargée)
+  let treeG = null;
   if (cls === 0) {
     const tr = new THREE.InstancedMesh(g3Merge([g3Tint(new THREE.CylinderGeometry(.2, .3, 3, 6).translate(0, 1.5, 0), 0x5a4026), g3Tint(new THREE.ConeGeometry(2.4, 6, 8).translate(0, 5.5, 0), 0x2f5a2c)]), new THREE.MeshLambertMaterial({ vertexColors: true }), 40);
-    const m4 = new THREE.Matrix4(); for (let i = 0; i < 40; i++) { const a = i / 40 * Math.PI * 2, rr = 78 + rnd() * 20; m4.makeTranslation(Math.cos(a) * rr, 0, Math.sin(a) * rr * .75); tr.setMatrixAt(i, m4); } S3.add(tr);
+    const m4 = new THREE.Matrix4(); for (let i = 0; i < 40; i++) { const a = i / 40 * Math.PI * 2, rr = 78 + rnd() * 20; m4.makeTranslation(Math.cos(a) * rr, 0, Math.sin(a) * rr * .75); tr.setMatrixAt(i, m4); } S3.add(tr); treeG = tr;
   }
   // main courante, grillage et pare-ballons (petits stades)
   if (cls <= 1) g3StFence(S3, cls, night);
   // ce qu'il faut pour « habiller » le stade avec les vraies pièces 3D (mâts, sièges, bancs) dès qu'elles sont chargées
-  S3.userData.st = { cls, night, seats: seats.length ? new Float32Array(seats) : null, seatCol: hc.clone().multiplyScalar(.6), mastG };
+  S3.userData.st = { cls, night, seats: seats.length ? new Float32Array(seats) : null, seatCol: hc.clone().multiplyScalar(.6), mastG, treeG };
   // écran géant (grands stades)
   if (cls === 0) { // écran du score accroché à la clôture du city-stade (comme sur le modèle)
     const [c, x] = g3Canvas(512, 160); G3.sb = { c, x, t: g3Tex(c) }; G3.sbKey = '';
@@ -450,7 +453,7 @@ function g3Draw(M, t, dt, paused) {
   const pr = lvPair(t); if (!pr) return false;
   const [fa, fb, a] = pr, L = i => fa[i] + (fb[i] - fa[i]) * a, mir = fa[2] === 2, E = M.E, P = G3.P;
   const X = x => (mir ? PL - x : x) - 52.5, Z = y => (mir ? PW - y : y) - 34, YAW = f => mir ? f + Math.PI : f;
-  g3SkAttach(P); g3StDress(G3.stad);
+  g3SkAttach(P); g3StDress(G3.stad); g3DcDress(G3.stad);
   const ros = LV.ros[fa[8]] || LV.ros[Object.keys(LV.ros).pop()] || meRoster(E); g3Kits(M, ros);
   // temps de jeu écoulé depuis l'image précédente (phases de course)
   const snap = G3.lastT == null || Math.abs(t - G3.lastT) > 1;
@@ -518,6 +521,7 @@ function g3Draw(M, t, dt, paused) {
   const now = performance.now() / 1000;
   if (G3.crowdU) { G3.crowdU.uT.value = now; const hot = lvHlSpeed(t) ? .55 : 0, gl = celeb ? 1 : 0; G3.crowdExc = (G3.crowdExc || 0) + ((Math.max(hot, gl, .08)) - (G3.crowdExc || 0)) * Math.min(1, dt * 2); G3.crowdU.uE.value = G3.crowdExc; }
   if (G3.adT) G3.adT.offset.x = (now * .04) % 1;
+  G3DC.wind.uT.value = now;
   if (G3.wxU) { G3.wxU.uT.value = now; G3.wx.position.set(G3.cm.p ? G3.cm.p[3] : 0, 0, 0); }
   for (const s of G3.flares || []) s.material.opacity = .6 + .4 * Math.sin(now * 9 + s.position.x);
   if (G3.sb) { const key = M.hg + '-' + M.ag + '-' + M.min; if (key !== G3.sbKey) { G3.sbKey = key; const { c, x } = G3.sb, h0 = M.side === 'h'; x.fillStyle = '#05070b'; x.fillRect(0, 0, 512, 160); x.fillStyle = '#ffd166'; x.font = '900 30px Arial'; x.textAlign = 'center'; x.fillText(M.min + "'", 256, 40); x.fillStyle = '#fff'; x.font = '800 30px Arial'; const hn = String(h0 ? M.my : M.op).slice(0, 12).toUpperCase(), an = String(h0 ? M.op : M.my).slice(0, 12).toUpperCase(); x.fillText(hn, 128, 100); x.fillText(an, 384, 100); x.font = '900 56px Arial'; x.fillText(M.hg + ' - ' + M.ag, 256, 112); G3.sb.t.needsUpdate = true; } }

@@ -29,7 +29,7 @@ function matchCond(prep) {
   const hs = prep.h.s || 60, cap = clamp(4000 + (hs - 60) * 3000, 3000, 81000);
   const att = youth ? ri(40, 400) : amateur ? ri(150, 1500) : prep.intl || prep.tour ? ri(30000, 78000) : Math.round(Math.min(cap, cap * rf(.7, 1.02) * (big ? 1.1 : 1)) / 100) * 100;
   const temp = Math.round((winter ? 4 : cold ? 10 : m >= 5 && m <= 7 ? 26 : 17) + rf(-4, 4) - (night ? 3 : 0));
-  return { night, rain, snow, wear: Math.round(wear * 100) / 100, att, derby: !!prep.derby, big, youth, seed: hueOf(prep.h.n), temp };
+  return { night, rain, snow, mo: m, wear: Math.round(wear * 100) / 100, att, derby: !!prep.derby, big, youth, seed: hueOf(prep.h.n), temp };
 }
 function condTxt(c) { if (!c) return ''; const a = []; if (c.night) a.push('Nocturne'); a.push(c.snow ? 'Neige' : c.rain ? 'Pluie' : c.night ? 'Ciel dégagé' : 'Soleil'); a.push(c.temp + ' °C'); if (c.wear > .45) a.push('Pelouse abîmée'); a.push(c.att.toLocaleString('fr-FR') + ' spectateurs'); return a.join(' · '); }
 
