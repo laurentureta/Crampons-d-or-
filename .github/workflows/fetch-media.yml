@@ -1,4 +1,4 @@
-# Robot « médias » : récupère les sons et les voix fabriqués sur ElevenLabs.
+# Robot « médias » : récupère les sons et les voix fabriqués sur ElevenLabs, et les textures photo libres (Poly Haven, CC0).
 # Claude dépose une liste dans media-queue/*.json : [{ "url": "https://…", "out": "assets/sons/kick.mp3" }, …]
 # Le robot télécharge chaque fichier (liens signés, valables 2 h), le range au bon endroit,
 # supprime la liste, refabrique le jeu et enregistre le tout.
@@ -28,6 +28,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Outil de réduction des images
+        run: npm install --no-save --no-package-lock --no-audit --no-fund sharp@0.33.5
       - name: Télécharger les fichiers de la file d'attente
         run: node tools/fetch-media.js
       - name: Refabriquer le jeu avec les nouveaux médias
@@ -38,6 +40,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A assets media-raw media-queue index.html jeu.js jeu.css sw.js manifest.webmanifest version.json 2>/dev/null || git add -A
           if git diff --cached --quiet; then echo "Rien de nouveau."; exit 0; fi
-          git commit -m "Médias importés ($(git diff --cached --name-only | grep -c '\.mp3$') fichiers)"
+          git commit -m "Médias importés ($(git diff --cached --name-only | grep -cE '\.(mp3|jpg|jpeg|png|webp)$') fichiers)"
           git pull --rebase origin main
           git push origin HEAD:main

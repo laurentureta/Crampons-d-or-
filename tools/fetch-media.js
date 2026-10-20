@@ -1,19 +1,46 @@
 // Robot « médias » : télécharge les fichiers listés dans media-queue/*.json puis supprime les listes.
 // Format d'une liste : [{ "url": "https://…", "out": "assets/sons/kick.mp3" }, …]
-// Sécurité : seulement des liens https vers ElevenLabs / Google Cloud Storage, seulement vers assets/ ou media-raw/,
-// seulement des fichiers audio de moins de 25 Mo.
+// Images (textures photo libres de droits CC0 de Poly Haven) : on peut ajouter de quoi les réduire avant de les ranger,
+//   { "url": "https://dl.polyhaven.org/…", "out": "assets/textures/ciel_jour.jpg", "resize": "4096x2048", "crop": "4096x1024+0+0", "quality": 84 }
+//   (le fichier d'origine, souvent énorme, n'est jamais enregistré dans le dépôt : seulement la version réduite)
+// Sécurité : seulement des liens https vers ElevenLabs / Google Cloud Storage / Poly Haven, seulement vers assets/ ou media-raw/,
+// seulement des fichiers audio ou image (vérifiés à leurs premiers octets).
 'use strict';
 const fs = require('fs'), path = require('path');
 const ROOT = path.join(__dirname, '..'), Q = path.join(ROOT, 'media-queue');
-const HOSTS = [/\.elevenlabs\.io$/, /^elevenlabs\.io$/, /^storage\.googleapis\.com$/, /\.storage\.googleapis\.com$/, /\.googleusercontent\.com$/];
-const MAX = 25 * 1024 * 1024;
+const HOSTS = [/\.elevenlabs\.io$/, /^elevenlabs\.io$/, /^storage\.googleapis\.com$/, /\.storage\.googleapis\.com$/, /\.googleusercontent\.com$/, /^dl\.polyhaven\.org$/];
+const MAX = 45 * 1024 * 1024, MAX_OUT = 8 * 1024 * 1024;
+let sharp = null; try { sharp = require('sharp'); } catch (e) { }
 
 function okUrl(u) { try { const x = new URL(u); return x.protocol === 'https:' && HOSTS.some(h => h.test(x.hostname)); } catch (e) { return false; } }
-function okOut(o) { const n = path.posix.normalize(String(o || '')); return /^(assets|media-raw)\/[\w\-./]+\.(mp3|wav|ogg|m4a)$/.test(n) && !n.includes('..') ? n : null; }
+function okOut(o) { const n = path.posix.normalize(String(o || '')); return /^(assets|media-raw)\/[\w\-./]+\.(mp3|wav|ogg|m4a|jpg|jpeg|png|webp)$/.test(n) && !n.includes('..') ? n : null; }
+const imgOut = o => /\.(jpg|jpeg|png|webp)$/.test(o);
 function isAudio(b) {
   if (b.length < 200) return false;
   const h = b.subarray(0, 4).toString('latin1');
   return h.startsWith('ID3') || (b[0] === 0xff && (b[1] & 0xe0) === 0xe0) || h === 'RIFF' || h === 'OggS' || b.subarray(4, 8).toString('latin1') === 'ftyp';
+}
+function isImage(b) {
+  if (b.length < 200) return false;
+  return (b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) || b.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) || (b.subarray(0, 4).toString('latin1') === 'RIFF' && b.subarray(8, 12).toString('latin1') === 'WEBP');
+}
+// réduction / recadrage d'une image (sharp, installé par le robot juste avant)
+async function shrink(b, it, out) {
+  const want = it.resize || it.crop || it.quality;
+  if (!want) return b;
+  if (!sharp) throw new Error('outil d\'images absent (sharp)');
+  let p = sharp(b, { limitInputPixels: 6e8 }).rotate();
+  const rs = /^(\d{2,5})x(\d{2,5})(!?)$/.exec(String(it.resize || ''));
+  if (it.resize && !rs) throw new Error('taille demandée invalide');
+  if (rs) p = p.resize(+rs[1], +rs[2], { fit: rs[3] ? 'fill' : 'inside', kernel: 'lanczos3' });
+  const cr = /^(\d{1,5})x(\d{1,5})\+(\d{1,5})\+(\d{1,5})$/.exec(String(it.crop || ''));
+  if (it.crop && !cr) throw new Error('recadrage invalide');
+  if (cr) { p = sharp(await p.toBuffer(), { limitInputPixels: 6e8 }).extract({ width: +cr[1], height: +cr[2], left: +cr[3], top: +cr[4] }); }
+  const q = Math.max(40, Math.min(95, +it.quality || 84));
+  if (/\.png$/.test(out)) p = p.png({ compressionLevel: 9 });
+  else if (/\.webp$/.test(out)) p = p.webp({ quality: q });
+  else p = p.jpeg({ quality: q, mozjpeg: true, progressive: true });
+  return p.toBuffer();
 }
 async function get(url) {
   for (let i = 0; i < 3; i++) {
@@ -38,8 +65,13 @@ async function get(url) {
       const out = okOut(it && it.out);
       if (!out || !okUrl(it.url)) { console.log(`✗ refusé : ${it && it.out}`); log.push(`✗ refusé : ${it && it.out}`); ko++; continue; }
       try {
-        const b = await get(it.url);
-        if (!isAudio(b)) throw new Error('ce n\'est pas un fichier audio');
+        let b = await get(it.url);
+        if (imgOut(out)) {
+          if (!isImage(b)) throw new Error('ce n\'est pas une image');
+          const n0 = b.length; b = await shrink(b, it, out);
+          if (b.length > MAX_OUT) throw new Error('image encore trop lourde après réduction');
+          if (b.length !== n0) log.push(`  ${out} : ${Math.round(n0 / 1024)} Ko → ${Math.round(b.length / 1024)} Ko`);
+        } else if (!isAudio(b)) throw new Error('ce n\'est pas un fichier audio');
         const dst = path.join(ROOT, out); fs.mkdirSync(path.dirname(dst), { recursive: true }); fs.writeFileSync(dst, b);
         console.log(`✓ ${out} (${Math.round(b.length / 1024)} Ko)`); ok++;
       } catch (e) { console.log(`✗ ${out} : ${e.message}`); log.push(`✗ ${out} : ${e.message}`); ko++; }
