@@ -94,6 +94,18 @@ Ciel et sols photographiés (`src/m3dgfx.js`, `assets/textures/`) : les matchs d
 
 Les filets de but (`src/m3dnet.js`) sont une toile de nœuds qui ondule : le ballon la creuse, l'onde se propage puis s'amortit, un ballon sur le toit ou dans le petit filet l'enfonce de l'extérieur, et le vent la fait respirer (plus fort sous la pluie). Caméras au choix pendant le match : TV, Large, Tactique, Mon joueur, Derrière le but, Bord du terrain, Drone.
 
+## Mouvements capturés
+
+Les joueurs 3D bougent avec de la **vraie capture de mouvement** : course, footing, marche, sprint, attente, frappes (pied droit et, en miroir, pied gauche), passe, saut de la tête et célébrations (joie, salto, roue, vrille, danse). Source : la base de capture de mouvement de **Carnegie Mellon University** ([mocap.cs.cmu.edu](http://mocap.cs.cmu.edu)), dans la conversion BVH de Bruce Hahne ([copie GitHub](https://github.com/una-dinosauria/cmu-mocap)), libre d'utilisation y compris dans un jeu. `tools/mocap.py` (avec `tools/bvh.py`) ramène chaque mouvement sur les 15 os du joueur 3D — seules les orientations des os sont gardées, les longueurs restent celles du modèle — extrait une foulée qui boucle pour chaque allure, aligne l'instant de la frappe sur celui du moteur, et écrit `assets/anim/` (anim.json + anim.bin, ~100 Ko). Dans le jeu (`src/m3dmc.js`), l'allure choisit et mélange les foulées (la phase suit la course du joueur), et les gestes capturés remplacent les gestes dessinés ; tacles, plongeons, gardien, touche et contrôles restent dessinés à la main.
+
+```sh
+python3 tools/mocap.py chemin/vers/cmu-mocap/data
+```
+
+## Moments clés au doigt
+
+En 3D (`src/geste.js`), au moment clé le match se fige et la caméra se place derrière toi : glisse vers le but pour frapper (le ballon part là où le doigt s'arrête, la vitesse du geste donne la puissance, un geste courbé enroule le ballon), glisse vers un coéquipier pour lui passer, coup sec sur le côté quand le cercle devient vert pour dribbler. En défense : glisse vers l'attaquant au bon moment pour tacler. Gardien : glisse du côté du tir quand le cercle touche le ballon. Coups de pied arrêtés : penalty (geste lent et court au centre : Panenka), coup franc direct (c'est toi qui le tires si tu es bon tireur ; enroule par-dessus le mur), corner (tu le tires : envoie le ballon sur une zone ; ou tu montes : choisis ta zone puis saute au bon moment). « Choisir dans la liste » garde l'ancien choix ; l'option *Moments clés au doigt* peut revenir à la liste pour toujours. Le bouton ⏭ pendant le match propose de **simuler la fin du match**.
+
 ## Écran d'ouverture
 
 Au lancement (`src/intro.js`), un vrai retourné en photo : un joueur photographié de nuit en plein retourné (photo de **Chaim Weingarten**, [Unsplash](https://unsplash.com/photos/man-performs-acrobatic-kick-with-soccer-ball-on-beach-5WzxI2voAfg)), détouré par le robot médias (`rembg`), posé devant le **Parc des Princes** de nuit vu du bord du terrain (photo de **Chris Kursikowski**, [Unsplash](https://unsplash.com/photos/a-soccer-field-at-night-with-the-lights-on-5IS7UghgoMA)), flouté comme par un objectif. Les deux photos sont sous [licence Unsplash](https://unsplash.com/license) (usage libre). Travelling lent, flashs des photographes dans les tribunes, puis la frappe : le vrai ballon de la photo fonce vers l'objectif et brise la vitre du téléphone — les éclats décalent l'image comme du verre cassé, fissures, flash, écran qui bave — et le titre apparaît derrière la vitre. Tout est dessiné en canvas 2D. `tools/intro_photos.py` prépare les images de `assets/intro/` (joueur sans le ballon, ballon seul, stade flouté, repères dans `intro.json`) à partir des originaux de `media-raw/intro/`.

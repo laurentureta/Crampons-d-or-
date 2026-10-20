@@ -294,7 +294,7 @@ function meShot(E, k, i, o = {}) {
   else if (style === 'pen') { const pw = R() < .3; sp = pw ? rf(27, 31) : rf(22, 25); tz = pw ? rf(.9, 2.1) : rf(.15, .7); ty = 34 + (o.sDir === 1 || (o.sDir == null && R() < .1) ? 0 : sd) * rf(1.8, 3.2); }
   // issues imposées (décisions du joueur, mini-jeux) : la trajectoire est choisie en conséquence
   let force = null;
-  if (o.mg) { const vw = o.mg.view, col = vw.zone % 3, top = vw.zone < 3; ty = 34 + [-2.7, 0, 2.7][col]; tz = top ? 1.95 : .3; if (vw.dive != null && o.gkDir == null) o = Object.assign({}, o, { gkDir: [-1, 0, 1][vw.dive] }); if (vw.wide) force = 'off'; else if (R() < o.mg.p) force = 'goal'; else force = R() < .78 ? 'save' : 'wood'; }
+  if (o.mg) { const vw = o.mg.view, col = vw.zone % 3, top = vw.zone < 3; ty = vw.ty != null ? vw.ty : 34 + [-2.7, 0, 2.7][col]; tz = vw.tz != null ? vw.tz : top ? 1.95 : .3; if (vw.cu != null) cu = vw.cu; if (vw.sp) sp = vw.sp; if (vw.dive != null && o.gkDir == null) o = Object.assign({}, o, { gkDir: [-1, 0, 1][vw.dive] }); if (vw.wide) force = 'off'; else if (R() < o.mg.p) force = 'goal'; else force = R() < .78 ? 'save' : 'wood'; }
   else if (o.forceP != null) force = R() < o.forceP ? 'goal' : (R() < .62 ? 'save' : R() < .8 ? 'off' : 'wood');
   else if (o.forceRes) force = o.forceRes;
   if (force === 'goal') { ty = clamp(ty, 34 - 3.1, 34 + 3.1); tz = Math.min(tz, 2.1); }
@@ -572,9 +572,29 @@ function restartTargets(E, t, p, i) {
   }
   return null;
 }
+// zones visées sur corner (repère de l'équipe qui attaque) : premier poteau, point de penalty, second poteau
+function cornerZones(bv) { const s = bv < 34 ? 1 : -1; return [[99.2, 34 - s * 3.6], [94, 34], [98.6, 34 + s * 3.9]]; }
 function meCorner(E, k, rs) {
   const T = E.T[k];
-  const takerI = T.pl.map((p, i) => [p, i]).filter(([p]) => p.on && !p.rc && p.role !== 'GK').sort((a, b) => b[0].a.pas - a[0].a.pas)[0][1];
+  let takerI = T.pl.map((p, i) => [p, i]).filter(([p]) => p.on && !p.rc && p.role !== 'GK').sort((a, b) => b[0].a.pas - a[0].a.pas)[0][1];
+  // coup de pied arrêté joué au doigt (pas à chaque corner : comme les autres moments clés, selon le budget du match)
+  const mi = k === 0 && !E.coach ? T.pl.findIndex(p => p.me && p.on && !p.rc && p.role !== 'GK') : -1, mp = mi >= 0 ? T.pl[mi] : null;
+  if (mp && E.decB > 0 && E.clock - E.decLast > 240 && R() < .6) {
+    const [, bv] = loc(k, rs.x, rs.y), Z = cornerZones(bv), take = mi === takerI || (['LW', 'RW', 'AM', 'CM', 'LB', 'RB'].includes(mp.role) && mp.a.pas >= T.pl[takerI].a.pas - 6);
+    if (take) takerI = mi;
+    const tk = T.pl[takerI]; tk.x = rs.x; tk.y = rs.y; giveBall(E, k, takerI, 99); E.ball.x = rs.x; E.ball.y = rs.y;
+    const box = T.pl.map((p, i) => [p, i]).filter(([p, i]) => p.on && !p.rc && i !== takerI && p.role !== 'GK');
+    if (take) {
+      // pour chaque zone, le partenaire qui l'attaque (le plus proche, un seul par zone)
+      const used = new Set(), opts = Z.map((z, zi) => { const c = box.filter(([, i]) => !used.has(i)).map(([p, i]) => [hy(loc(k, p.x, p.y)[0] - z[0], loc(k, p.x, p.y)[1] - z[1]) - (p.a.phy - 70) * .05, i]).sort((a, b) => a[0] - b[0])[0]; if (!c) return null; used.add(c[1]); const q = T.pl[c[1]]; return { t: ['Premier poteau', 'Point de penalty', 'Second poteau'][zi] + ' pour ' + q.n, act: 'corner', z: zi, j: c[1], at: 'PAS', out: 'assist', p: clamp(.36 + (mp.a.pas - 70) / 140 + [0, -.04, .02][zi], .15, .8) }; }).filter(Boolean);
+      const sj = nearestTo(E, k, rs.x, rs.y, takerI); if (sj >= 0) opts.push({ t: 'Corner à deux avec ' + T.pl[sj].n, act: 'pass', j: sj, at: 'PAS', out: 'pass', p: .9 });
+      if (opts.length >= 2) { E.dec = { kind: 'corner', mode: 'take', k, i: mi, taker: mi, bv, opts }; E.stop = 'decision'; return; }
+    } else if (['ST', 'CB', 'LW', 'RW', 'AM'].includes(mp.role) || mp.a.phy >= 72) {
+      const hp = clamp(.1 + (mp.a.phy + mp.a.sho - 140) / 420, .05, .35);
+      const opts = Z.map((z, zi) => ({ t: ['Attaquer le premier poteau', 'Attaquer le point de penalty', 'Attaquer le second poteau'][zi], act: 'head', z: zi, at: 'TIR', out: 'head', p: clamp(hp + [.03, -.04, .01][zi], .04, .5) }));
+      E.dec = { kind: 'corner', mode: 'head', k, i: mi, taker: takerI, bv, tn: tk.n, opts }; E.stop = 'decision'; return;
+    }
+  }
   const tk = T.pl[takerI]; tk.x = rs.x; tk.y = rs.y; giveBall(E, k, takerI, 0); meCm(E, 'corner', k, tk);
   const box = T.pl.map((p, i) => [p, i]).filter(([p, i]) => p.on && !p.rc && i !== takerI && loc(k, p.x, p.y)[0] > 86 && Math.abs(loc(k, p.x, p.y)[1] - 34) < 13);
   if (!box.length || R() < .12) { const j = nearestTo(E, k, rs.x, rs.y, takerI); mePass(E, k, takerI, j, 'pass'); return; }
@@ -589,7 +609,16 @@ function meFreeKick(E, k, rs) {
     if (!rs.wall) { const O = E.T[1 - k]; const w = O.pl.map((p, i) => [p, i]).filter(([p]) => p.on && !p.rc && p.role !== 'GK').sort((a, b) => dst(a[0].x, a[0].y, rs.x, rs.y) - dst(b[0].x, b[0].y, rs.x, rs.y)).slice(0, u > 85 ? 5 : u > 80 ? 4 : 3).map(x => x[1]); E.rs = Object.assign({}, rs, { wall: w, at: E.time + 7, done: true }); E.wall = { k: 1 - k, ids: w }; return; }
   }
   if (rs.wall) {
-    const [sp, si] = cand.sort((a, b) => (b[0].a.sho + (b[0].me && hasPerk('cf') ? 12 : 0)) - (a[0].a.sho + (a[0].me && hasPerk('cf') ? 12 : 0)))[0];
+    let [sp, si] = cand.sort((a, b) => (b[0].a.sho + (b[0].me && hasPerk('cf') ? 12 : 0)) - (a[0].a.sho + (a[0].me && hasPerk('cf') ? 12 : 0)))[0];
+    // coup de pied arrêté joué au doigt : c'est toi qui le tires si tu es le meilleur tireur, ou un attaquant à peine moins adroit
+    const mi = k === 0 && !E.coach ? T.pl.findIndex(p => p.me && p.on && !p.rc && p.role !== 'GK') : -1, mp = mi >= 0 ? T.pl[mi] : null;
+    if (mp && (mi === si || (['ST', 'LW', 'RW', 'AM', 'CM'].includes(mp.role) && mp.a.sho >= sp.a.sho - 7) || hasPerk('cf'))) {
+      sp = mp; si = mi; sp.x = rs.x - .8; sp.y = rs.y; giveBall(E, k, si, 99); E.ball.x = rs.x; E.ball.y = rs.y;
+      const pg = shotGoalProb(E, k, sp, { kind: 'fk' }), box = T.pl.map((p, i) => [p, i]).filter(([p, i]) => p.on && !p.rc && i !== si && loc(k, p.x, p.y)[0] > 86).sort((a, b) => b[0].a.phy - a[0].a.phy);
+      const opts = [{ t: 'Frapper le coup franc', act: 'shot', at: 'TIR', out: 'goal', p: pg }];
+      if (box.length) opts.push({ t: 'Centrer pour ' + box[0][0].n, act: 'cross', j: box[0][1], at: 'PAS', out: 'assist', p: .3 });
+      E.dec = { kind: 'att', fk: true, k, i: si, d: Math.round(hy(PL - u, v - 34)), gkn: keeper(E, 1 - k).n, opts }; E.stop = 'decision'; E.decB++; return;
+    }
     sp.x = rs.x - (k ? -.8 : .8); sp.y = rs.y; giveBall(E, k, si, 0); E.ball.x = rs.x; E.ball.y = rs.y;
     for (const wi of rs.wall) { const w = E.T[1 - k].pl[wi]; if (w && w.on) setAct(E, w, GEST.HEAD, 0, .25); }
     meCm(E, 'fkshot', k, sp, { d: Math.round(hy(PL - u, v - 34)) }); meShot(E, k, si, { kind: 'fk' }); return;
@@ -906,7 +935,7 @@ function touchBall(E, k, i, c) {
   if (c.z > 1.6 || (c.gkB && c.z > 1.2)) {
     setAct(E, p, GEST.HEAD, p.face);
     if (c.gkB) { const hold = R() < (E.cond.rain ? .7 : .85); if (hold) { if (K && K.kind === 'cross' && !mine) { p.st.sv++; meEv(E, 'claim', k, p); meCm(E, 'claim', k, p); } giveBall(E, k, i, rf(2.5, 5), true); return; } deflect(E, k, i, .4, 1.2, 3); meCm(E, 'claim', k, p, { punch: true }); return; }
-    if (u > 86 && Math.abs(v - 34) < 14 && (mine || K.kind === 'cross' || R() < .5)) { if (mine && pass) { E.T[k].st.pc++; const ps = E.T[K.k].pl[K.i]; if (ps) ps.st.pc++; E.lastPass = Object.assign(E.lastPass || {}, { to: i, t: E.time }); } giveBall(E, k, i, 0); meShot(E, k, i, { kind: 'head' }); return; }
+    if (u > 86 && Math.abs(v - 34) < 14 && (mine || K.kind === 'cross' || R() < .5)) { if (mine && pass) { E.T[k].st.pc++; const ps = E.T[K.k].pl[K.i]; if (ps) ps.st.pc++; E.lastPass = Object.assign(E.lastPass || {}, { to: i, t: E.time }); } giveBall(E, k, i, 0); const hm = p.headMg && p.headMg.until > E.time ? p.headMg : null; p.headMg = null; meShot(E, k, i, hm ? { kind: 'head', decided: true, mg: hm } : { kind: 'head' }); return; }
     if (u < 35) { if (!mine && u < 20 && R() < ME_HCO) { const [gx] = glob(k, 0, 34); b.vx = (gx - b.x) / Math.abs(gx - b.x || 1) * rf(3, 8); b.vy = (b.y < 34 ? -1 : 1) * rf(2, 6); b.vz = rf(2, 5); safeWide(b, gx); b.pv++; E.last = [k, i]; if (b.kick) { b.kick.kind = 'loose'; b.kick.safe = false; } return; } meClear(E, k, i, false, true); return; }
     // déviation de la tête vers un partenaire
     const mates = E.T[k].pl.map((q, j) => [q, j]).filter(([q, j]) => j !== i && q.on && !q.rc && dst(q.x, q.y, p.x, p.y) < 22 && dst(q.x, q.y, p.x, p.y) > 5 && (k === 0 ? q.x > p.x - 4 : q.x < p.x + 4));
@@ -1074,16 +1103,30 @@ function meApply(E, opt, mg) {
   const T = E.T[D.k];
   if (D.kind === 'att') {
     const p = T.pl[D.i];
-    if (opt.act === 'shot') { meShot(E, D.k, D.i, Object.assign({ decided: true }, D.pen ? { kind: 'pen' } : {}, mg ? { mg } : { forceP: opt.pp ?? opt.p + DF().mom })); return; }
-    const ok = R() < (opt.pp ?? clamp(opt.p + DF().mom, .03, .97)); D.ok = ok;
+    if (opt.act === 'shot') { meShot(E, D.k, D.i, Object.assign({ decided: true }, D.pen ? { kind: 'pen' } : D.fk ? { kind: 'fk' } : {}, mg && mg.view ? { mg } : { forceP: mg && mg.p != null ? mg.p : opt.pp ?? opt.p + DF().mom })); return; }
+    const ok = R() < (mg && mg.p != null ? mg.p : opt.pp ?? clamp(opt.p + DF().mom, .03, .97)); D.ok = ok;
     if (opt.act === 'drib') { const fr = frontOpp(E, D.k, p); if (fr) meAct(E, D.k, D.i, { k: 'drib', o: fr, ps: opt.p }, ok); else meAct(E, D.k, D.i, { k: 'carry' }); return; }
     if (opt.act === 'cross') { meAct(E, D.k, D.i, { k: 'cross', j: opt.j }, ok); return; }
     meAct(E, D.k, D.i, { k: opt.act, j: opt.j }, ok ? 'ok' : (R() < .7 ? 'int' : 'mis'));
     return;
   }
+  if (D.kind === 'corner') {
+    const zi = opt.z != null ? opt.z : 1, Z = cornerZones(D.bv)[zi], tk = T.pl[D.taker], me = T.pl[D.i];
+    if (D.mode === 'take') {
+      if (opt.act === 'pass') { const ok = R() < (mg && mg.p != null ? mg.p : .9); D.ok = ok; mePass(E, D.k, D.taker, opt.j, 'pass'); return; }
+      const q = T.pl[opt.j]; if (q) { const [x, y] = glob(D.k, Z[0] + rf(-.6, .6), Z[1] + rf(-.6, .6)); q.x = x; q.y = y; q.runTo = [Z[0], Z[1]]; q.run = E.time + 2; }
+      const ok = R() < (mg && mg.p != null ? mg.p : opt.pp ?? opt.p); D.ok = ok;
+      meCm(E, 'corner', D.k, tk); meCross(E, D.k, D.taker, opt.j, true, ok ? 'ok' : R() < .5 ? 'mis' : undefined); return;
+    }
+    // reprise de la tête : tu files dans la zone, le centre arrive (plus ou moins bien), ta tête est jouée selon ton saut
+    const [x, y] = glob(D.k, Z[0] + rf(-.4, .4), Z[1] + rf(-.4, .4)); me.x = x; me.y = y; me.runTo = [Z[0], Z[1]]; me.run = E.time + 2;
+    const deliv = R() < clamp(.62 + (tk.a.pas - 70) / 120, .35, .9); D.ok = deliv;
+    if (deliv) me.headMg = { p: mg && mg.p != null ? mg.p : opt.pp ?? opt.p, view: mg && mg.view ? mg.view : { kind: 'shot', zone: R() < .5 ? 3 : 5, dive: ri(0, 2), tq: 1 }, until: E.time + 4 };
+    meCm(E, 'corner', D.k, tk); meCross(E, D.k, D.taker, D.i, true, deliv ? 'ok' : undefined); return;
+  }
   if (D.kind === 'def') {
     const me = T.pl[D.i], [ok_, oi] = D.opp, op = E.T[ok_].pl[oi];
-    const ok = R() < (opt.pp ?? clamp(opt.p + DF().mom, .03, .97)); D.ok = ok;
+    const ok = R() < (mg && mg.p != null ? mg.p : opt.pp ?? clamp(opt.p + DF().mom, .03, .97)); D.ok = ok;
     if (opt.act === 'foul') { const y0 = me.yc; meFoul(E, D.k, D.i, ok_, oi); D.ok = true; if (me.yc === y0 && !me.rc && R() < .45) meCard(E, D.k, D.i, 'Y'); return; }
     if (opt.act === 'tackle') { setAct(E, me, R() < .5 ? GEST.SLIDE : GEST.TACKLE, Math.atan2(op.y - me.y, op.x - me.x)); if (ok) { me.st.tk++; op.st.lost++; giveBall(E, D.k, D.i); meEv(E, 'tackle', D.k, me); } else { me.beat = E.time + 1.4; op.carry = glob(ok_, Math.min(103, loc(ok_, op.x, op.y)[0] + 8), loc(ok_, op.x, op.y)[1]); E.timer = .8; if (R() < (opt.card || 0) * .6) meCard(E, D.k, D.i, 'Y'); } return; }
     if (ok) { me.st.int++; E.timer = .2; op.carry = null; op.beat = 0; const pas = bestPasses(E, ok_, oi).filter(x => loc(ok_, x.q.x, x.q.y)[0] < loc(ok_, op.x, op.y)[0]).sort((a, b) => b.ev - a.ev)[0]; if (pas) mePass(E, ok_, oi, pas.j, 'pass'); } else { me.beat = E.time + 1.2; op.carry = glob(ok_, Math.min(103, loc(ok_, op.x, op.y)[0] + 9), 34); E.timer = .9; }

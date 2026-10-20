@@ -1,14 +1,15 @@
-/* Crampons d'Or 11.8.0 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
-var GAME_VERSION = "11.8.0";
+/* Crampons d'Or 12.0.0 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
+var GAME_VERSION = "12.0.0";
 var CRWD_FILES = ["chant_2","chant_3","chant_4","cheer_loop","goal_1","goal_2","goal_3","goal_4","ooh_1","roar_1","roar_2","roar_3","roar_4","surge"];
 var SONS_FILES = ["catch","glass","header","kick","net","post","shot","tackle","whistle1","whistle3"];
-var MEDIA_H = {"foule/chant_2":"3ebb4bce","foule/chant_3":"4f555b3f","foule/chant_4":"e9942adb","foule/cheer_loop":"e5b4a150","foule/goal_1":"a49bc043","foule/goal_2":"db0cbb88","foule/goal_3":"05dbbca2","foule/goal_4":"09720ea4","foule/ooh_1":"155d868a","foule/roar_1":"aff56709","foule/roar_2":"a3f978be","foule/roar_3":"6bed5e29","foule/roar_4":"df5f4aa6","foule/surge":"ce5de2be","sons/catch":"082b1f8c","sons/glass":"149bfce3","sons/header":"ac052ba0","sons/kick":"877b4236","sons/net":"fe0694be","sons/post":"ae984141","sons/shot":"9695a8e3","sons/tackle":"601ffa60","sons/whistle1":"cc2e8cf9","sons/whistle3":"dbccf110","tex":"f85d947d","intro":"eda0a29f","decor":"49ccd40b","stade":"180b7b01","joueur":"cbcc8acf"};
+var MEDIA_H = {"foule/chant_2":"3ebb4bce","foule/chant_3":"4f555b3f","foule/chant_4":"e9942adb","foule/cheer_loop":"e5b4a150","foule/goal_1":"a49bc043","foule/goal_2":"db0cbb88","foule/goal_3":"05dbbca2","foule/goal_4":"09720ea4","foule/ooh_1":"155d868a","foule/roar_1":"aff56709","foule/roar_2":"a3f978be","foule/roar_3":"6bed5e29","foule/roar_4":"df5f4aa6","foule/surge":"ce5de2be","sons/catch":"082b1f8c","sons/glass":"149bfce3","sons/header":"ac052ba0","sons/kick":"877b4236","sons/net":"fe0694be","sons/post":"ae984141","sons/shot":"9695a8e3","sons/tackle":"601ffa60","sons/whistle1":"cc2e8cf9","sons/whistle3":"dbccf110","tex":"f85d947d","anim":"1bc92a6a","intro":"eda0a29f","decor":"49ccd40b","stade":"180b7b01","joueur":"cbcc8acf"};
 var VOIX_INDEX = {"S|Ah, les matchs du soir… Les projecteurs, l'herbe qui brille comme un miroir, l'odeur des frites. C'est ma madeleine de Proust, ça !":"S/033043fb565a.mp3","S|Chacun ses madeleines, Nathalie.":"S/184ed733a2a2.mp3","S|De la neige ! Regardez-moi ça, on se croirait au Canigou en plein mois de janvier !":"S/3330ac9a394b.mp3","S|Il pleut, mes amis ! Il pleut des cordes, des ficelles, des lacets !":"S/e5474d79c72a.mp3","S|Je le salue aussi ! Les petits matchs, c'est là que naissent les grands joueurs. Ne l'oubliez jamais.":"S/51e8f0b12016.mp3","S|La tête, les jambes, le cœur, les tripes, tout compte ! Ce soir, les familles sont divisées et les voisins ne se parlent plus jusqu'à lundi !":"S/d08542c8b556.mp3","S|Le ballon orange ! Comme une mandarine posée sur un gâteau à la crème. Magnifique.":"S/bcbce0b09960.mp3","S|Le papier, Nathalie ! Le papier ne court pas, le papier ne transpire pas ! C'est le terrain qui va parler !":"S/c5a3ec573ddf.mp3","S|Moi je sens des buts, des larmes, de la sueur et de la poésie ! On verra qui a raison !":"S/8daba191eb47.mp3","S|On va voir du ski nautique ce soir. Sortez les bouées !":"S/380bb6427e7c.mp3","S|Si vous êtes chez vous, montez le son. Si vous êtes au stade, vous n'entendez rien de ce que je dis… bonsoir quand même !":"S/56d80e607aac.mp3","S|Un derby ! Un DERBY ! J'ai des frissons jusque dans les chaussettes !":"S/665153ff867c.mp3"};
 var JOUEUR_3D = {"name":"A footballer 3d model","auteur":"AP 3d models (https://sketchfab.com/jeetu.143p)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/a-footballer-3d-model-afd601d0e0ea471f90b26c0d3b6c1cb7","bin":"joueur.bin","parts":[{"name":"corps","tris":12577,"alpha":false,"arr":{"pos":[0,22554],"nor":[90216,22554],"uv":[180432,15036],"bi":[240576,30072],"bw":[360864,30072],"reg":[481152,7518],"idx":[511224,37731]},"map":"corps.jpg","nmap":"corps_n.jpg"},{"name":"cheveux","tris":3669,"alpha":true,"arr":{"pos":[662148,11472],"nor":[708036,11472],"uv":[753924,7648],"bi":[784516,15296],"bw":[845700,15296],"reg":[906884,3824],"idx":[922180,11007]},"map":"cheveux.png"}],"bind":[[1,0,0,0,0,1,0,0,0,0,1,0,0,0.9561621074541208,0,1],[1,0,0,0,0,1,0,0,0,0,1,0,0,1.1114961124377731,0,1],[1,0,0,0,0,1,0,0,0,0,1,0,0,1.5915074134701013,0,1],[1,0,0,0,0,0.06507265101264002,0.9978805289663624,0,0,-0.9978805289663624,0.06507265101264002,0,0,1.4698137585331512,-0.19810914412195205,1],[1,0,0,0,0,0.06507265101264002,0.9978805289663624,0,0,-0.9978805289663624,0.06507265101264002,0,0,1.451196050022711,-0.483609250963011,1],[1,0,0,0,0,0.06507265101264002,0.9978805289663624,0,0,-0.9978805289663624,0.06507265101264002,0,0,1.436920698147589,-0.7025198909730603,1],[1,0,0,0,0,0.06876318803696509,-0.9976330106662434,0,0,0.9976330106662434,0.06876318803696509,0,0,1.4698137585331512,0.19810914412195205,1],[1,0,0,0,0,0.06876318803696509,-0.9976330106662434,0,0,0.9976330106662434,0.06876318803696509,0,0,1.4501401633868256,0.48353843436816046,1],[1,0,0,0,0,0.06876318803696509,-0.9976330106662434,0,0,0.9976330106662434,0.06876318803696509,0,0,1.4350551977367836,0.7023947749025508,1],[0.9982234212070645,-0.059581887798754285,0,0,0.059318219422530634,0.9938059722422536,0.0939736046992415,0,-0.0055991247712346955,-0.09380665318603713,0.9955746891217306,0,0,0.9017922101197102,-0.09436051729552487,1],[0.9982234212070645,-0.059581887798754285,0,0,0.059318219422530634,0.9938059722422536,0.0939736046992415,0,-0.0055991247712346955,-0.09380665318603713,0.9955746891217306,0,-0.021932103902617326,0.5343459844162471,-0.1291059780061074,1],[0.9982234212070645,-0.059581887798754285,0,0,0.059318219422530634,0.9938059722422536,0.0939736046992415,0,-0.0055991247712346955,-0.09380665318603713,0.9955746891217306,0,-0.046543159907541404,0.122017113472557,-0.16809551057726158,1],[0.9987227153012338,-0.05052660627165251,0,0,0.05030278712397283,0.9942986448282388,-0.09402039406579786,0,0.0047505314324681825,0.09390030325508565,0.9955702715025756,0,0,0.9017922101197102,0.09436051729552487,1],[0.9987227153012338,-0.05052660627165251,0,0,0.05030278712397283,0.9942986448282388,-0.09402039406579786,0,0.0047505314324681825,0.09390030325508565,0.9955702715025756,0,-0.01859877057225307,0.5341638254362409,0.12912327773726662,1],[0.9987227153012338,-0.05052660627165251,0,0,0.05030278712397283,0.9942986448282388,-0.09402039406579786,0,0.0047505314324681825,0.09390030325508565,0.9955702715025756,0,-0.03946933484683819,0.12163054524487249,0.16813222315883952,1]],"rig":{"hp":0.9562,"hipY":-0.0544,"hipW":0.0944,"thigh":0.3697,"shin":0.4149,"torY":0.1553,"shY":0.3583,"shW":0.1981,"ua":0.2861,"fa":0.2194,"neck":0.48,"numX":-0.1502,"numY":0.2222},"lum":[0.469,0.765,0.747,0.842,0.231,0.5]};
 var STADE_3D = {"name":"football stade","auteur":"mohamed ouartassi (https://sketchfab.com/mohamedouartassi)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/football-stade-cda2fcbaefb84fa280a5bf7213c67a71","bin":"stade.bin","pieces":{"pylone":[{"mat":"metal_dark.002","col":[0.3131,0.3131,0.3131],"rough":0,"metal":1,"tris":801,"arr":{"pos":[0,1320],"nor":[5280,1320],"idx":[6600,2403]}},{"mat":"metal_clear","col":[0.0593,0.0593,0.0593],"rough":0.98,"metal":0,"tris":462,"arr":{"pos":[11408,1206],"nor":[16232,1206],"idx":[17440,1386]}},{"mat":"metal_dark","col":[0.0593,0.0593,0.0593],"rough":0.98,"metal":0,"tris":294,"arr":{"pos":[20212,573],"nor":[22504,573],"idx":[23080,882]}},{"mat":"light_cold","col":[0.8,0.8,0.8],"rough":0.8,"metal":0,"tris":172,"arr":{"pos":[24844,378],"nor":[26356,378],"idx":[26736,516]}}],"siege":[{"mat":"PlasticRAL3018","col":[0.6627,0.0235,0.0235],"rough":0.98,"metal":0,"tris":210,"arr":{"pos":[27768,321],"nor":[29052,321],"idx":[29376,630]}}],"banc":[{"mat":"PlasticRAL3018","col":[0.6627,0.0235,0.0235],"rough":0.98,"metal":0,"tris":2100,"arr":{"pos":[30636,3210],"nor":[43476,3210],"idx":[46688,6300]}},{"mat":"MetalPaint_RAL5010_riffl","col":[0.004,0.0158,0.0671],"rough":0.96,"metal":0,"tris":4,"arr":{"pos":[59288,12],"nor":[59336,12],"idx":[59348,12]}},{"mat":"MetalPaint_RAL5010","col":[0.004,0.0158,0.0671],"rough":0.96,"metal":0,"tris":202,"arr":{"pos":[59372,228],"nor":[60284,228],"idx":[60512,606]}}],"siege_b":[{"mat":"PlasticRAL3018","col":[0.6627,0.0235,0.0235],"rough":0.98,"metal":0,"tris":42,"arr":{"pos":[61724,69],"nor":[62000,69],"idx":[62072,126]}}]}};
 var DECOR_3D = {"bin":"decor.bin","tex":{"feuilles_ete":"feuilles_ete.webp","feuilles_printemps":"feuilles_printemps.webp","feuilles_automne":"feuilles_automne.webp","feuilles_fin_automne":"feuilles_fin_automne.webp","feuilles_hiver":"feuilles_hiver.webp","ecorce_chene":"ecorce_chene.jpg","foret":"foret.webp","ecorce_sapin":"ecorce_sapin.jpg","chemin":"chemin.jpg"},"credits":[{"nom":"Oak trees pack (17var, LODs, seasons, gameready)","auteur":"LOLIPOP (https://sketchfab.com/lolipop_1707)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/oak-trees-pack-17var-lods-seasons-gameready-a5e4e64f9f1d4089bdcc6170a9333393"},{"nom":"a forest (3) with a road at night for game","auteur":"dasy444 (https://sketchfab.com/dasy444)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/a-forest-3-with-a-road-at-night-for-game-61f8c7817fe6457fb26e4814cfc48a3f"}],"pieces":{"chene_a":{"unit":"m","parts":[{"tex":"ecorce_chene","alpha":false,"tris":478,"arr":{"pos":[0,1122],"nor":[4488,1122],"uv":[5612,748],"idx":[8604,1434]}},{"tex":"feuilles","alpha":true,"tris":2630,"arr":{"pos":[11472,10680],"nor":[54192,10680],"uv":[64872,7120],"idx":[93352,7890]}}],"size":[13.645,20.29,17.289]},"chene_b":{"unit":"m","parts":[{"tex":"ecorce_chene","alpha":false,"tris":476,"arr":{"pos":[109132,1107],"nor":[113560,1107],"uv":[114668,738],"idx":[117620,1428]}},{"tex":"feuilles","alpha":true,"tris":2717,"arr":{"pos":[120476,11040],"nor":[164636,11040],"uv":[175676,7360],"idx":[205116,8151]}}],"size":[20.532,19.472,15.675]},"chene_c":{"unit":"m","parts":[{"tex":"ecorce_chene","alpha":false,"tris":364,"arr":{"pos":[221420,762],"nor":[224468,762],"uv":[225232,508],"idx":[227264,1092]}},{"tex":"feuilles","alpha":true,"tris":1030,"arr":{"pos":[229448,4179],"nor":[246164,4179],"uv":[250344,2786],"idx":[261488,3090]}}],"size":[8.993,10.238,8.566]},"chene_d":{"unit":"m","parts":[{"tex":"ecorce_chene","alpha":false,"tris":350,"arr":{"pos":[267668,726],"nor":[270572,726],"uv":[271300,484],"idx":[273236,1050]}},{"tex":"feuilles","alpha":true,"tris":1144,"arr":{"pos":[275336,4638],"nor":[293888,4638],"uv":[298528,3092],"idx":[310896,3432]}}],"size":[9.354,12.697,9.229]},"chene_e":{"unit":"m","parts":[{"tex":"ecorce_chene","alpha":false,"tris":137,"arr":{"pos":[317760,273],"nor":[318852,273],"uv":[319128,182],"idx":[319856,411]}},{"tex":"feuilles","alpha":true,"tris":68,"arr":{"pos":[320680,246],"nor":[321664,246],"uv":[321912,164],"idx":[322568,204]}}],"size":[3.321,5.385,3.775]},"sapin":{"unit":"h","parts":[{"tex":"ecorce_sapin","alpha":false,"tris":84,"arr":{"pos":[322976,282],"nor":[324104,282],"uv":[324388,188],"idx":[325140,252]}},{"tex":"foret","alpha":true,"tris":264,"arr":{"pos":[325644,522],"nor":[327732,522],"uv":[328256,348],"idx":[329648,792]}}],"size":[0.379,1,0.379]},"herbe":{"unit":"h","parts":[{"tex":"foret","alpha":true,"tris":24,"arr":{"pos":[331232,48],"nor":[331424,48],"uv":[331472,32],"idx":[331600,72]}}],"size":[0.807,1,0.807]},"buisson":{"unit":"h","parts":[{"tex":"foret","alpha":true,"tris":152,"arr":{"pos":[331744,336],"nor":[333088,336],"uv":[333424,224],"idx":[334320,456]}}],"size":[0.471,1,0.471]},"fougere":{"unit":"h","parts":[{"tex":"foret","alpha":true,"tris":144,"arr":{"pos":[335232,288],"nor":[336384,288],"uv":[336672,192],"idx":[337440,432]}}],"size":[1.269,1,1.168]}}};
 var TEX_3D = {"asphalte":"asphalte.jpg","beton":"beton.jpg","ciel_gris":"ciel_gris.jpg","ciel_jour":"ciel_jour.jpg","herbe":"herbe.jpg","pre":"pre.jpg"};
 var INTRO_PH = {"stade":{"f":"stade.jpg","w":1200,"h":1600,"fx":0.5,"hz":0.595,"st":[0.46,0.58]},"joueur":{"f":"joueur.webp","w":927,"h":1228,"cx":0.5,"cy":0.5,"ball":[0.3909,0.0627,0.0762],"foot":[0.5045,0.1496],"px":0.5333,"py":0.611},"ballon":{"f":"ballon.png","w":320},"credits":["Joueur : photo de Chaim Weingarten (Unsplash, licence Unsplash)","Stade : Parc des Princes, photo de Chris Kursikowski (Unsplash, licence Unsplash)"]};
+var ANIM_3D = {"fps":30,"bones":["bassin","buste","tete","brasG","avbrasG","mainG","brasD","avbrasD","mainD","cuisseG","jambeG","piedG","cuisseD","jambeD","piedD"],"clips":[{"n":"idle","src":"CMU 77_02","fr":181,"dur":6,"loop":1,"o":0},{"n":"marche","src":"CMU 35_01","fr":35,"dur":1.125,"loop":1,"v":1.31,"p0":0.844,"o":11041},{"n":"footing","src":"CMU 35_17","fr":23,"dur":0.725,"loop":1,"v":3.28,"p0":0.759,"o":13176},{"n":"course","src":"CMU 09_02","fr":23,"dur":0.742,"loop":1,"v":3.67,"p0":0.506,"o":14579},{"n":"course2","src":"CMU 127_06","fr":20,"dur":0.625,"loop":1,"v":3.69,"p0":0.587,"o":15982},{"n":"sprint","src":"CMU 143_01","fr":22,"dur":0.708,"loop":1,"v":7.24,"p0":0.341,"o":17202},{"n":"frappe","src":"CMU 10_05","fr":34,"dur":1.1,"c":0.55,"o":18544},{"n":"frappe_g","src":"CMU 10_05","fr":34,"dur":1.1,"c":0.55,"o":20618},{"n":"frappe2","src":"CMU 11_01","fr":34,"dur":1.1,"c":0.55,"o":22692},{"n":"frappe2_g","src":"CMU 11_01","fr":34,"dur":1.1,"c":0.55,"o":24766},{"n":"passe","src":"CMU 10_03","fr":28,"dur":0.9,"c":0.45,"o":26840},{"n":"passe_g","src":"CMU 10_03","fr":28,"dur":0.9,"c":0.45,"o":28548},{"n":"saut","src":"CMU 16_01","fr":35,"dur":1.15,"c":0.6,"o":30256},{"n":"joie","src":"CMU 142_09","fr":91,"dur":3,"tr":1,"o":32391},{"n":"salto","src":"CMU 87_03","fr":40,"dur":1.3,"c":0.63,"tr":1,"o":38215},{"n":"roue","src":"CMU 49_06","fr":64,"dur":2.1,"tr":1,"o":40775},{"n":"vrille","src":"CMU 88_06","fr":34,"dur":1.1,"c":0.42,"tr":1,"o":44871},{"n":"danse","src":"CMU 05_06","fr":97,"dur":3.2,"tr":1,"o":47047}],"credit":"Capture de mouvement : base CMU (mocap.cs.cmu.edu), conversion BVH de Bruce Hahne ; utilisation libre."};
 (function(){
 // ===== src/data.js =====
 // ===== DONNÉES RÉELLES — saison 2026-27 (après le mercato d'été 2026, état au 11/10/2026) =====
@@ -2712,7 +2713,7 @@ function meShot(E, k, i, o = {}) {
   else if (style === 'pen') { const pw = R() < .3; sp = pw ? rf(27, 31) : rf(22, 25); tz = pw ? rf(.9, 2.1) : rf(.15, .7); ty = 34 + (o.sDir === 1 || (o.sDir == null && R() < .1) ? 0 : sd) * rf(1.8, 3.2); }
   // issues imposées (décisions du joueur, mini-jeux) : la trajectoire est choisie en conséquence
   let force = null;
-  if (o.mg) { const vw = o.mg.view, col = vw.zone % 3, top = vw.zone < 3; ty = 34 + [-2.7, 0, 2.7][col]; tz = top ? 1.95 : .3; if (vw.dive != null && o.gkDir == null) o = Object.assign({}, o, { gkDir: [-1, 0, 1][vw.dive] }); if (vw.wide) force = 'off'; else if (R() < o.mg.p) force = 'goal'; else force = R() < .78 ? 'save' : 'wood'; }
+  if (o.mg) { const vw = o.mg.view, col = vw.zone % 3, top = vw.zone < 3; ty = vw.ty != null ? vw.ty : 34 + [-2.7, 0, 2.7][col]; tz = vw.tz != null ? vw.tz : top ? 1.95 : .3; if (vw.cu != null) cu = vw.cu; if (vw.sp) sp = vw.sp; if (vw.dive != null && o.gkDir == null) o = Object.assign({}, o, { gkDir: [-1, 0, 1][vw.dive] }); if (vw.wide) force = 'off'; else if (R() < o.mg.p) force = 'goal'; else force = R() < .78 ? 'save' : 'wood'; }
   else if (o.forceP != null) force = R() < o.forceP ? 'goal' : (R() < .62 ? 'save' : R() < .8 ? 'off' : 'wood');
   else if (o.forceRes) force = o.forceRes;
   if (force === 'goal') { ty = clamp(ty, 34 - 3.1, 34 + 3.1); tz = Math.min(tz, 2.1); }
@@ -2990,9 +2991,29 @@ function restartTargets(E, t, p, i) {
   }
   return null;
 }
+// zones visées sur corner (repère de l'équipe qui attaque) : premier poteau, point de penalty, second poteau
+function cornerZones(bv) { const s = bv < 34 ? 1 : -1; return [[99.2, 34 - s * 3.6], [94, 34], [98.6, 34 + s * 3.9]]; }
 function meCorner(E, k, rs) {
   const T = E.T[k];
-  const takerI = T.pl.map((p, i) => [p, i]).filter(([p]) => p.on && !p.rc && p.role !== 'GK').sort((a, b) => b[0].a.pas - a[0].a.pas)[0][1];
+  let takerI = T.pl.map((p, i) => [p, i]).filter(([p]) => p.on && !p.rc && p.role !== 'GK').sort((a, b) => b[0].a.pas - a[0].a.pas)[0][1];
+  // coup de pied arrêté joué au doigt (pas à chaque corner : comme les autres moments clés, selon le budget du match)
+  const mi = k === 0 && !E.coach ? T.pl.findIndex(p => p.me && p.on && !p.rc && p.role !== 'GK') : -1, mp = mi >= 0 ? T.pl[mi] : null;
+  if (mp && E.decB > 0 && E.clock - E.decLast > 240 && R() < .6) {
+    const [, bv] = loc(k, rs.x, rs.y), Z = cornerZones(bv), take = mi === takerI || (['LW', 'RW', 'AM', 'CM', 'LB', 'RB'].includes(mp.role) && mp.a.pas >= T.pl[takerI].a.pas - 6);
+    if (take) takerI = mi;
+    const tk = T.pl[takerI]; tk.x = rs.x; tk.y = rs.y; giveBall(E, k, takerI, 99); E.ball.x = rs.x; E.ball.y = rs.y;
+    const box = T.pl.map((p, i) => [p, i]).filter(([p, i]) => p.on && !p.rc && i !== takerI && p.role !== 'GK');
+    if (take) {
+      // pour chaque zone, le partenaire qui l'attaque (le plus proche, un seul par zone)
+      const used = new Set(), opts = Z.map((z, zi) => { const c = box.filter(([, i]) => !used.has(i)).map(([p, i]) => [hy(loc(k, p.x, p.y)[0] - z[0], loc(k, p.x, p.y)[1] - z[1]) - (p.a.phy - 70) * .05, i]).sort((a, b) => a[0] - b[0])[0]; if (!c) return null; used.add(c[1]); const q = T.pl[c[1]]; return { t: ['Premier poteau', 'Point de penalty', 'Second poteau'][zi] + ' pour ' + q.n, act: 'corner', z: zi, j: c[1], at: 'PAS', out: 'assist', p: clamp(.36 + (mp.a.pas - 70) / 140 + [0, -.04, .02][zi], .15, .8) }; }).filter(Boolean);
+      const sj = nearestTo(E, k, rs.x, rs.y, takerI); if (sj >= 0) opts.push({ t: 'Corner à deux avec ' + T.pl[sj].n, act: 'pass', j: sj, at: 'PAS', out: 'pass', p: .9 });
+      if (opts.length >= 2) { E.dec = { kind: 'corner', mode: 'take', k, i: mi, taker: mi, bv, opts }; E.stop = 'decision'; return; }
+    } else if (['ST', 'CB', 'LW', 'RW', 'AM'].includes(mp.role) || mp.a.phy >= 72) {
+      const hp = clamp(.1 + (mp.a.phy + mp.a.sho - 140) / 420, .05, .35);
+      const opts = Z.map((z, zi) => ({ t: ['Attaquer le premier poteau', 'Attaquer le point de penalty', 'Attaquer le second poteau'][zi], act: 'head', z: zi, at: 'TIR', out: 'head', p: clamp(hp + [.03, -.04, .01][zi], .04, .5) }));
+      E.dec = { kind: 'corner', mode: 'head', k, i: mi, taker: takerI, bv, tn: tk.n, opts }; E.stop = 'decision'; return;
+    }
+  }
   const tk = T.pl[takerI]; tk.x = rs.x; tk.y = rs.y; giveBall(E, k, takerI, 0); meCm(E, 'corner', k, tk);
   const box = T.pl.map((p, i) => [p, i]).filter(([p, i]) => p.on && !p.rc && i !== takerI && loc(k, p.x, p.y)[0] > 86 && Math.abs(loc(k, p.x, p.y)[1] - 34) < 13);
   if (!box.length || R() < .12) { const j = nearestTo(E, k, rs.x, rs.y, takerI); mePass(E, k, takerI, j, 'pass'); return; }
@@ -3007,7 +3028,16 @@ function meFreeKick(E, k, rs) {
     if (!rs.wall) { const O = E.T[1 - k]; const w = O.pl.map((p, i) => [p, i]).filter(([p]) => p.on && !p.rc && p.role !== 'GK').sort((a, b) => dst(a[0].x, a[0].y, rs.x, rs.y) - dst(b[0].x, b[0].y, rs.x, rs.y)).slice(0, u > 85 ? 5 : u > 80 ? 4 : 3).map(x => x[1]); E.rs = Object.assign({}, rs, { wall: w, at: E.time + 7, done: true }); E.wall = { k: 1 - k, ids: w }; return; }
   }
   if (rs.wall) {
-    const [sp, si] = cand.sort((a, b) => (b[0].a.sho + (b[0].me && hasPerk('cf') ? 12 : 0)) - (a[0].a.sho + (a[0].me && hasPerk('cf') ? 12 : 0)))[0];
+    let [sp, si] = cand.sort((a, b) => (b[0].a.sho + (b[0].me && hasPerk('cf') ? 12 : 0)) - (a[0].a.sho + (a[0].me && hasPerk('cf') ? 12 : 0)))[0];
+    // coup de pied arrêté joué au doigt : c'est toi qui le tires si tu es le meilleur tireur, ou un attaquant à peine moins adroit
+    const mi = k === 0 && !E.coach ? T.pl.findIndex(p => p.me && p.on && !p.rc && p.role !== 'GK') : -1, mp = mi >= 0 ? T.pl[mi] : null;
+    if (mp && (mi === si || (['ST', 'LW', 'RW', 'AM', 'CM'].includes(mp.role) && mp.a.sho >= sp.a.sho - 7) || hasPerk('cf'))) {
+      sp = mp; si = mi; sp.x = rs.x - .8; sp.y = rs.y; giveBall(E, k, si, 99); E.ball.x = rs.x; E.ball.y = rs.y;
+      const pg = shotGoalProb(E, k, sp, { kind: 'fk' }), box = T.pl.map((p, i) => [p, i]).filter(([p, i]) => p.on && !p.rc && i !== si && loc(k, p.x, p.y)[0] > 86).sort((a, b) => b[0].a.phy - a[0].a.phy);
+      const opts = [{ t: 'Frapper le coup franc', act: 'shot', at: 'TIR', out: 'goal', p: pg }];
+      if (box.length) opts.push({ t: 'Centrer pour ' + box[0][0].n, act: 'cross', j: box[0][1], at: 'PAS', out: 'assist', p: .3 });
+      E.dec = { kind: 'att', fk: true, k, i: si, d: Math.round(hy(PL - u, v - 34)), gkn: keeper(E, 1 - k).n, opts }; E.stop = 'decision'; E.decB++; return;
+    }
     sp.x = rs.x - (k ? -.8 : .8); sp.y = rs.y; giveBall(E, k, si, 0); E.ball.x = rs.x; E.ball.y = rs.y;
     for (const wi of rs.wall) { const w = E.T[1 - k].pl[wi]; if (w && w.on) setAct(E, w, GEST.HEAD, 0, .25); }
     meCm(E, 'fkshot', k, sp, { d: Math.round(hy(PL - u, v - 34)) }); meShot(E, k, si, { kind: 'fk' }); return;
@@ -3324,7 +3354,7 @@ function touchBall(E, k, i, c) {
   if (c.z > 1.6 || (c.gkB && c.z > 1.2)) {
     setAct(E, p, GEST.HEAD, p.face);
     if (c.gkB) { const hold = R() < (E.cond.rain ? .7 : .85); if (hold) { if (K && K.kind === 'cross' && !mine) { p.st.sv++; meEv(E, 'claim', k, p); meCm(E, 'claim', k, p); } giveBall(E, k, i, rf(2.5, 5), true); return; } deflect(E, k, i, .4, 1.2, 3); meCm(E, 'claim', k, p, { punch: true }); return; }
-    if (u > 86 && Math.abs(v - 34) < 14 && (mine || K.kind === 'cross' || R() < .5)) { if (mine && pass) { E.T[k].st.pc++; const ps = E.T[K.k].pl[K.i]; if (ps) ps.st.pc++; E.lastPass = Object.assign(E.lastPass || {}, { to: i, t: E.time }); } giveBall(E, k, i, 0); meShot(E, k, i, { kind: 'head' }); return; }
+    if (u > 86 && Math.abs(v - 34) < 14 && (mine || K.kind === 'cross' || R() < .5)) { if (mine && pass) { E.T[k].st.pc++; const ps = E.T[K.k].pl[K.i]; if (ps) ps.st.pc++; E.lastPass = Object.assign(E.lastPass || {}, { to: i, t: E.time }); } giveBall(E, k, i, 0); const hm = p.headMg && p.headMg.until > E.time ? p.headMg : null; p.headMg = null; meShot(E, k, i, hm ? { kind: 'head', decided: true, mg: hm } : { kind: 'head' }); return; }
     if (u < 35) { if (!mine && u < 20 && R() < ME_HCO) { const [gx] = glob(k, 0, 34); b.vx = (gx - b.x) / Math.abs(gx - b.x || 1) * rf(3, 8); b.vy = (b.y < 34 ? -1 : 1) * rf(2, 6); b.vz = rf(2, 5); safeWide(b, gx); b.pv++; E.last = [k, i]; if (b.kick) { b.kick.kind = 'loose'; b.kick.safe = false; } return; } meClear(E, k, i, false, true); return; }
     // déviation de la tête vers un partenaire
     const mates = E.T[k].pl.map((q, j) => [q, j]).filter(([q, j]) => j !== i && q.on && !q.rc && dst(q.x, q.y, p.x, p.y) < 22 && dst(q.x, q.y, p.x, p.y) > 5 && (k === 0 ? q.x > p.x - 4 : q.x < p.x + 4));
@@ -3492,16 +3522,30 @@ function meApply(E, opt, mg) {
   const T = E.T[D.k];
   if (D.kind === 'att') {
     const p = T.pl[D.i];
-    if (opt.act === 'shot') { meShot(E, D.k, D.i, Object.assign({ decided: true }, D.pen ? { kind: 'pen' } : {}, mg ? { mg } : { forceP: opt.pp ?? opt.p + DF().mom })); return; }
-    const ok = R() < (opt.pp ?? clamp(opt.p + DF().mom, .03, .97)); D.ok = ok;
+    if (opt.act === 'shot') { meShot(E, D.k, D.i, Object.assign({ decided: true }, D.pen ? { kind: 'pen' } : D.fk ? { kind: 'fk' } : {}, mg && mg.view ? { mg } : { forceP: mg && mg.p != null ? mg.p : opt.pp ?? opt.p + DF().mom })); return; }
+    const ok = R() < (mg && mg.p != null ? mg.p : opt.pp ?? clamp(opt.p + DF().mom, .03, .97)); D.ok = ok;
     if (opt.act === 'drib') { const fr = frontOpp(E, D.k, p); if (fr) meAct(E, D.k, D.i, { k: 'drib', o: fr, ps: opt.p }, ok); else meAct(E, D.k, D.i, { k: 'carry' }); return; }
     if (opt.act === 'cross') { meAct(E, D.k, D.i, { k: 'cross', j: opt.j }, ok); return; }
     meAct(E, D.k, D.i, { k: opt.act, j: opt.j }, ok ? 'ok' : (R() < .7 ? 'int' : 'mis'));
     return;
   }
+  if (D.kind === 'corner') {
+    const zi = opt.z != null ? opt.z : 1, Z = cornerZones(D.bv)[zi], tk = T.pl[D.taker], me = T.pl[D.i];
+    if (D.mode === 'take') {
+      if (opt.act === 'pass') { const ok = R() < (mg && mg.p != null ? mg.p : .9); D.ok = ok; mePass(E, D.k, D.taker, opt.j, 'pass'); return; }
+      const q = T.pl[opt.j]; if (q) { const [x, y] = glob(D.k, Z[0] + rf(-.6, .6), Z[1] + rf(-.6, .6)); q.x = x; q.y = y; q.runTo = [Z[0], Z[1]]; q.run = E.time + 2; }
+      const ok = R() < (mg && mg.p != null ? mg.p : opt.pp ?? opt.p); D.ok = ok;
+      meCm(E, 'corner', D.k, tk); meCross(E, D.k, D.taker, opt.j, true, ok ? 'ok' : R() < .5 ? 'mis' : undefined); return;
+    }
+    // reprise de la tête : tu files dans la zone, le centre arrive (plus ou moins bien), ta tête est jouée selon ton saut
+    const [x, y] = glob(D.k, Z[0] + rf(-.4, .4), Z[1] + rf(-.4, .4)); me.x = x; me.y = y; me.runTo = [Z[0], Z[1]]; me.run = E.time + 2;
+    const deliv = R() < clamp(.62 + (tk.a.pas - 70) / 120, .35, .9); D.ok = deliv;
+    if (deliv) me.headMg = { p: mg && mg.p != null ? mg.p : opt.pp ?? opt.p, view: mg && mg.view ? mg.view : { kind: 'shot', zone: R() < .5 ? 3 : 5, dive: ri(0, 2), tq: 1 }, until: E.time + 4 };
+    meCm(E, 'corner', D.k, tk); meCross(E, D.k, D.taker, D.i, true, deliv ? 'ok' : undefined); return;
+  }
   if (D.kind === 'def') {
     const me = T.pl[D.i], [ok_, oi] = D.opp, op = E.T[ok_].pl[oi];
-    const ok = R() < (opt.pp ?? clamp(opt.p + DF().mom, .03, .97)); D.ok = ok;
+    const ok = R() < (mg && mg.p != null ? mg.p : opt.pp ?? clamp(opt.p + DF().mom, .03, .97)); D.ok = ok;
     if (opt.act === 'foul') { const y0 = me.yc; meFoul(E, D.k, D.i, ok_, oi); D.ok = true; if (me.yc === y0 && !me.rc && R() < .45) meCard(E, D.k, D.i, 'Y'); return; }
     if (opt.act === 'tackle') { setAct(E, me, R() < .5 ? GEST.SLIDE : GEST.TACKLE, Math.atan2(op.y - me.y, op.x - me.x)); if (ok) { me.st.tk++; op.st.lost++; giveBall(E, D.k, D.i); meEv(E, 'tackle', D.k, me); } else { me.beat = E.time + 1.4; op.carry = glob(ok_, Math.min(103, loc(ok_, op.x, op.y)[0] + 8), loc(ok_, op.x, op.y)[1]); E.timer = .8; if (R() < (opt.card || 0) * .6) meCard(E, D.k, D.i, 'Y'); } return; }
     if (ok) { me.st.int++; E.timer = .2; op.carry = null; op.beat = 0; const pas = bestPasses(E, ok_, oi).filter(x => loc(ok_, x.q.x, x.q.y)[0] < loc(ok_, op.x, op.y)[0]).sort((a, b) => b.ev - a.ev)[0]; if (pas) mePass(E, ok_, oi, pas.j, 'pass'); } else { me.beat = E.time + 1.2; op.carry = glob(ok_, Math.min(103, loc(ok_, op.x, op.y)[0] + 9), 34); E.timer = .9; }
@@ -3747,6 +3791,8 @@ function engP(M, o) { return clamp(o.p + DF().mom + (hasPerk('big') && M.big ? .
 function buildDecision(M) {
   const E = M.E, D = E.dec, c = liveNames(M);
   if (D.kind === 'att' && D.pen) return { dec: true, q: `Penalty pour ton équipe ! ${D.gkn || c.gk} se balance sur sa ligne. Tu prends le ballon.`, o: D.opts.map(o => Object.assign({}, o, { mt: 'pen' })) };
+  if (D.kind === 'att' && D.fk) return { dec: true, q: `Coup franc à ${D.d} mètres du but ! Le mur est en place, ${D.gkn || c.gk} replace ses défenseurs. C'est toi qui le tires.`, o: D.opts.map(o => Object.assign({}, o)) };
+  if (D.kind === 'corner') return { dec: true, q: D.mode === 'take' ? 'Corner pour ton équipe ! Tu poses le ballon près du drapeau. Où l\'envoies-tu ?' : `Corner pour ton équipe, ${D.tn || 'ton coéquipier'} va le tirer. Tu montes dans la surface : quelle zone attaques-tu ?`, o: D.opts.map(o => Object.assign({}, o)) };
   if (D.kind === 'att') {
     const where = D.box ? 'dans la surface' : `à ${D.d} mètres du but`;
     return { dec: true, q: `Tu as le ballon ${where}${D.fo ? ', ' + D.fo + ' sort sur toi' : ''}. À toi de jouer !`, o: D.opts.map(o => Object.assign({}, o)) };
@@ -3768,7 +3814,9 @@ function momProb(M, o) {
   return clamp(p, .05, o.out === 'pen' ? .92 : o.out === 'goal' ? .72 : .85);
 }
 const LIVE_OK = { goal: ['BUUUT ! Imparable !', 'Quel but ! Le stade explose !', 'Lucarne ! Tu cours vers tes supporters.'], pass: ['Passe parfaite.', 'Ballon dans la course de ton coéquipier.'], assist: ['Centre parfait, ton coéquipier est à la réception !'], drib: ['Tu l\'élimines d\'un crochet !', 'Grand pont ! Le public se lève.'], stop: ['Intervention parfaite, le danger est écarté.', 'Superbe lecture du jeu, ballon récupéré.'], save: ['Arrêt réflexe exceptionnel !', 'Parade magnifique, le public scande ton nom.'], pen: ['Penalty transformé !', 'Imparable, le gardien n\'a rien pu faire.'], gkpen: ['Tu arrêtes le penalty !! Énorme !'] };
+LIVE_OK.head = ['Le centre arrive dans ta zone, tu t\'élèves…']; LIVE_OK.corner = LIVE_OK.assist;
 const LIVE_KO = { goal: ['Frappe à côté…', 'Le gardien s\'interpose.', 'Ta tentative est contrée.'], pass: ['Ta passe est interceptée.', 'Le ballon est trop long.'], assist: ['Ton centre est repoussé.'], drib: ['Il te prend le ballon.', 'Tu perds ton duel.'], stop: ['Tu es éliminé…', 'Trop tard, il t\'a pris de vitesse.'], save: ['Pas cette fois.', 'Le ballon file sous ton corps.'], pen: ['Raté ! Le gardien a deviné.', 'Sur le poteau !'], gkpen: ['Il te prend à contre-pied.'] };
+LIVE_KO.head = ['Le centre est mal tiré : il ne t\'arrive pas.']; LIVE_KO.corner = LIVE_KO.assist;
 function liveChoose(M, i, mg) {
   if (M.coach) return coachChoose(M, i);
   const m = M.pending; if (!m) return;
@@ -3783,6 +3831,7 @@ function liveChoose(M, i, mg) {
     ok = D.kind === 'gk' || D.kind === 'gkpen' ? res !== 'goal' : res === 'goal';
     if (D.kind === 'gk' || D.kind === 'gkpen') { if (ok) S.cnt.save++; }
   } else if (o.act === 'pass' || o.act === 'thru' || o.act === 'cross') { ok = !!f && (f.res === 'ok' || f.res === 'duel'); at = f ? f.t0 + f.dur + .2 : at; }
+  else if (o.act === 'corner' || o.act === 'head') { ok = !!D.ok; at = f ? f.t0 + Math.min(f.dur, 1.2) : at; }
   else ok = !!D.ok;
   if (D.kind === 'def' && ok) S.cnt.stop++;
   if (o.act === 'drib' && ok) S.cnt.drib++;
@@ -5524,7 +5573,7 @@ function lvStop() { const was = !!LV.raf; if (LV.raf) cancelAnimationFrame(LV.ra
 function lvCanvas() {
   const cv = document.getElementById('lCan');
   if (!cv) { LV.cv = null; return false; }
-  if (cv !== LV.cv) { LV.cv = cv; LV.cx = cv.getContext && cv.getContext('2d'); if (!LV.cx) { LV.off = true; return false; } LV.w = 0; }
+  if (cv !== LV.cv) { LV.cv = cv; LV.cx = cv.getContext && cv.getContext('2d'); if (!LV.cx) { LV.off = true; return false; } LV.w = 0; if (typeof geHook === 'function') geHook(cv); }
   // le terrain prend toute la hauteur disponible (3D : jusqu'à un format portrait ; 2D : format télé)
   const stage = cv.closest ? cv.closest('.lstage') : null, sh = stage ? stage.clientHeight : 0, w = cv.clientWidth || 360;
   const maxA = typeof g3On === 'function' && g3On() ? 1.2 : .74, h = Math.round(sh > 40 ? Math.max(Math.min(sh, w * maxA), Math.min(sh, w * .5)) : w * .6), dpr = Math.min(2.5, window.devicePixelRatio || 1);
@@ -5578,6 +5627,7 @@ function lvFrame(now) {
   }
   if (lvCanvas()) lvDraw(M, LV.replay ? LV.replay.pt : LV.pt, dt, paused);
   if (M.sfx && M.sfx.length) sfxDrain(M);
+  if (UI.gest && typeof geTick === 'function') geTick(M, now);
   // pendant les pauses et les ralentis, le temps du match est figé mais les commentateurs continuent (temps réel)
   if ((paused || LV.replay) && M.com && typeof comTick === 'function') comTick(M, M.clockAt ?? LV.pt, now / 1000);
   if (rebuild) { save(); render(); }
@@ -5671,6 +5721,7 @@ function lvOverlay(M, t) {
       cx.fillStyle = 'rgba(8,10,14,.72)'; cx.fillRect(8, y - 8, tw + 18, 16); cx.fillStyle = E.T[k].col; cx.fillRect(12, y - 4, 6, 8); cx.fillStyle = '#fff'; cx.fillText(txt, 22, y); }
   }
   lvHud(cx, w, h, E, fa, own, M.cond || {});
+  if (UI.gest && typeof geDraw === 'function') geDraw(cx, M);
 }
 function lvDraw2D(M, t, dt, paused) {
   const cx = LV.cx, w = LV.w, h = LV.h, E = M.E, C = M.cond || {}, FX = LV.fx || { patches: [], flares: [], drops: [], crowdA: .5 };
@@ -5867,6 +5918,269 @@ function lvHud(cx, w, h, E, fa, own, C) {
     cx.font = `${p.big ? (p.t.length > 12 ? 24 : 34) : 16}px 'Protest Strike', 'Big Shoulders Display', system-ui, sans-serif`; cx.textAlign = 'center'; cx.textBaseline = 'middle';
     cx.lineWidth = p.big ? 5 : 3; cx.strokeStyle = 'rgba(0,0,0,.65)'; cx.strokeText(p.t, 0, 0); cx.fillStyle = p.col; cx.fillText(p.t, 0, 0); cx.restore();
   });
+}
+
+// ===== src/geste.js =====
+// ===================== MOMENTS CLÉS JOUÉS AU DOIGT (vue 3D) =====================
+// Au moment clé, le match se fige, la caméra se place derrière toi et tu joues au geste, directement sur la scène :
+//  · attaque : glisse vers le but pour frapper (là où ton doigt s'arrête = là où part le ballon ; vitesse du geste = puissance ;
+//    un geste courbé enroule le ballon) · glisse vers un coéquipier (ou touche-le) pour lui passer · petit coup sec sur le côté,
+//    quand le cercle autour du défenseur devient vert, pour le dribbler
+//  · défense : glisse vers l'attaquant quand le cercle devient vert pour tacler ; touche ton joueur pour temporiser
+//  · gardien : glisse du côté où part le ballon au moment où le cercle touche le ballon ; touche pour rester debout
+//  · coups de pied arrêtés : penalty (Panenka : geste lent et court au centre), coup franc (enroule le ballon autour du mur),
+//    corner (envoie le ballon sur une zone, ou va reprendre de la tête : choisis ta zone puis saute au bon moment)
+// Les probabilités restent celles du moteur (tes qualités, l'adversaire, la fatigue) ; le geste les fait monter ou baisser.
+const GE = { pts: null, id: null, cv: null };
+const GE_TIME = (typeof window !== 'undefined' && window.__GE_TIME) || 10000; // temps pour jouer une action de jeu (ms) ; ensuite, ton joueur choisit seul
+function geOn() { return typeof OPTS === 'undefined' || OPTS.geste !== false; }
+function geKind(D) { return D.kind === 'att' ? (D.pen ? 'pen' : D.fk ? 'fk' : 'att') : D.kind === 'corner' ? (D.mode === 'head' ? 'head' : 'corner') : D.kind; }
+function geAvail(M) {
+  if (!geOn() || !M || M.coach || !M.pending || M.pending.list || !M.E || !M.E.dec || UI.mg) return false;
+  if (!LV.d3 || LV.off || typeof g3On !== 'function' || !g3On() || !G3.cam || !G3.w) return false;
+  return ['att', 'def', 'gk', 'gkpen', 'corner'].includes(M.E.dec.kind);
+}
+function geNew(M) {
+  const D = M.E.dec, kind = geKind(D), at = a => S.p.at[a] || 60, rel = v => v - (M.opS - 6);
+  return { m: M.pending, kind, t0: performance.now() + (kind === 'gk' || kind === 'gkpen' || kind === 'def' ? 450 : 0), /* le cercle part quand la caméra est en place */ dive: wpick([0, 1, 2], d => [.38, .24, .38][d]), sDir: M.pending.sDir != null ? M.pending.sDir : D.sDir,
+    T: kind === 'gk' || kind === 'gkpen' ? Math.round(clamp(1250 + rel(at('GAR')) * 8, 900, 1600)) : kind === 'def' ? Math.round(clamp(1500 - rel(at('DEF')) * 6, 1050, 1800)) : kind === 'head' ? 1250 : Math.round(clamp(1450 - rel(at('DRI')) * 6, 1000, 1750)),
+    zone: null, t1: 0, msg: '', flash: 0 };
+}
+// positions de la scène au moment figé (repère du moteur, déjà dans le sens de l'affichage)
+function geGeo(M) {
+  const pr = lvPair(LV.pt); if (!pr) return null;
+  const [fa, fb, a] = pr, mir = fa[2] === 2, L = i => fa[i] + (fb[i] - fa[i]) * a;
+  const P = (kk, i) => { const o = MF_H + (kk * 11 + i) * MF_S; let x = L(o), y = L(o + 1); if (mir) { x = PL - x; y = PW - y; } return [x, y, fa[o + 2] >= .5]; };
+  let bx = L(3), by = L(4); if (mir) { bx = PL - bx; by = PW - by; }
+  // repère d'équipe (u, v) → affichage
+  const toD = (k, u, v) => { const [x, y] = glob(k, u, v); return mir ? [PL - x, PW - y] : [x, y]; };
+  return { P, ball: [bx, by, L(5)], mir, toD, atkX: mir ? 0 : PL, ownX: mir ? PL : 0 };
+}
+const geProj = (x, y, z) => g3Proj(x, y, z || 0);
+// le but visé à l'écran : coin gauche/droit (à l'écran), haut/bas
+function geGoal(Gg, own) {
+  const gx = own ? Gg.ownX : Gg.atkX, a = geProj(gx, 34 - GHW, 0), b = geProj(gx, 34 + GHW, 0), at = geProj(gx, 34 - GHW, GH), bt = geProj(gx, 34 + GHW, GH);
+  const lft = a[0] <= b[0];
+  // y moteur de chaque poteau, pour convertir la visée en repère d'équipe (v)
+  const yd = lft ? [34 - GHW, 34 + GHW] : [34 + GHW, 34 - GHW], ye = Gg.mir ? [PW - yd[0], PW - yd[1]] : yd;
+  return { L: lft ? a : b, R: lft ? b : a, LT: lft ? at : bt, RT: lft ? bt : at, ye };
+}
+// visée (point écran) → fractions dans le cadre (u : 0 gauche → 1 droite ; w : 0 bas → 1 barre)
+function geAim(Go, x, y) {
+  const yb = (Go.L[1] + Go.R[1]) / 2, yt = (Go.LT[1] + Go.RT[1]) / 2, w = (yb - y) / Math.max(8, yb - yt);
+  const xl = Go.L[0] + (Go.LT[0] - Go.L[0]) * clamp(w, 0, 1), xr = Go.R[0] + (Go.RT[0] - Go.R[0]) * clamp(w, 0, 1), u = (x - xl) / Math.max(8, xr - xl);
+  return { u, w };
+}
+// cibles du moment (coéquipiers, défenseur, attaquant, zones de corner)
+function geTargets(M, G, Gg) {
+  const D = M.E.dec, out = [], o = M.pending.o;
+  o.forEach((op, i) => {
+    if (op.j != null && (op.act === 'pass' || op.act === 'thru' || op.act === 'cross') && G.kind !== 'corner') { const [x, y, on] = Gg.P(D.k, op.j); if (!on) return; const p = geProj(x, y, 1.1); out.push({ i, t: op.act === 'thru' ? 'Profondeur' : op.act === 'cross' ? 'Centre' : 'Passe', n: LN(M.E.T[D.k].pl[op.j].n), x: p[0], y: p[1], vis: p[2] }); }
+    if (G.kind === 'corner' || G.kind === 'head') {
+      if (op.z != null) { const Z = cornerZones(D.bv)[op.z], [x, y] = Gg.toD(D.k, Z[0], Z[1]), p = geProj(x, y, 0); out.push({ i, zone: op.z, t: ['1er poteau', 'Penalty', '2e poteau'][op.z], n: G.kind === 'corner' && op.j != null ? LN(M.E.T[D.k].pl[op.j].n) : '', x: p[0], y: p[1], vis: p[2] }); }
+      else if (op.act === 'pass' && op.j != null) { const [x, y] = Gg.P(D.k, op.j), p = geProj(x, y, 1.1); out.push({ i, t: 'À deux', n: LN(M.E.T[D.k].pl[op.j].n), x: p[0], y: p[1], vis: p[2] }); }
+    }
+  });
+  const w = LV.w || 360, h = LV.h || 400;
+  for (const q of out) if (!q.vis || q.x < 14 || q.x > w - 14 || q.y < 26 || q.y > h - 36) { if (!q.vis) { q.x = q.x < w / 2 ? 24 : w - 24; q.y = h - 60; } q.x = clamp(q.x, 22, w - 22); q.y = clamp(q.y, 34, h - 44); q.vis = true; q.edge = true; }
+  return out;
+}
+// ---------- le geste ----------
+function gePointer(e) {
+  const G = UI.gest; if (!G || G.done || !LV.cv) return;
+  const r = LV.cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, t = performance.now();
+  if (e.type === 'pointerdown') { GE.pts = [[x, y, t]]; GE.id = e.pointerId; try { LV.cv.setPointerCapture(e.pointerId); } catch (er) { } }
+  else if (e.type === 'pointermove') { if (!GE.pts || e.pointerId !== GE.id) return; GE.pts.push([x, y, t]); if (GE.pts.length > 160) GE.pts.splice(1, 1); }
+  else { if (!GE.pts) return; GE.pts.push([x, y, t]); const pts = GE.pts; GE.pts = null; try { geGesture(pts); } catch (er) { console.warn('geste', er); } }
+  if (e.cancelable) e.preventDefault(); e.stopPropagation();
+}
+function geHook(cv) {
+  if (!cv || cv === GE.cv) return; GE.cv = cv;
+  for (const ev of ['pointerdown', 'pointermove', 'pointerup', 'pointercancel']) cv.addEventListener(ev, gePointer, { passive: false });
+}
+// analyse du tracé : départ, arrivée, longueur, vitesse (px/ms), courbure signée (enroulé)
+function geShape(pts) {
+  const [x0, y0, t0] = pts[0], [x1, y1, t1] = pts[pts.length - 1], dx = x1 - x0, dy = y1 - y0, len = Math.hypot(dx, dy) || 1;
+  let path = 0, dev = 0; for (let i = 1; i < pts.length; i++) path += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+  for (const [x, y] of pts) { const c = ((x - x0) * dy - (y - y0) * dx) / len; if (Math.abs(c) > Math.abs(dev)) dev = c; }
+  // vitesse mesurée sur la fin du geste (le doigt qui « frappe »), pas sur l'hésitation du début
+  let k = pts.length - 1; while (k > 0 && t1 - pts[k][2] < 110) k--; const vs = Math.hypot(x1 - pts[k][0], y1 - pts[k][1]) / Math.max(16, t1 - pts[k][2]);
+  return { x0, y0, x1, y1, dx, dy, len, dur: Math.max(1, t1 - t0), sp: Math.max(vs, path / Math.max(1, t1 - t0)), curl: dev / len, tap: len < 14 && t1 - t0 < 450, t1 };
+}
+const geNear = (L, x, y, r) => { let b = null, bd = r; for (const q of L) { if (!q.vis) continue; const d = Math.hypot(q.x - x, q.y - y); if (d < bd) { bd = d; b = q; } } return b ? Object.assign({ d: bd }, b) : null; };
+// phase d'un cercle qui se resserre (0 → 1 par cycle) et qualité du moment (1 = pile quand il devient vert, à .78)
+const gePh = (G, t) => ((t - G.t0) % G.T) / G.T, geQ = ph => clamp(1 - Math.abs(ph - .78) / .22, 0, 1);
+function geGesture(pts) {
+  const M = S.live && S.live.M, G = UI.gest; if (!M || !G || !M.pending) return;
+  const D = M.E.dec, Gg = geGeo(M); if (!D || !Gg) return;
+  const g = geShape(pts), o = M.pending.o, has = a => o.findIndex(x => x.act === a), T = geTargets(M, G, Gg);
+  if (G.kind === 'att' || G.kind === 'fk' || G.kind === 'pen') {
+    const Go = geGoal(Gg, false), si = has('shot'), di = has('drib'), A = geAim(Go, g.x1, g.y1);
+    const gcx = (Go.L[0] + Go.R[0] + Go.LT[0] + Go.RT[0]) / 4, gcy = (Go.L[1] + Go.R[1] + Go.LT[1] + Go.RT[1]) / 4, ang = (g.dx * (gcx - g.x0) + g.dy * (gcy - g.y0)) / (g.len * (Math.hypot(gcx - g.x0, gcy - g.y0) || 1));
+    const shoot = (opt) => geResolve(M, G.kind === 'pen' ? gePenOpt(A, g) : si, geShotG(M, o[si], G, g, A, Go, Gg));
+    // 1) le doigt finit dans le cadre (ou juste autour) : frappe
+    if (si >= 0 && !g.tap && g.len > 30 && (g.dy < -20 || G.kind === 'pen') && A.u > -.25 && A.u < 1.25 && A.w > -.3 && A.w < 1.6) return shoot();
+    // 2) sur un coéquipier : passe (toucher = passe simple)
+    const tgt = G.kind === 'pen' ? null : !g.tap ? geNear(T, g.x1, g.y1, 46) : geNear(T, g.x0, g.y0, 40);
+    if (tgt) return geResolve(M, tgt.i, gePass(M, o[tgt.i], g.tap ? 30 : tgt.d, tgt));
+    // 3) coup sec sur le côté : dribble
+    if (di >= 0 && !g.tap && Math.abs(g.dx) > 36 && Math.abs(g.dx) > Math.abs(g.dy) * 1.4 && g.len < 260) return geResolve(M, di, geDrib(M, o[di], G, g));
+    // 4) un geste nettement vers le but, qui finit hors du cadre : frappe ratée (au-dessus, à côté)
+    if (si >= 0 && !g.tap && g.dy < -24 && ang > .8) return shoot();
+    return geHint(G, G.kind === 'pen' ? 'Glisse vers le but : ton doigt s\'arrête là où part le ballon.' : 'Glisse vers le but pour frapper, vers un coéquipier pour passer' + (di >= 0 ? ', ou d\'un coup sec sur le côté pour dribbler.' : '.'));
+  }
+  if (G.kind === 'def') {
+    const [ax, ay] = Gg.P(D.opp[0], D.opp[1]), A = geProj(ax, ay, 1), [mx, my] = Gg.P(D.k, D.i), Me = geProj(mx, my, 1), ph = gePh(G, g.t1), q = geQ(ph);
+    if (g.tap) { const nf = Math.hypot(g.x0 - (G.foul ? G.foul[0] : -999), g.y0 - (G.foul ? G.foul[1] : -999)) < 40, fi = has('foul'); if (nf && fi >= 0) return geResolve(M, fi, { p: null }); const ci = has('contain'); return geResolve(M, ci >= 0 ? ci : 0, { p: null, okTxt: 'Tu temporises, il ne passe pas.', koTxt: 'Tu recules trop, il s\'engouffre.' }); }
+    const toward = (g.dx * (A[0] - g.x0) + g.dy * (A[1] - g.y0)) / (g.len * (Math.hypot(A[0] - g.x0, A[1] - g.y0) || 1));
+    const ti = has('tackle'); if (ti >= 0 && (toward > .5 || Math.hypot(g.x1 - A[0], g.y1 - A[1]) < 70)) { const base = momProb(M, o[ti]); return geResolve(M, ti, { p: clamp(base + (q - .5) * .4, .03, .93), okTxt: q > .7 ? 'Tacle parfait, au bon moment ! Ballon récupéré.' : 'Tu récupères le ballon.', koTxt: q < .25 ? 'Trop tôt… il t\'a vu venir et t\'efface.' : 'Il protège le ballon et passe.' }); }
+    void Me; return geHint(G, 'Glisse vers l\'attaquant quand le cercle devient vert pour tacler, ou touche l\'écran pour temporiser.');
+  }
+  if (G.kind === 'gk' || G.kind === 'gkpen') {
+    const r = (g.t1 - G.t0) / G.T, dir = g.tap || Math.abs(g.dx) < 30 ? 1 : g.dx > 0 ? 0 : 2; // droite de l'écran = sDir 0 (repère du tireur)
+    const oi = G.kind === 'gkpen' ? (dir === 1 ? 2 : dir === 0 ? 1 : 0) : (dir === 1 && g.tap ? Math.min(1, o.length - 1) : 0);
+    const sD = G.sDir != null ? G.sDir : 1, mg = mgSave(M, o[oi], dir, sD, r), ks = ['à droite', 'au centre', 'à gauche'][sD]; // côtés vus par toi, gardien
+    if (mg.okTxt.startsWith('Plongeon parfait')) mg.okTxt = `Plongeon parfait ${ks} : arrêt !`;
+    if (dir !== sD) mg.koTxt = `Frappe ${ks}, tu étais parti ${dir === 1 ? 'trop tard, resté au centre' : 'de l\'autre côté'}.`;
+    return geResolve(M, oi, mg);
+  }
+  if (G.kind === 'corner') {
+    const tgt = geNear(T, g.tap ? g.x0 : g.x1, g.tap ? g.y0 : g.y1, g.tap ? 44 : 80); if (!tgt) return geHint(G, 'Glisse le ballon vers une zone de la surface (ou touche ton coéquipier pour le jouer à deux).');
+    const op = o[tgt.i]; if (op.act === 'pass') return geResolve(M, tgt.i, { p: .92, okTxt: 'Corner joué à deux, ton équipe garde le ballon.', koTxt: 'Ta passe est trop molle.' });
+    const pq = clamp(1 - tgt.d / 80, 0, 1), sq = g.sp < .5 ? .3 : g.sp > 2.8 ? .4 : 1, q = pq * .6 + sq * .4;
+    return geResolve(M, tgt.i, { p: clamp(momProb(M, op) + (q - .55) * .5, .08, .92), okTxt: q > .75 ? `Centre parfait ${['au premier poteau', 'au point de penalty', 'au second poteau'][op.z]} !` : 'Ton centre arrive dans la zone.', koTxt: sq < .5 ? (g.sp < .5 ? 'Centre trop court, la défense dégage.' : 'Centre trop fort, il file derrière.') : 'Le gardien sort et capte ton centre.' });
+  }
+  if (G.kind === 'head') {
+    if (G.zone == null) { const tgt = geNear(T, g.x0, g.y0, 80); if (!tgt) return geHint(G, 'Touche la zone que tu veux attaquer.'); G.zone = tgt.zone; G.zi = tgt.i; G.t1 = performance.now(); G.msg = 'Saute (touche l\'écran) quand le cercle se referme sur toi.'; return; }
+    const r = (g.t1 - G.t1) / G.T, q = clamp(1 - Math.abs(r - 1) / .3, 0, 1), op = o[G.zi];
+    return geResolve(M, G.zi, { p: clamp(momProb(M, op) * (.45 + q * 1.1), .02, .7), view: { kind: 'shot', zone: R() < .5 ? 3 + (R() < .5 ? 0 : 2) : (R() < .5 ? 0 : 2), dive: ri(0, 2), tq: q > .7 ? 2 : 1 }, okTxt: q > .7 ? 'Détente parfaite, tu reprends de la tête !' : 'Tu sautes, le ballon arrive…', koTxt: q < .3 ? (r < 1 ? 'Tu as sauté trop tôt.' : 'Tu as sauté trop tard.') : 'Ta tête manque de précision.' });
+  }
+}
+function geHint(G, t) { G.msg = t; G.flash = performance.now(); }
+// passe : précision du geste (fin du geste sur le coéquipier)
+function gePass(M, op, d, tgt) {
+  const base = momProb(M, op), b = d < 18 ? .07 : d < 32 ? .03 : 0;
+  return { p: clamp(base + b, .03, .97), okTxt: `${op.act === 'cross' ? 'Centre' : op.act === 'thru' ? 'Ballon en profondeur' : 'Passe'} ${b > .05 ? 'millimétrée' : 'réussie'} pour ${tgt.n}.`, koTxt: `${op.act === 'cross' ? 'Ton centre' : 'Ta passe'} pour ${tgt.n} est interceptée.` };
+}
+// dribble : un coup sec quand le cercle autour du défenseur devient vert
+function geDrib(M, op, G, g) {
+  const q = geQ(gePh(G, g.t1)), fast = clamp((g.sp - .5) / 1, 0, 1), base = momProb(M, op), k = q * .7 + fast * .3;
+  return { p: clamp(base + (k - .5) * .36, .04, .93), okTxt: k > .7 ? 'Crochet parfait, il est dans le vent !' : 'Tu passes ton adversaire.', koTxt: q < .3 ? 'Trop tôt : il ne mord pas et te prend le ballon.' : 'Il te reprend le ballon.' };
+}
+// penalty : en bas → placé ; en haut → en force ; lent, court et au centre → Panenka
+function gePenOpt(A, g) { if (g.sp < .45 && g.len < 150 && Math.abs(A.u - .5) < .2) return 2; return A.w > .5 ? 1 : 0; }
+// frappe : visée (u, w), puissance (vitesse du geste), effet (courbure), plongeon du gardien
+function geShotG(M, op, G, g, A, Go, Gg) {
+  const fk = G.kind === 'fk', pen = G.kind === 'pen', base = momProb(M, op), col = A.u < .36 ? 0 : A.u > .64 ? 2 : 1, top = A.w > .5, zone = (top ? 0 : 3) + col;
+  const lo = pen ? .42 : .5, hi = pen ? 2.8 : 3.2, tq = g.sp >= lo + .3 && g.sp <= hi - .5 ? 2 : g.sp >= lo && g.sp <= hi ? 1 : 0;
+  const wide = A.u < -.03 || A.u > 1.03 || A.w > 1.08 || (tq === 0 && g.sp > hi && top && R() < .6) || (A.u < .05 || A.u > .95 ? R() < .3 : false);
+  const curl = clamp(g.curl, -.6, .6), toFar = (col === 0 && curl < -.05) || (col === 2 && curl > .05);
+  const panenka = pen && gePenOpt(A, g) === 2;
+  let p;
+  if (panenka) p = G.dive !== 1 ? .9 : .08;
+  else if (fk) {
+    // le mur : à ras de terre du côté du mur, sans effet, il renvoie le ballon
+    p = base * [2.3, .8, 2.3, 1.15, .35, 1.15][zone] * [.35, 1, 1.35][tq] * (Math.abs(curl) > .07 ? 1.3 : 1) * (G.dive === col ? .6 : 1);
+    if (!top && Math.abs(curl) < .05 && col !== 1 && R() < .5) p *= .25;
+    p = clamp(p, 0, .5);
+  } else {
+    p = base + (tq === 2 ? .12 : tq === 1 ? 0 : -.25) + [.1, -.02, .1, .05, -.1, .05][zone] + (toFar ? .04 : 0) + (pen ? .03 : 0);
+    if (G.dive === col) p -= top && col !== 1 ? .12 : .28;
+    p = clamp(p, 0, .96);
+  }
+  if (wide) p = 0;
+  // la trajectoire suit le geste : point visé dans le cadre (repère d'équipe), effet du geste
+  const ty = clamp(Go.ye[0] + clamp(A.u, -.1, 1.1) * (Go.ye[1] - Go.ye[0]), 34 - GHW - 1.5, 34 + GHW + 1.5), tz = clamp(A.w, 0, 1.25) * GH * .92 + .12;
+  const view = { kind: 'shot', zone, dive: G.dive, tq, wide, ty: wide ? ty : clamp(ty, 34 - GHW + .2, 34 + GHW - .2), tz: wide ? Math.max(tz, A.w > 1 ? 2.8 : tz) : Math.min(tz, 2.25), cu: Math.abs(curl) > .05 ? clamp(-curl * .35, -.18, .18) : undefined, sp: panenka ? 12 : tq === 0 && g.sp < lo ? 17 : undefined };
+  const side = ['à gauche', 'au centre', 'à droite'][col], hgt = top ? (col === 1 ? 'sous la barre' : 'en pleine lucarne') : 'à ras de terre';
+  const guess = G.dive === col, gk = guess ? 'le gardien avait deviné' : 'le gardien part du mauvais côté';
+  return { p, view, okTxt: panenka ? 'Panenka ! Le gardien a plongé, le ballon tombe doucement au centre !' : `${tq === 2 ? 'Frappe parfaite' : 'Frappe'} ${hgt} ${side}${fk && Math.abs(curl) > .07 ? ', enroulée par-dessus le mur' : ''}, ${guess ? 'imparable quand même !' : gk + ' : BUT !'}`,
+    koTxt: wide ? (A.w > 1 ? 'Trop haut, le ballon passe au-dessus.' : 'Trop croisé, le ballon file à côté.') : panenka ? 'Panenka… mais le gardien est resté au centre !' : tq === 0 && g.sp < lo ? 'Frappe trop molle, le gardien s\'en saisit.' : `Frappe ${side}, ${guess ? gk + ' et la sort' : 'mais le gardien s\'interpose'}.` };
+}
+function geResolve(M, i, mg) {
+  const G = UI.gest; if (!G || G.done) return; G.done = true;
+  try { navigator.vibrate && navigator.vibrate(12); } catch (e) { }
+  UI.gest = null; if (mg && mg.p == null) mg = null;
+  liveChoose(M, i, mg); save(); render(); liveRun();
+}
+// temps écoulé (action de jeu) : ton joueur décide seul ; gardien sans geste : il reste planté
+function geTick(M, now) {
+  const G = UI.gest; if (!G || G.done || !M.pending) return;
+  if ((G.kind === 'att' || G.kind === 'def') && now - G.t0 > GE_TIME) { G.done = true; UI.gest = null; liveChoose(M, autoPick(M)); save(); render(); liveRun(); return; }
+  if ((G.kind === 'gk' || G.kind === 'gkpen') && now - G.t0 > G.T * 1.35) { const o = M.pending.o, oi = G.kind === 'gkpen' ? 2 : Math.min(1, o.length - 1), mg = mgSave(M, o[oi], 1, G.sDir != null ? G.sDir : 0, 2); mg.okTxt = 'Il tire sur toi : arrêt sans bouger !'; mg.koTxt = 'Tu es resté figé sur ta ligne…'; G.done = true; UI.gest = null; liveChoose(M, oi, mg); save(); render(); liveRun(); }
+  if (G.kind === 'head' && G.zone != null && now - G.t1 > G.T * 1.4) { geGesture([[0, 0, now], [0, 0, now]]); }
+}
+// ---------- caméra du moment clé (g3Camera) : derrière toi, vers l'action ----------
+function geCam(M) {
+  const G = UI.gest; if (!G || !M.E || !M.E.dec) return null;
+  const D = M.E.dec, Gg = geGeo(M); if (!Gg) return null;
+  const W = (x, y) => [x - 52.5, y - 34], nrm = (x, y) => { const l = Math.hypot(x, y) || 1; return [x / l, y / l]; };
+  if (G.kind === 'att' || G.kind === 'fk' || G.kind === 'pen') {
+    const [bx, by] = Gg.ball, [ux, uy] = nrm(Gg.atkX - bx, 34 - by), d = Math.hypot(Gg.atkX - bx, 34 - by), back = G.kind === 'pen' ? 6 : G.kind === 'fk' ? 6.5 : 9, h = G.kind === 'pen' ? 2.5 : G.kind === 'fk' ? 2.4 : 4.6, sd = G.kind === 'att' ? 0 : 1.3; // de côté : le tireur ne cache pas le but
+    const [px, pz] = W(bx - ux * back - uy * sd, by - uy * back + ux * sd), [lx, lz] = W(bx + ux * Math.min(d, 26) * .85, by + uy * Math.min(d, 26) * .85);
+    return [px, h, pz, lx, G.kind === 'att' ? .2 : 1.1, lz, G.kind === 'pen' ? 46 : G.kind === 'att' ? 50 : 54];
+  }
+  if (G.kind === 'def') { const [mx, my] = Gg.P(D.k, D.i), [ax, ay] = Gg.P(D.opp[0], D.opp[1]), [ux, uy] = nrm(ax - mx, ay - my), [px, pz] = W(mx - ux * 6, my - uy * 6), [lx, lz] = W(ax + ux * 4, ay + uy * 4); return [px, 2.7, pz, lx, .7, lz, 56]; }
+  if (G.kind === 'gk' || G.kind === 'gkpen') { const [mx, my] = Gg.P(D.k, geKeeperIdx(M.E, D.k)), [sx, sy] = Gg.P(D.shooter[0], D.shooter[1]), [ux, uy] = nrm(sx - mx, sy - my), [px, pz] = W(mx - ux * 3.6, my - uy * 3.6), [lx, lz] = W(sx, sy); return [px, 1.75, pz, lx, .9, lz, 58]; }
+  if (G.kind === 'corner') { const [cx, cy] = Gg.toD(D.k, 99, 34), [ex, ey] = Gg.toD(D.k, 79, 34), [px, pz] = W(ex, ey), [lx, lz] = W(cx, cy); return [px, 11, pz, lx, 0, lz, 44]; } // en hauteur, face au but : premier poteau, point de penalty et second poteau bien séparés
+  if (G.kind === 'head') { const [gx, gy] = Gg.toD(D.k, PL, 34), [cx, cy] = Gg.toD(D.k, 76, 34), [px, pz] = W(cx, cy), [lx, lz] = W(gx, gy); return [px, 4.4, pz, lx, .6, lz, 42]; }
+  return null;
+}
+// identifiant du gardien (décisions de gardien : le moteur ne donne pas D.i)
+function geKeeperIdx(E, k) { const T = E.T[k]; const i = T.pl.findIndex(p => p.on && !p.rc && p.role === 'GK'); return i >= 0 ? i : 0; }
+// ---------- dessin par-dessus la 3D ----------
+function geDraw(cx, M) {
+  const G = UI.gest; if (!G || !M.pending || !M.E.dec) return;
+  const D = M.E.dec, Gg = geGeo(M); if (!Gg) return;
+  const now = performance.now(), w = LV.w, h = LV.h, T = geTargets(M, G, Gg);
+  cx.save();
+  const vg = cx.createRadialGradient(w / 2, h * .45, Math.min(w, h) * .3, w / 2, h * .45, Math.hypot(w, h) * .6); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.38)'); cx.fillStyle = vg; cx.fillRect(0, 0, w, h);
+  const ring = (x, y, r0, ph, lab) => { const q = geQ(ph), rr = r0 * (2.6 - 1.6 * Math.min(1, ph / .78)) + (ph > .78 ? r0 * 1.6 * (ph - .78) : 0); cx.lineWidth = 2.4; cx.strokeStyle = q > .55 ? `rgba(80,230,120,${.6 + q * .4})` : 'rgba(255,255,255,.75)'; cx.beginPath(); cx.arc(x, y, rr, 0, 7); cx.stroke(); cx.lineWidth = 1.2; cx.strokeStyle = 'rgba(255,255,255,.45)'; cx.beginPath(); cx.arc(x, y, r0, 0, 7); cx.stroke(); if (lab) geLabel(cx, x, y + r0 * 2.7 + 8, lab, q > .55 ? '#5be37a' : '#fff'); };
+  const bubble = q => { if (q.edge) return geEdge(cx, q, w, h); cx.fillStyle = 'rgba(245,197,66,.16)'; cx.strokeStyle = '#f5c542'; cx.lineWidth = 2; cx.beginPath(); cx.arc(q.x, q.y, 17, 0, 7); cx.fill(); cx.stroke(); geLabel(cx, q.x, q.y - 26, q.t + (q.n ? ' · ' + q.n : ''), '#f5c542'); };
+  if (G.kind === 'att' || G.kind === 'fk' || G.kind === 'pen') {
+    const Go = geGoal(Gg, false), pulse = .55 + .25 * Math.sin(now / 260);
+    cx.strokeStyle = `rgba(255,255,255,${pulse})`; cx.lineWidth = 2; cx.beginPath(); cx.moveTo(Go.L[0], Go.L[1]); cx.lineTo(Go.LT[0], Go.LT[1]); cx.lineTo(Go.RT[0], Go.RT[1]); cx.lineTo(Go.R[0], Go.R[1]); cx.stroke();
+    // lucarnes : les zones qui paient
+    for (const [a, b] of [[Go.LT, Go.L], [Go.RT, Go.R]]) { const x = a[0] + (b[0] - a[0]) * .18, y = a[1] + (b[1] - a[1]) * .18; cx.fillStyle = `rgba(245,197,66,${.18 + .12 * Math.sin(now / 300)})`; cx.beginPath(); cx.arc(x, y, Math.max(6, Math.abs(Go.R[0] - Go.L[0]) * .09), 0, 7); cx.fill(); }
+    T.forEach(bubble);
+    const di = M.pending.o.findIndex(x => x.act === 'drib');
+    if (di >= 0) { const E = M.E, fo = E.T[1 - D.k].pl.map((p, i) => [p, i]).filter(([p]) => p.on).map(([p, i]) => [Gg.P(1 - D.k, i), i]).sort((a, b) => Math.hypot(a[0][0] - Gg.ball[0], a[0][1] - Gg.ball[1]) - Math.hypot(b[0][0] - Gg.ball[0], b[0][1] - Gg.ball[1]))[0]; if (fo) { const p = geProj(fo[0][0], fo[0][1], 1); if (p[2]) ring(p[0], p[1], 12, gePh(G, now), '↔ Crochet'); } }
+    if (G.kind === 'fk' && M.E.wall) { const ids = M.E.wall.ids || []; for (const i of ids) { const [x, y] = Gg.P(M.E.wall.k, i), p = geProj(x, y, 2.1); if (p[2]) { cx.fillStyle = 'rgba(255,90,90,.85)'; cx.fillRect(p[0] - 5, p[1] - 2, 10, 4); } } }
+  } else if (G.kind === 'def') {
+    const [ax, ay] = Gg.P(D.opp[0], D.opp[1]), A = geProj(ax, ay, 1); if (A[2]) ring(A[0], A[1], 13, gePh(G, now), 'Tacle : glisse vers lui');
+    const fi = M.pending.o.findIndex(x => x.act === 'foul'); if (fi >= 0) { G.foul = [w - 46, h - 70]; cx.fillStyle = 'rgba(200,40,40,.85)'; cx.beginPath(); cx.arc(G.foul[0], G.foul[1], 22, 0, 7); cx.fill(); geLabel(cx, G.foul[0], G.foul[1], 'Faute', '#fff', true); }
+  } else if (G.kind === 'gk' || G.kind === 'gkpen') {
+    const [bx, by, bz] = Gg.ball, B = geProj(bx, by, Math.max(.2, bz)), r = (now - G.t0) / G.T;
+    if (B[2]) { const rr = 14 * (1 + Math.max(0, 1 - r / .78) * 4), q = clamp(1 - Math.abs(r - .78) / .3, 0, 1); cx.lineWidth = 3; cx.strokeStyle = q > .5 ? '#5be37a' : '#fff'; cx.beginPath(); cx.arc(B[0], B[1], rr, 0, 7); cx.stroke(); }
+    geLabel(cx, w / 2, h * .16, '← Glisse du côté du tir · touche pour rester debout →', '#fff');
+  } else if (G.kind === 'corner') { T.forEach(bubble); }
+  else if (G.kind === 'head') {
+    if (G.zone == null) T.forEach(bubble);
+    else { const q = T.find(x => x.zone === G.zone); if (q && q.vis) { const r = (now - G.t1) / G.T, rr = 16 * (1 + Math.max(0, 1 - r) * 4); cx.lineWidth = 3; cx.strokeStyle = Math.abs(r - 1) < .15 ? '#5be37a' : '#fff'; cx.beginPath(); cx.arc(q.x, q.y, rr, 0, 7); cx.stroke(); cx.strokeStyle = 'rgba(255,255,255,.5)'; cx.lineWidth = 1.2; cx.beginPath(); cx.arc(q.x, q.y, 16, 0, 7); cx.stroke(); } }
+  }
+  // le tracé du doigt
+  if (GE.pts && GE.pts.length > 1) { cx.lineCap = 'round'; cx.lineJoin = 'round'; cx.strokeStyle = 'rgba(255,255,255,.9)'; cx.lineWidth = 5; cx.shadowColor = 'rgba(245,197,66,.9)'; cx.shadowBlur = 12; cx.beginPath(); for (const [x, y] of GE.pts) cx.lineTo(x, y); cx.stroke(); cx.shadowBlur = 0; }
+  // temps restant (actions de jeu)
+  if (G.kind === 'att' || G.kind === 'def') { const f = clamp(1 - (now - G.t0) / GE_TIME, 0, 1); cx.fillStyle = 'rgba(0,0,0,.35)'; cx.fillRect(12, 8, w - 24, 4); cx.fillStyle = f < .3 ? '#ff6b5b' : '#f5c542'; cx.fillRect(12, 8, (w - 24) * f, 4); }
+  if (G.msg && now - G.flash < 2600) geLabel(cx, w / 2, h - 28, G.msg, '#fff', false, true);
+  cx.restore();
+}
+function geLabel(cx, x, y, t, col, center, wide) {
+  cx.font = `700 ${wide ? 11 : 10}px system-ui, sans-serif`; cx.textAlign = 'center'; cx.textBaseline = 'middle';
+  const tw = Math.min(cx.measureText(t).width, LV.w - 20); x = clamp(x, tw / 2 + 8, LV.w - tw / 2 - 8);
+  if (!center) { cx.fillStyle = 'rgba(8,10,14,.74)'; cx.fillRect(x - tw / 2 - 5, y - 8, tw + 10, 16); }
+  cx.fillStyle = col || '#fff'; cx.fillText(t, x, y, LV.w - 20);
+}
+// coéquipier hors champ : flèche au bord de l'écran
+function geEdge(cx, q, w, h) {
+  const x = q.x, y = q.y;
+  cx.fillStyle = 'rgba(245,197,66,.85)'; cx.beginPath(); cx.arc(x, y, 13, 0, 7); cx.fill(); geLabel(cx, x, y - 22, q.t + (q.n ? ' · ' + q.n : ''), '#f5c542');
+}
+// panneau du bas pendant le moment au doigt : la consigne, et la liste pour qui préfère choisir
+function vGest(M) {
+  const G = UI.gest, m = M.pending, k = G.kind;
+  const how = { att: 'Glisse vers le but pour frapper · vers un coéquipier pour passer' + (m.o.some(x => x.act === 'drib') ? ' · coup sec sur le côté pour dribbler' : ''), pen: 'Glisse vers le but : là où ton doigt s\'arrête. Lent et court au centre : Panenka.', fk: 'Glisse vers le but en courbant le geste pour enrouler par-dessus le mur.', def: 'Glisse vers l\'attaquant quand le cercle devient vert · touche pour temporiser', gk: 'Glisse du côté où part le ballon quand le cercle touche le ballon', gkpen: 'Glisse du côté où tu plonges, au moment où le cercle touche le ballon', corner: 'Glisse le ballon vers une zone de la surface', head: G.zone == null ? 'Touche la zone que tu attaques' : 'Touche l\'écran pour sauter quand le cercle se referme' }[k] || '';
+  return `<div class="moment gest"><div class="row between"><div class="lbl acc">${k === 'pen' ? 'Penalty' : k === 'fk' ? 'Coup franc' : k === 'corner' || k === 'head' ? 'Corner' : 'Moment clé'} · ${M.min}'</div><button class="link" data-a="geList">Choisir dans la liste</button></div><p class="q">${esc(m.q)}</p><p class="note ghow">☝︎ ${esc(how)}</p></div>`;
 }
 
 // ===== src/m3d.js =====
@@ -6170,6 +6484,16 @@ function g3Weather(snow, low) {
 // ---------- Animation des joueurs ----------
 const _m = { e: null }, G3M = {};
 function g3Tmp() { if (_m.e) return; _m.e = new THREE.Euler(); _m.q = new THREE.Quaternion(); _m.v = new THREE.Vector3(); _m.s = new THREE.Vector3(1, 1, 1); _m.l = new THREE.Matrix4(); for (const k of ['root', 'tor', 'sh', 'ua', 'fa', 'hip', 'th', 'sn', 'hd', 'z']) G3M[k] = new THREE.Matrix4(); G3M.z.makeScale(0, 0, 0); }
+// os mêlé au mouvement capturé (mc : poids w, quaternions q ; b : n° de l'os ; yAdd : rotation en plus autour de l'os, ex. regard)
+const _mq = {};
+function g3Jm(out, parent, x, y, z, rx, ry, rz, mc, b, yAdd) {
+  if (!mc || !(mc.w > 0)) return g3J(out, parent, x, y, z, rx, ry, rz);
+  _m.e.set(rx || 0, ry || 0, rz || 0, 'YZX'); _m.q.setFromEuler(_m.e);
+  const q2 = _mq.q2 || (_mq.q2 = new THREE.Quaternion()), o = b * 4; q2.set(mc.q[o], mc.q[o + 1], mc.q[o + 2], mc.q[o + 3]);
+  _m.q.slerp(q2, b === 2 ? mc.w * (mc.hw ?? 1) : mc.w);
+  if (yAdd) { const qa = _mq.qa || (_mq.qa = new THREE.Quaternion()), ay = _mq.ay || (_mq.ay = new THREE.Vector3(0, 1, 0)); qa.setFromAxisAngle(ay, yAdd); _m.q.multiply(qa); }
+  _m.l.compose(_m.v.set(x, y, z), _m.q, _m.s); return out.multiplyMatrices(parent, _m.l);
+}
 // out = parent × T(x,y,z) × R(rx,ry,rz ordre YZX)
 function g3J(out, parent, x, y, z, rx, ry, rz) { _m.e.set(rx || 0, ry || 0, rz || 0, 'YZX'); _m.q.setFromEuler(_m.e); _m.l.compose(_m.v.set(x, y, z), _m.q, _m.s); return out.multiplyMatrices(parent, _m.l); }
 const ease = x => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
@@ -6181,7 +6505,7 @@ const bell = (p, a, b) => p < a || p > b ? 0 : Math.sin((p - a) / (b - a) * Math
 const G3RIG_DEF = { hp: .97, hipY: -.07, hipW: .1, thigh: .45, shin: .45, torY: .04, shY: .5, shW: .225, ua: .3, fa: .28, neck: .7 };
 let G3RIG = Object.assign({}, G3RIG_DEF);
 const G3JS = new Map(), G3_JK = ['hp', 'lean', 'roll', 'twist', 'nod', 'look', 'hipL', 'hipR', 'kneeL', 'kneeR', 'shL', 'shR', 'abL', 'abR', 'elL', 'elR', 'ab2'];
-const G3_CELS = ['plane', 'classic', 'ear', 'heart', 'knee', 'dance'];
+const G3_CELS = ['plane', 'classic', 'ear', 'heart', 'knee', 'dance', 'roue'];
 // instant du contact dans l'animation de chaque geste (s) : frappe, reprise de volée, tête, tacle glissé, tacle, contrôle, contre, touche
 const G3_CONTACT = { 1: .26, 11: .33, 2: .36, 3: .2, 4: .25, 12: .12, 17: .2, 10: .45 };
 // spline de Catmull-Rom entre les images b et c (a, d : voisines) ; on garde l'angle vif quand la vitesse change d'un coup (frappe, rebond, mi-temps)
@@ -6250,24 +6574,33 @@ function g3Pose(P, n, s) {
     if (!J || s.snap) { J = Float32Array.from(cur); G3JS.set(key, J); }
     else { const k = 1 - Math.exp(-(s.gdt || 0) * (a && t >= 0 && t < 1.5 ? 26 : 14)); for (let i = 0; i < cur.length; i++) J[i] += (cur[i] - J[i]) * k; }
     [hp, lean, roll, twist, nod, look, hipL, hipR, kneeL, kneeR, shL, shR, abL, abR, elL, elR, ab2] = J; }
-  // composition
-  const R = G3M.root, sq = n * 2;
-  _m.e.set(roll, -s.yaw - yawAdd, pitch, 'YZX'); _m.q.setFromEuler(_m.e); R.compose(_m.v.set(s.x, Math.max(.12, hp), s.z), _m.q, _m.s);
-  g3J(G3M.tor, R, 0, G3RIG.torY, 0, 0, twist + look * .2, -lean);
+  // composition (mouvements capturés mêlés aux gestes dessinés : m3dmc.js)
+  const R = G3M.root, sq = n * 2, mc = typeof g3McPick === 'function' ? g3McPick(s, n, a, t) : null;
+  _m.e.set(roll, -s.yaw - yawAdd, pitch, 'YZX'); _m.q.setFromEuler(_m.e);
+  let rx = s.x, ry = Math.max(.12, hp), rz = s.z;
+  if (mc) { // bassin : cap du jeu × orientation capturée ; hauteur capturée ; petit déplacement des acrobaties
+    const qy = _mq.y || (_mq.y = new THREE.Quaternion()), qm = _mq.m || (_mq.m = new THREE.Quaternion()), ax = _mq.ax || (_mq.ax = new THREE.Vector3(0, 1, 0)), tv = _mq.tv || (_mq.tv = new THREE.Vector3());
+    qy.setFromAxisAngle(ax, -s.yaw - yawAdd); qm.set(mc.q[0], mc.q[1], mc.q[2], mc.q[3]); qm.premultiply(qy);
+    if (Math.abs(roll) > .01) { const qr = _mq.r || (_mq.r = new THREE.Quaternion()), ar = _mq.ar || (_mq.ar = new THREE.Vector3()); ar.set(1, 0, 0).applyQuaternion(qy); qr.setFromAxisAngle(ar, roll * .7); qm.premultiply(qr); } // on se penche dans les virages
+    _m.q.slerp(qm, mc.w); ry += (Math.max(.12, mc.h * (G3RIG.thigh + G3RIG.shin) / .9) - ry) * mc.w;
+    if (mc.tr[0] || mc.tr[2]) { tv.set(mc.tr[0], 0, mc.tr[2]).applyQuaternion(qy); rx += tv.x; rz += tv.z; }
+  }
+  R.compose(_m.v.set(rx, ry, rz), _m.q, _m.s);
+  g3Jm(G3M.tor, R, 0, G3RIG.torY, 0, 0, twist + look * .2, -lean, mc, 1);
   P.torso.setMatrixAt(n, G3M.tor); P.shorts.setMatrixAt(n, R);
-  g3J(G3M.hd, G3M.tor, 0, G3RIG.neck, 0, 0, look * .8, -nod); P.head.setMatrixAt(n, G3M.hd); P.hair.setMatrixAt(n, G3M.hd);
+  g3Jm(G3M.hd, G3M.tor, 0, G3RIG.neck, 0, 0, look * .8, -nod, mc, 2, mc ? look * .8 * mc.w : 0); P.head.setMatrixAt(n, G3M.hd); P.hair.setMatrixAt(n, G3M.hd);
   const SKo = P.sk && P.sk.out; if (SKo) { P.sk.hid[n] = 0; g3SkPut(SKo, n, 0, R); g3SkPut(SKo, n, 1, G3M.tor); g3SkPut(SKo, n, 2, G3M.hd); }
   if (n < 22) { g3J(G3M.z, G3M.tor, G3RIG.numX ?? -.128, G3RIG.numY ?? .33, 0, 0, 0, 0); P.num.setMatrixAt(n, G3M.z); G3M.z.makeScale(0, 0, 0); } else P.num.setMatrixAt(n, G3M.z);
   for (let k = 0; k < 2; k++) {
     const sd = k ? 1 : -1, sh = k ? shR : shL, ab = k ? abR : abL, el = k ? elR : elL;
-    g3J(G3M.ua, G3M.tor, 0, G3RIG.shY, sd * G3RIG.shW, -sd * ab, 0, sh); // ab > 0 : le bras s'écarte du corps P.uarm.setMatrixAt(sq + k, G3M.ua); if (P.ubare) P.ubare.setMatrixAt(sq + k, G3M.ua);
-    g3J(G3M.fa, G3M.ua, 0, -G3RIG.ua, 0, 0, 0, el); P.farm.setMatrixAt(sq + k, G3M.fa);
-    g3J(G3M.sh, G3M.fa, 0, -G3RIG.fa, 0, 0, 0, 0); P.hand.setMatrixAt(sq + k, G3M.sh);
+    g3Jm(G3M.ua, G3M.tor, 0, G3RIG.shY, sd * G3RIG.shW, -sd * ab, 0, sh, mc, 3 + k * 3); // ab > 0 : le bras s'écarte du corps P.uarm.setMatrixAt(sq + k, G3M.ua); if (P.ubare) P.ubare.setMatrixAt(sq + k, G3M.ua);
+    g3Jm(G3M.fa, G3M.ua, 0, -G3RIG.ua, 0, 0, 0, el, mc, 4 + k * 3); P.farm.setMatrixAt(sq + k, G3M.fa);
+    g3Jm(G3M.sh, G3M.fa, 0, -G3RIG.fa, 0, 0, 0, 0, mc, 5 + k * 3); P.hand.setMatrixAt(sq + k, G3M.sh);
     if (SKo) { g3SkPut(SKo, n, 3 + k * 3, G3M.ua); g3SkPut(SKo, n, 4 + k * 3, G3M.fa); g3SkPut(SKo, n, 5 + k * 3, G3M.sh); }
     const hip = k ? hipR : hipL, kn = k ? kneeR : kneeL;
-    g3J(G3M.th, R, 0, G3RIG.hipY, sd * G3RIG.hipW, -sd * (.04 + ab2), 0, hip); // ab2 > 0 : jambes écartées P.thigh.setMatrixAt(sq + k, G3M.th);
-    g3J(G3M.sn, G3M.th, 0, -G3RIG.thigh, 0, 0, 0, -kn); P.shin.setMatrixAt(sq + k, G3M.sn);
-    g3J(G3M.hip, G3M.sn, 0, -G3RIG.shin, 0, 0, 0, Math.min(.6, kn * .3)); P.boot.setMatrixAt(sq + k, G3M.hip);
+    g3Jm(G3M.th, R, 0, G3RIG.hipY, sd * G3RIG.hipW, -sd * (.04 + ab2), 0, hip, mc, 9 + k * 3); // ab2 > 0 : jambes écartées P.thigh.setMatrixAt(sq + k, G3M.th);
+    g3Jm(G3M.sn, G3M.th, 0, -G3RIG.thigh, 0, 0, 0, -kn, mc, 10 + k * 3); P.shin.setMatrixAt(sq + k, G3M.sn);
+    g3Jm(G3M.hip, G3M.sn, 0, -G3RIG.shin, 0, 0, 0, Math.min(.6, kn * .3), mc, 11 + k * 3); P.boot.setMatrixAt(sq + k, G3M.hip);
     if (SKo) { g3SkPut(SKo, n, 9 + k * 3, G3M.th); g3SkPut(SKo, n, 10 + k * 3, G3M.sn); g3SkPut(SKo, n, 11 + k * 3, G3M.hip); }
   }
 }
@@ -6316,7 +6649,8 @@ function g3Camera(M, t, dt, bx, bz, by, paused, celeb) {
   else if (view === 'tac') { const cx = clamp(C.tx * .6, -22, 22); px = cx; py = 92; pz = 30; lx = cx; ly = 0; lz = 3; fov = 46; }
   else if (view === 'large') { const cx = clamp(C.tx * .85, -34, 34), B = G3.camB || [74, 16]; px = cx * .9; py = (B[1] + 8) * (1 + .6 * pf); pz = (B[0] + 2) * (1 - .1 * pf); lx = cx; ly = 0; lz = C.tz * .35 - pf * 7; fov = 33; }
   else { const cx = clamp(C.tx, -40, 40), near = Math.abs(bx) > 34 ? 1 : 0, B = G3.camB || [74, 16], fd = Math.hypot(B[0], B[1]) / 78; px = cx * .9; py = B[1] * (1 + .85 * pf); pz = B[0] * (1 - .1 * pf); lx = cx; ly = Math.min(3, by * .3); lz = C.tz * .55 - 2 + pf * 4; fov = (18.5 - near * 1.5 + Math.min(3, Math.abs(bz) * .04) + (LV.spd > 6 ? 4 : 0) + (paused ? -1 : 0)) / fd; }
-  const s = RP || celeb ? 1 - Math.exp(-dt * 3) : 1;
+  const gc = !RP && UI.gest && typeof geCam === 'function' ? geCam(M) : null; if (gc) [px, py, pz, lx, ly, lz, fov] = gc;
+  const s = RP || celeb ? 1 - Math.exp(-dt * 3) : gc || C.gcWas ? 1 - Math.exp(-Math.max(dt, .05) * 7) : 1; C.gcWas = gc ? 1 : Math.max(0, (C.gcWas || 0) - dt * 1.4);
   if (!C.p) C.p = [px, py, pz, lx, ly, lz, fov];
   const P = C.p, f = RP && !C.wasRP ? 1 : s; C.wasRP = !!RP;
   P[0] += (px - P[0]) * f; P[1] += (py - P[1]) * f; P[2] += (pz - P[2]) * f; P[3] += (lx - P[3]) * f; P[4] += (ly - P[4]) * f; P[5] += (lz - P[5]) * f; P[6] += (fov - P[6]) * Math.min(1, dt * 2);
@@ -6786,6 +7120,102 @@ function g3SkAttach(P) {
     for (const k of ['torso', 'shorts', 'head', 'hair', 'uarm', 'ubare', 'farm', 'hand', 'thigh', 'shin', 'boot']) P[k].visible = false;
     G3.kitKey = null;
   } catch (e) { G3SK.fail = true; P.sk = null; }
+}
+
+// ===== src/m3dmc.js =====
+// ===================== 3D : animations en vraie capture de mouvement =====================
+// Base de capture de mouvement de Carnegie Mellon (mocap.cs.cmu.edu ; libre, y compris dans un jeu), ramenée sur le
+// squelette du jeu par tools/mocap.py : course, footing, marche, sprint, attente, frappes (pied droit et pied gauche),
+// passe, saut de la tête, célébrations (joie, salto, roue, vrille, danse). g3Pose (m3d.js) mélange ces mouvements
+// avec ses gestes dessinés à la main (tacles, plongeons, gardien…) : la capture remplace ce qu'elle sait faire.
+const G3MC = { ok: false, clips: {}, loading: null, fail: false, st: new Map() };
+function g3McLoad() {
+  if (G3MC.ok || G3MC.loading || G3MC.fail) return;
+  if (typeof ANIM_3D === 'undefined' || !ANIM_3D || !ANIM_3D.clips || typeof fetch !== 'function') { G3MC.fail = true; return; }
+  const q = typeof MEDIA_H !== 'undefined' && MEDIA_H.anim ? '?h=' + MEDIA_H.anim : '';
+  G3MC.loading = fetch('assets/anim/anim.bin' + q).then(r => { if (!r.ok) throw new Error('anim'); return r.arrayBuffer(); }).then(buf => {
+    const I = new Int16Array(buf);
+    for (const c of ANIM_3D.clips) {
+      const n = c.fr, o = c.o, Q = new Float32Array(n * 60), H = new Float32Array(n);
+      for (let i = 0; i < n * 60; i++) Q[i] = I[o + i] / 32767;
+      for (let i = 0; i < n; i++) H[i] = I[o + n * 60 + i] / 1000;
+      let T = null; if (c.tr) { T = new Float32Array(n * 3); for (let i = 0; i < n * 3; i++) T[i] = I[o + n * 61 + i] / 1000; }
+      G3MC.clips[c.n] = Object.assign({}, c, { Q, H, T });
+    }
+    G3MC.ok = true;
+  }).catch(() => { G3MC.fail = true; });
+}
+// échantillon d'une animation au temps tc (s) → out (15 quaternions), renvoie la hauteur du bassin ; tr : déplacement
+function g3McAt(c, tc, out, tr) {
+  const fps = (ANIM_3D && ANIM_3D.fps) || 30, n = c.fr; let f = tc * fps;
+  if (c.loop) { f = ((f % (n)) + n) % n; } else f = clamp(f, 0, n - 1);
+  const i0 = Math.floor(f), i1 = c.loop ? (i0 + 1) % n : Math.min(n - 1, i0 + 1), a = f - i0, Q = c.Q;
+  for (let b = 0; b < 15; b++) {
+    const o0 = i0 * 60 + b * 4, o1 = i1 * 60 + b * 4, sg = Q[o0] * Q[o1] + Q[o0 + 1] * Q[o1 + 1] + Q[o0 + 2] * Q[o1 + 2] + Q[o0 + 3] * Q[o1 + 3] < 0 ? -1 : 1;
+    let x = Q[o0] * (1 - a) + Q[o1] * a * sg, y = Q[o0 + 1] * (1 - a) + Q[o1 + 1] * a * sg, z = Q[o0 + 2] * (1 - a) + Q[o1 + 2] * a * sg, w = Q[o0 + 3] * (1 - a) + Q[o1 + 3] * a * sg; const l = Math.hypot(x, y, z, w) || 1;
+    out[b * 4] = x / l; out[b * 4 + 1] = y / l; out[b * 4 + 2] = z / l; out[b * 4 + 3] = w / l;
+  }
+  if (tr && c.T) { const T = c.T; tr[0] = T[i0 * 3] * (1 - a) + T[i1 * 3] * a; tr[1] = T[i0 * 3 + 1] * (1 - a) + T[i1 * 3 + 1] * a; tr[2] = T[i0 * 3 + 2] * (1 - a) + T[i1 * 3 + 2] * a; }
+  return c.H[i0] * (1 - a) + c.H[i1] * a;
+}
+// mélange (nlerp) de deux jeux de quaternions : out = a → b (k)
+function g3McMix(out, A, B, k) {
+  for (let b = 0; b < 15; b++) { const o = b * 4, sg = A[o] * B[o] + A[o + 1] * B[o + 1] + A[o + 2] * B[o + 2] + A[o + 3] * B[o + 3] < 0 ? -1 : 1;
+    let x = A[o] + (B[o] * sg - A[o]) * k, y = A[o + 1] + (B[o + 1] * sg - A[o + 1]) * k, z = A[o + 2] + (B[o + 2] * sg - A[o + 2]) * k, w = A[o + 3] + (B[o + 3] * sg - A[o + 3]) * k; const l = Math.hypot(x, y, z, w) || 1;
+    out[o] = x / l; out[o + 1] = y / l; out[o + 2] = z / l; out[o + 3] = w / l; }
+}
+// gestes dessinés à la main qui gardent la main (tacles, plongeons, gardien, touche, contrôle…) : durée de chaque geste
+const G3_ACTDUR = { 1: .55, 11: .7, 2: .8, 3: 1.1, 4: .6, 17: .6, 5: 1.4, 10: .9, 12: .35, 15: 2.2, 14: 6, 18: 9, 8: 11 };
+const G3_MCCEL = { flip: 'salto', spin: 'vrille', dance: 'danse', classic: 'joie', roue: 'roue' };
+const _mc = { L: null, A: null, B: null, C: null, tr: null, out: null };
+// mouvement capturé pour le joueur n (ou null) : { w (poids), q (15 quaternions), h (bassin), tr (déplacement), hw (poids de la tête) }
+function g3McPick(s, n, a, t) {
+  if (!G3MC.ok) { g3McLoad(); return null; }
+  if (s.flagUp || (typeof OPTS !== 'undefined' && OPTS.mocap === false)) return null;
+  if (!_mc.L) { for (const k of ['L', 'A', 'B', 'C']) _mc[k] = new Float32Array(60); _mc.tr = new Float32Array(3); _mc.out = { w: 0, q: new Float32Array(60), h: 0, tr: _mc.tr, has: false, hw: 1 }; }
+  const key = s.key ?? n; let S = G3MC.st.get(key); if (!S) { S = { wl: 0, wa: 0, clip: null, tc: 0, celT: null }; G3MC.st.set(key, S); }
+  const C = G3MC.clips, actOn = a && t >= 0 && (a === 7 ? (s.hold || t < .8) : a === 9 ? t < (s.busy || 1.6) + .6 : t < (G3_ACTDUR[a] || 1));
+  // geste capturé ?
+  let ac = null, tc = 0;
+  if (actOn && (a === 1 || a === 11)) { const sideR = (n % 2) === 1, nm = ((n >> 1) % 3 === 2 ? 'passe' : (n >> 1) % 3 === 1 ? 'frappe2' : 'frappe') + (sideR ? '' : '_g'); ac = C[nm]; if (ac) tc = t - G3_CONTACT[a] + ac.c; }
+  else if (a === 1 || a === 11) { const nm = S.clip; if (nm && C[nm] && (nm.startsWith('frappe') || nm.startsWith('passe'))) { ac = C[nm]; tc = t - G3_CONTACT[a] + ac.c; } }
+  if (a === 2 && t >= 0 && t < 1.2 && C.saut) { ac = C.saut; tc = t - G3_CONTACT[2] + ac.c; }
+  if (a === 8 && t >= 0 && t < 11) {
+    const cel = s.cel || G3_CELS[n % G3_CELS.length], nm = G3_MCCEL[cel];
+    if (nm && C[nm]) { if (S.celT == null && s.v < 1.3) S.celT = t; if (S.celT != null && t >= S.celT) { ac = C[nm]; tc = t - S.celT; if (!ac.loop && (nm === 'joie' || nm === 'danse')) tc = tc % ac.dur; } }
+  } else S.celT = null;
+  const actOk = ac && tc >= 0 && tc <= ac.dur;
+  if (actOk) { S.clip = ac.n; S.tc = tc; }
+  // les autres gestes restent dessinés à la main
+  const procAct = actOn && !actOk && !(a === 1 || a === 11 || a === 2 || (a === 8 && S.celT != null));
+  const gkCrouch = s.gk && s.v < 1.5 && s.alert;
+  const tl = !procAct && !gkCrouch && !(actOn && actOk) ? 1 : 0, ta = actOk ? 1 : 0;
+  const k = s.snap ? 1 : 1 - Math.exp(-(s.gdt || 0) * 12);
+  S.wl += (tl - S.wl) * k; S.wa += (ta - S.wa) * k;
+  if (S.wl < .02 && S.wa < .02) return null;
+  const O = _mc.out; O.has = false; O.tr[0] = O.tr[1] = O.tr[2] = 0; O.hw = 1;
+  let hL = 0, hA = 0;
+  // course, footing, marche, sprint, attente : selon la vitesse ; la foulée suit la phase de course du jeu
+  if (S.wl > .02) {
+    const v = s.v || 0, u = (((s.ph || 0) / (Math.PI * 2) - .25) % 1 + 1) % 1, at = (c, ph) => g3McAt(c, ((ph + (c.p0 || 0)) % 1) * c.dur, _mc.B);
+    const run = (n % 2) ? C.course : C.course2 || C.course;
+    if (v < .35 && C.idle) { hL = g3McAt(C.idle, (s.tm || 0) + n * 1.7, _mc.L); }
+    else {
+      const seq = [[1.3, C.marche], [3.3, C.footing], [3.9, run], [7.2, C.sprint]].filter(x => x[1]);
+      let lo = seq[0], hi = seq[seq.length - 1]; for (let i = 0; i < seq.length - 1; i++) if (v >= seq[i][0] && v <= seq[i + 1][0]) { lo = seq[i]; hi = seq[i + 1]; }
+      const kk = lo === hi ? 0 : clamp((v - lo[0]) / (hi[0] - lo[0]), 0, 1);
+      hL = at(lo[1], u); _mc.L.set(_mc.B);
+      if (kk > 0 && hi !== lo) { const h2 = at(hi[1], u); g3McMix(_mc.L, _mc.L, _mc.B, kk); hL += (h2 - hL) * kk; }
+      if (v < 1.1 && C.idle) { const w0 = clamp((1.1 - v) / .75, 0, 1), h0 = g3McAt(C.idle, (s.tm || 0) + n * 1.7, _mc.C); g3McMix(_mc.L, _mc.L, _mc.C, w0 * .6); hL += (h0 - hL) * w0 * .6; }
+    }
+  }
+  // geste capturé (encore un peu après sa fin, le temps du fondu)
+  if (S.wa > .02 && S.clip && C[S.clip]) { const c = C[S.clip]; hA = g3McAt(c, actOk ? tc : S.tc, _mc.A, c.tr ? O.tr : null); if (a === 2) O.hw = .45; }
+  if (S.wl > .02 && S.wa > .02) { g3McMix(O.q, _mc.L, _mc.A, clamp(S.wa / (S.wa + S.wl), 0, 1)); O.h = hL + (hA - hL) * clamp(S.wa / (S.wa + S.wl), 0, 1); O.w = Math.max(S.wl, S.wa); }
+  else if (S.wa > .02) { O.q.set(_mc.A); O.h = hA; O.w = S.wa; }
+  else { O.q.set(_mc.L); O.h = hL; O.w = S.wl; }
+  O.tr[0] *= .45 * S.wa; O.tr[2] *= .45 * S.wa; O.tr[1] = 0;
+  return O;
 }
 
 // ===== src/m3dfx.js =====
@@ -8503,7 +8933,7 @@ let MODAL = null, TOAST_T = null;
 const OPTS_KEY = 'cdo2_opts';
 // caméras du match en 3D : [clé, nom court, description]
 const CAM_VIEWS = [['tv', 'TV', 'Caméra TV'], ['large', 'Large', 'Caméra large'], ['tac', 'Tactique', 'Vue tactique : les lignes des deux équipes'], ['joueur', 'Mon joueur', 'Caméra derrière ton joueur'], ['but', 'Derrière le but', 'Caméra derrière le but'], ['bord', 'Bord du terrain', 'Caméra au bord du terrain'], ['drone', 'Drone', 'Caméra drone au-dessus de l\'action']];
-const OPT_DEF = { live: 'all', speed: 1, music: true, mvol: .55, svol: .8, shuffle: true, mg: true, interrupt: 'all', voice: true, replay: 'all', gfx: '3d', cam: 'tv', chat: 'all', v1: '', v2: '', aiv: 'off', aivMode: 'all', aivS: '', aivN: '', aivM: 'eleven_flash_v2_5', aivEL: [], intro: true, fetes: true };
+const OPT_DEF = { live: 'all', speed: 1, music: true, mvol: .55, svol: .8, shuffle: true, mg: true, geste: true, interrupt: 'all', voice: true, replay: 'all', gfx: '3d', cam: 'tv', chat: 'all', v1: '', v2: '', aiv: 'off', aivMode: 'all', aivS: '', aivN: '', aivM: 'eleven_flash_v2_5', aivEL: [], intro: true, fetes: true };
 function loadOpts() { try { return Object.assign({}, OPT_DEF, JSON.parse(localStorage.getItem(OPTS_KEY) || '{}')); } catch (e) { return Object.assign({}, OPT_DEF); } }
 let OPTS = loadOpts();
 function saveOpts() { try { localStorage.setItem(OPTS_KEY, JSON.stringify(OPTS)); } catch (e) { } }
@@ -9291,7 +9721,7 @@ function vAiVoice() {
 const OPT_TABS = [['match', 'Matchs'], ['jeu', 'Jeu'], ['son', 'Son'], ['ia', 'Voix IA']];
 function vOptions() {
   const tab = UI.otab || 'match', parts = vOptionsAll().split(/(?=<section )/).filter(x => x.trim());
-  const cat = h => /<h3>(Commentateurs|Son)<\/h3>/.test(h) ? 'son' : /<h3>Vraies voix/.test(h) ? 'ia' : /<h3>(Vitesse du temps|Interruptions|Difficulté|Mini-jeux d'adresse|Écran d'ouverture)<\/h3>|data-a="(wipe|resetAll|quit)/.test(h) || !/<section /.test(h) ? 'jeu' : 'match';
+  const cat = h => /<h3>(Commentateurs|Son)<\/h3>/.test(h) ? 'son' : /<h3>Vraies voix/.test(h) ? 'ia' : /<h3>(Vitesse du temps|Interruptions|Difficulté|Mini-jeux d'adresse|Moments clés au doigt|Écran d'ouverture)<\/h3>|data-a="(wipe|resetAll|quit)/.test(h) || !/<section /.test(h) ? 'jeu' : 'match';
   return segTabs('oTab', tab, OPT_TABS) + `<div class="optc stack">${parts.filter(h => cat(h) === tab).join('')}</div>`;
 }
 function vOptionsAll() {
@@ -9303,6 +9733,7 @@ function vOptionsAll() {
   <section class="card sec"><h3>Graphismes des matchs</h3><div class="seg">${[['3d', '3D'], ['3dl', '3D rapide'], ['2d', '2D léger']].map(([k, n]) => `<button data-a="optGfx" data-v="${k}" class="${(OPTS.gfx || '3d') === k ? 'on' : ''}">${n}</button>`).join('')}</div>${typeof g3Avail === 'function' && !g3Avail() ? '<p class="note">La 3D n\'est pas disponible sur cet appareil : le jeu utilise la 2D.</p>' : '<p class="note">Si ça saccade, le jeu passe seul en 3D rapide.</p>'}</section>
   <section class="card sec"><h3>Ralentis</h3><div class="seg">${[['all', 'Grosses actions'], ['goals', 'Buts seulement'], ['none', 'Aucun']].map(([k, n]) => `<button data-a="optReplay" data-v="${k}" class="${(OPTS.replay || 'all') === k ? 'on' : ''}">${n}</button>`).join('')}</div><p class="note">Buts, poteaux, arrêts décisifs, grosses occasions.</p></section>
   <section class="card sec"><h3>Mini-jeux d'adresse</h3><div class="seg"><button data-a="optMg" data-v="1" class="${o.mg !== false ? 'on' : ''}">Activés</button><button data-a="optMg" data-v="0" class="${o.mg === false ? 'on' : ''}">Désactivés</button></div><p class="note">Vise et tape au bon moment. Désactivés : simple choix.</p></section>
+  <section class="card sec"><h3>Moments clés au doigt</h3><div class="seg"><button data-a="optGeste" data-v="1" class="${OPTS.geste !== false ? 'on' : ''}">Au doigt</button><button data-a="optGeste" data-v="0" class="${OPTS.geste === false ? 'on' : ''}">Liste de choix</button></div><p class="note">En 3D, la caméra se met derrière toi : glisse vers le but pour frapper, vers un coéquipier pour passer, d'un coup sec pour dribbler ; penaltys, coups francs et corners se jouent aussi au geste.</p></section>
   <section class="card sec"><h3>Écran d'ouverture</h3><div class="seg"><button data-a="optIntro" data-v="1" class="${OPTS.intro !== false ? 'on' : ''}">Activé</button><button data-a="optIntro" data-v="0" class="${OPTS.intro === false ? 'on' : ''}">Jamais</button><button data-a="introReplay">▶ Revoir</button></div><p class="note">Un vrai retourné photographié, de nuit au Parc des Princes : le ballon fonce vers toi et casse l'écran. Avec le son quand tu le revois.</p></section>
   <section class="card sec"><h3>Grandes soirées en 3D</h3><div class="seg"><button data-a="optFetes" data-v="1" class="${OPTS.fetes !== false ? 'on' : ''}">Activées</button><button data-a="optFetes" data-v="0" class="${OPTS.fetes === false ? 'on' : ''}">Jamais</button></div><div class="seg" style="margin-top:8px"><button data-a="feteDemo" data-v="pres">▶ Présentation</button><button data-a="feteDemo" data-v="titre">▶ Titre</button><button data-a="feteDemo" data-v="bdo">▶ Ballon d'Or</button></div><p class="note">Ta présentation au nouveau club devant ses supporters, le trophée soulevé avec tes coéquipiers, la cérémonie du Ballon d'Or. On touche l'écran pour passer.</p></section>
   <section class="card sec"><h3>Interruptions</h3><div class="seg"><button data-a="optInt" data-v="all" class="${o.interrupt !== 'key' ? 'on' : ''}">Toutes</button><button data-a="optInt" data-v="key" class="${o.interrupt === 'key' ? 'on' : ''}">Essentielles</button></div><p class="note">Essentielles : moins de fenêtres pendant la saison.</p></section>
@@ -9334,6 +9765,7 @@ function vCredits() {
   <section class="card sec"><h3>Ce qui est simulé</h3><p class="note">Tous les résultats à partir du début de ta carrière, le Ballon d'Or 2026 (cérémonie réelle le ${REAL_FACTS.bdo2026date}), les transferts futurs, les jeunes joueurs générés, les sponsors (marques fictives) et ta vie.</p></section>
   ${typeof JOUEUR_3D !== 'undefined' && JOUEUR_3D ? `<section class="card sec"><h3>Joueurs en 3D</h3><p class="note">Modèle « ${esc(JOUEUR_3D.name)} » par ${esc(String(JOUEUR_3D.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(JOUEUR_3D.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(JOUEUR_3D.source || 'Sketchfab')}. Adapté pour le jeu : allégé, squelette et animations du jeu, couleurs des clubs.</p></section>` : ''}${typeof STADE_3D !== 'undefined' && STADE_3D ? `<section class="card sec"><h3>Stade en 3D</h3><p class="note">Mâts d'éclairage, sièges et bancs de touche tirés du modèle « ${esc(STADE_3D.name)} » par ${esc(String(STADE_3D.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(STADE_3D.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(STADE_3D.source || 'Sketchfab')}. Adapté pour le jeu : pièces allégées et remises à l'échelle, placées autour du terrain.</p></section>` : ''}${typeof DECOR_3D !== 'undefined' && DECOR_3D && DECOR_3D.credits ? `<section class="card sec"><h3>Décors autour du stade</h3>${DECOR_3D.credits.map(c => `<p class="note">« ${esc(c.nom)} » par ${esc(String(c.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(c.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(c.source || 'Sketchfab')}.</p>`).join('')}<p class="note">Adapté pour le jeu : arbres allégés, feuillages selon la saison, plantés autour du stade avec une route et un chemin forestier.</p></section>` : ''}
   ${typeof TEX_3D !== 'undefined' && TEX_3D && Object.keys(TEX_3D).length ? `<section class="card sec"><h3>Ciel et textures photo</h3><p class="note">Ciel des matchs (beau temps et temps couvert), gazon, prés, route et dalles : photos de Poly Haven (polyhaven.com), dans le domaine public (CC0). Réduites pour le téléphone.</p></section>` : ''}
+  ${typeof ANIM_3D !== 'undefined' && ANIM_3D ? `<section class="card sec"><h3>Mouvements des joueurs</h3><p class="note">Course, sprint, marche, frappes, têtes et célébrations (salto, roue, vrille, danse) : vraie capture de mouvement de la base de Carnegie Mellon University (mocap.cs.cmu.edu), conversion BVH de Bruce Hahne, libre d'utilisation. Adaptée au squelette des joueurs du jeu.</p></section>` : ''}
   ${typeof INTRO_PH !== 'undefined' && INTRO_PH && INTRO_PH.credits ? `<section class="card sec"><h3>Écran d'ouverture</h3><p class="note">${INTRO_PH.credits.map(esc).join('<br>')}. Photos libres (unsplash.com/license) ; le joueur est détouré et posé devant le stade.</p></section>` : ''}
   <section class="card sec"><h3>Crampons d'Or</h3><p class="note">Un simulateur de carrière pensé pour iPhone. Ajoute-le à l'écran d'accueil depuis Safari pour l'avoir comme une app : il marche aussi hors connexion et se met à jour tout seul.</p><p class="note">Version ${typeof GAME_VERSION !== 'undefined' ? GAME_VERSION : 'dev'}${typeof VOIX_INDEX !== 'undefined' ? ' · ' + Object.keys(VOIX_INDEX).length + ' répliques enregistrées' : ''}</p></section>`;
 }
@@ -9645,6 +10077,9 @@ const ACT = {
   lSpeed: v => { UI.lspeed = +v; render(); liveRun(); },
   lAuto: () => { clearInterval(UI.lt); UI.mg = null; const M = S.live.M; if (!M.eng) S.live.M = liveSetup(S.live.prep); liveAuto(S.live.M); if (S.live.M.eng) lvReset(S.live.M); if (S.live.M.sfx) S.live.M.sfx = ['whistle3']; sfxDrain(S.live.M); save(); render(); },
   lStat: () => { UI.lstat = UI.lstat ? false : 'st'; render(); },
+  lSim: () => openModal({ title: 'Simuler le match ?', html: '<p class="note">Le match se termine tout de suite, au rythme du moteur. Tes moments clés sont joués pour toi, au mieux de tes qualités.</p>', btns: [{ t: 'Simuler', cls: 'pri', fn: () => { UI.gest = null; ACT.lAuto(); } }, { t: 'Continuer à jouer', fn: () => { } }] }),
+  geList: () => { const M = S.live && S.live.M; if (M && M.pending) M.pending.list = true; UI.gest = null; render(); },
+  optGeste: v => { OPTS.geste = v === '1'; saveOpts(); render(); },
   lStatTab: v => { UI.lstat = v === 'fd' ? 'fd' : 'st'; render(); },
   lEnd: v => { UI.lend = v; render(); },
   optRec: v => { OPTS.voixRec = v === '1'; saveOpts(); auUnlock(); render(); if (v === '1' && typeof VOIX_INDEX !== 'undefined') { const k = Object.keys(VOIX_INDEX).find(x => x.startsWith('S|')); if (k) { sayStop(); sayPush({ txt: k.slice(2), pri: 2, who: 'S' }); } } },
@@ -9777,6 +10212,8 @@ function vLivePanel(M, P) {
     if (M.done) { const mine = M.side === 'h' ? M.hg : M.ag, th = M.side === 'h' ? M.ag : M.hg, win = mine > th || (mine === th && M.pen === M.side), loss = mine < th || (mine === th && M.pen && M.pen !== M.side); return `<div class="moment end"><div class="lbl ${win ? 'ok' : loss ? 'bad' : ''}">${win ? 'Victoire' : loss ? 'Défaite' : 'Match nul'}${M.pen ? ' aux tirs au but' : ''}</div><p class="note">Le président et les supporters jugeront. Confiance actuelle : ${Math.round(S.mgr.board)} / 100.</p></div>`; }
     return '';
   }
+  if (UI.gest && (!M.pending || UI.gest.m !== M.pending)) UI.gest = null;
+  if (M.pending && !UI.mg && typeof geAvail === 'function' && geAvail(M)) { if (!UI.gest) { UI.gest = geNew(M); LV.replay = null; } return vGest(M); }
   if (UI.mg && (M.pending || M.shoot)) return vMg(M);
   if (M.press && typeof voOnce === 'function') voOnce(M.press, M.press.q, 'J');
   if (M.half && typeof voOnce === 'function') voOnce(M.half, coachHalfLine(M), 'C');
@@ -9813,7 +10250,7 @@ function vLive() {
   const cam = has3d ? `<button class="ib${UI.lcam ? ' on' : ''}" data-a="lCam" aria-label="Choisir la caméra">${icon('cam')}</button>` : '';
   const camPick = has3d && UI.lcam && !M.done ? `<div class="campick" role="menu" aria-label="Caméras"><b>Caméra</b>${CAM_VIEWS.map(([k, n]) => `<button data-a="lCamSet" data-v="${k}" class="${cur === k ? 'on' : ''}" role="menuitemradio" aria-checked="${cur === k}">${n}</button>`).join('')}</div>` : '';
   const bar = M.done ? `<div class="lbar">${liveStatus(M)}<span class="grow"></span>${snd}</div>`
-    : `<div class="lbar"><div class="seg spd">${['×1', '×2', '×4', '×8', 'Résumé'].map((t, i) => `<button data-a="lSpeed" data-v="${i}" class="${(UI.lspeed ?? 1) === i ? 'on' : ''}" aria-label="${i < 4 ? 'Vitesse ' + t : 'Temps forts seulement'}">${t}</button>`).join('')}</div>${cam}<button class="ib${UI.lstat ? ' on' : ''}" data-a="lStat" aria-label="Stats et fil du match">${icon('chart')}</button>${snd}</div>`;
+    : `<div class="lbar"><div class="seg spd">${['×1', '×2', '×4', '×8', 'Résumé'].map((t, i) => `<button data-a="lSpeed" data-v="${i}" class="${(UI.lspeed ?? 1) === i ? 'on' : ''}" aria-label="${i < 4 ? 'Vitesse ' + t : 'Temps forts seulement'}">${t}</button>`).join('')}</div>${cam}<button class="ib${UI.lstat ? ' on' : ''}" data-a="lStat" aria-label="Stats et fil du match">${icon('chart')}</button>${M.coach ? '' : `<button class="ib" data-a="lSim" aria-label="Simuler la fin du match">${icon('next')}</button>`}${snd}</div>`;
   return `<div class="live lv2">${liveHead(M, P)}<div class="lstage">${view}${sheet}${camPick}</div>${comBox}<div class="lfoot">${M.done ? '' : liveStatus(M)}${M.cond ? `<span class="lcond">${esc(condTxt(M.cond).replace(/ spectateurs/, ' spect.'))}</span>` : ''}</div>${bar}</div>`;
 }
 // boîte de commentaire : qui parle (Lo Sol / Nathalie), la réplique en cours et la précédente

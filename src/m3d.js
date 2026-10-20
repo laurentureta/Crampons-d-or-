@@ -298,6 +298,16 @@ function g3Weather(snow, low) {
 // ---------- Animation des joueurs ----------
 const _m = { e: null }, G3M = {};
 function g3Tmp() { if (_m.e) return; _m.e = new THREE.Euler(); _m.q = new THREE.Quaternion(); _m.v = new THREE.Vector3(); _m.s = new THREE.Vector3(1, 1, 1); _m.l = new THREE.Matrix4(); for (const k of ['root', 'tor', 'sh', 'ua', 'fa', 'hip', 'th', 'sn', 'hd', 'z']) G3M[k] = new THREE.Matrix4(); G3M.z.makeScale(0, 0, 0); }
+// os mêlé au mouvement capturé (mc : poids w, quaternions q ; b : n° de l'os ; yAdd : rotation en plus autour de l'os, ex. regard)
+const _mq = {};
+function g3Jm(out, parent, x, y, z, rx, ry, rz, mc, b, yAdd) {
+  if (!mc || !(mc.w > 0)) return g3J(out, parent, x, y, z, rx, ry, rz);
+  _m.e.set(rx || 0, ry || 0, rz || 0, 'YZX'); _m.q.setFromEuler(_m.e);
+  const q2 = _mq.q2 || (_mq.q2 = new THREE.Quaternion()), o = b * 4; q2.set(mc.q[o], mc.q[o + 1], mc.q[o + 2], mc.q[o + 3]);
+  _m.q.slerp(q2, b === 2 ? mc.w * (mc.hw ?? 1) : mc.w);
+  if (yAdd) { const qa = _mq.qa || (_mq.qa = new THREE.Quaternion()), ay = _mq.ay || (_mq.ay = new THREE.Vector3(0, 1, 0)); qa.setFromAxisAngle(ay, yAdd); _m.q.multiply(qa); }
+  _m.l.compose(_m.v.set(x, y, z), _m.q, _m.s); return out.multiplyMatrices(parent, _m.l);
+}
 // out = parent × T(x,y,z) × R(rx,ry,rz ordre YZX)
 function g3J(out, parent, x, y, z, rx, ry, rz) { _m.e.set(rx || 0, ry || 0, rz || 0, 'YZX'); _m.q.setFromEuler(_m.e); _m.l.compose(_m.v.set(x, y, z), _m.q, _m.s); return out.multiplyMatrices(parent, _m.l); }
 const ease = x => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
@@ -309,7 +319,7 @@ const bell = (p, a, b) => p < a || p > b ? 0 : Math.sin((p - a) / (b - a) * Math
 const G3RIG_DEF = { hp: .97, hipY: -.07, hipW: .1, thigh: .45, shin: .45, torY: .04, shY: .5, shW: .225, ua: .3, fa: .28, neck: .7 };
 let G3RIG = Object.assign({}, G3RIG_DEF);
 const G3JS = new Map(), G3_JK = ['hp', 'lean', 'roll', 'twist', 'nod', 'look', 'hipL', 'hipR', 'kneeL', 'kneeR', 'shL', 'shR', 'abL', 'abR', 'elL', 'elR', 'ab2'];
-const G3_CELS = ['plane', 'classic', 'ear', 'heart', 'knee', 'dance'];
+const G3_CELS = ['plane', 'classic', 'ear', 'heart', 'knee', 'dance', 'roue'];
 // instant du contact dans l'animation de chaque geste (s) : frappe, reprise de volée, tête, tacle glissé, tacle, contrôle, contre, touche
 const G3_CONTACT = { 1: .26, 11: .33, 2: .36, 3: .2, 4: .25, 12: .12, 17: .2, 10: .45 };
 // spline de Catmull-Rom entre les images b et c (a, d : voisines) ; on garde l'angle vif quand la vitesse change d'un coup (frappe, rebond, mi-temps)
@@ -378,24 +388,33 @@ function g3Pose(P, n, s) {
     if (!J || s.snap) { J = Float32Array.from(cur); G3JS.set(key, J); }
     else { const k = 1 - Math.exp(-(s.gdt || 0) * (a && t >= 0 && t < 1.5 ? 26 : 14)); for (let i = 0; i < cur.length; i++) J[i] += (cur[i] - J[i]) * k; }
     [hp, lean, roll, twist, nod, look, hipL, hipR, kneeL, kneeR, shL, shR, abL, abR, elL, elR, ab2] = J; }
-  // composition
-  const R = G3M.root, sq = n * 2;
-  _m.e.set(roll, -s.yaw - yawAdd, pitch, 'YZX'); _m.q.setFromEuler(_m.e); R.compose(_m.v.set(s.x, Math.max(.12, hp), s.z), _m.q, _m.s);
-  g3J(G3M.tor, R, 0, G3RIG.torY, 0, 0, twist + look * .2, -lean);
+  // composition (mouvements capturés mêlés aux gestes dessinés : m3dmc.js)
+  const R = G3M.root, sq = n * 2, mc = typeof g3McPick === 'function' ? g3McPick(s, n, a, t) : null;
+  _m.e.set(roll, -s.yaw - yawAdd, pitch, 'YZX'); _m.q.setFromEuler(_m.e);
+  let rx = s.x, ry = Math.max(.12, hp), rz = s.z;
+  if (mc) { // bassin : cap du jeu × orientation capturée ; hauteur capturée ; petit déplacement des acrobaties
+    const qy = _mq.y || (_mq.y = new THREE.Quaternion()), qm = _mq.m || (_mq.m = new THREE.Quaternion()), ax = _mq.ax || (_mq.ax = new THREE.Vector3(0, 1, 0)), tv = _mq.tv || (_mq.tv = new THREE.Vector3());
+    qy.setFromAxisAngle(ax, -s.yaw - yawAdd); qm.set(mc.q[0], mc.q[1], mc.q[2], mc.q[3]); qm.premultiply(qy);
+    if (Math.abs(roll) > .01) { const qr = _mq.r || (_mq.r = new THREE.Quaternion()), ar = _mq.ar || (_mq.ar = new THREE.Vector3()); ar.set(1, 0, 0).applyQuaternion(qy); qr.setFromAxisAngle(ar, roll * .7); qm.premultiply(qr); } // on se penche dans les virages
+    _m.q.slerp(qm, mc.w); ry += (Math.max(.12, mc.h * (G3RIG.thigh + G3RIG.shin) / .9) - ry) * mc.w;
+    if (mc.tr[0] || mc.tr[2]) { tv.set(mc.tr[0], 0, mc.tr[2]).applyQuaternion(qy); rx += tv.x; rz += tv.z; }
+  }
+  R.compose(_m.v.set(rx, ry, rz), _m.q, _m.s);
+  g3Jm(G3M.tor, R, 0, G3RIG.torY, 0, 0, twist + look * .2, -lean, mc, 1);
   P.torso.setMatrixAt(n, G3M.tor); P.shorts.setMatrixAt(n, R);
-  g3J(G3M.hd, G3M.tor, 0, G3RIG.neck, 0, 0, look * .8, -nod); P.head.setMatrixAt(n, G3M.hd); P.hair.setMatrixAt(n, G3M.hd);
+  g3Jm(G3M.hd, G3M.tor, 0, G3RIG.neck, 0, 0, look * .8, -nod, mc, 2, mc ? look * .8 * mc.w : 0); P.head.setMatrixAt(n, G3M.hd); P.hair.setMatrixAt(n, G3M.hd);
   const SKo = P.sk && P.sk.out; if (SKo) { P.sk.hid[n] = 0; g3SkPut(SKo, n, 0, R); g3SkPut(SKo, n, 1, G3M.tor); g3SkPut(SKo, n, 2, G3M.hd); }
   if (n < 22) { g3J(G3M.z, G3M.tor, G3RIG.numX ?? -.128, G3RIG.numY ?? .33, 0, 0, 0, 0); P.num.setMatrixAt(n, G3M.z); G3M.z.makeScale(0, 0, 0); } else P.num.setMatrixAt(n, G3M.z);
   for (let k = 0; k < 2; k++) {
     const sd = k ? 1 : -1, sh = k ? shR : shL, ab = k ? abR : abL, el = k ? elR : elL;
-    g3J(G3M.ua, G3M.tor, 0, G3RIG.shY, sd * G3RIG.shW, -sd * ab, 0, sh); // ab > 0 : le bras s'écarte du corps P.uarm.setMatrixAt(sq + k, G3M.ua); if (P.ubare) P.ubare.setMatrixAt(sq + k, G3M.ua);
-    g3J(G3M.fa, G3M.ua, 0, -G3RIG.ua, 0, 0, 0, el); P.farm.setMatrixAt(sq + k, G3M.fa);
-    g3J(G3M.sh, G3M.fa, 0, -G3RIG.fa, 0, 0, 0, 0); P.hand.setMatrixAt(sq + k, G3M.sh);
+    g3Jm(G3M.ua, G3M.tor, 0, G3RIG.shY, sd * G3RIG.shW, -sd * ab, 0, sh, mc, 3 + k * 3); // ab > 0 : le bras s'écarte du corps P.uarm.setMatrixAt(sq + k, G3M.ua); if (P.ubare) P.ubare.setMatrixAt(sq + k, G3M.ua);
+    g3Jm(G3M.fa, G3M.ua, 0, -G3RIG.ua, 0, 0, 0, el, mc, 4 + k * 3); P.farm.setMatrixAt(sq + k, G3M.fa);
+    g3Jm(G3M.sh, G3M.fa, 0, -G3RIG.fa, 0, 0, 0, 0, mc, 5 + k * 3); P.hand.setMatrixAt(sq + k, G3M.sh);
     if (SKo) { g3SkPut(SKo, n, 3 + k * 3, G3M.ua); g3SkPut(SKo, n, 4 + k * 3, G3M.fa); g3SkPut(SKo, n, 5 + k * 3, G3M.sh); }
     const hip = k ? hipR : hipL, kn = k ? kneeR : kneeL;
-    g3J(G3M.th, R, 0, G3RIG.hipY, sd * G3RIG.hipW, -sd * (.04 + ab2), 0, hip); // ab2 > 0 : jambes écartées P.thigh.setMatrixAt(sq + k, G3M.th);
-    g3J(G3M.sn, G3M.th, 0, -G3RIG.thigh, 0, 0, 0, -kn); P.shin.setMatrixAt(sq + k, G3M.sn);
-    g3J(G3M.hip, G3M.sn, 0, -G3RIG.shin, 0, 0, 0, Math.min(.6, kn * .3)); P.boot.setMatrixAt(sq + k, G3M.hip);
+    g3Jm(G3M.th, R, 0, G3RIG.hipY, sd * G3RIG.hipW, -sd * (.04 + ab2), 0, hip, mc, 9 + k * 3); // ab2 > 0 : jambes écartées P.thigh.setMatrixAt(sq + k, G3M.th);
+    g3Jm(G3M.sn, G3M.th, 0, -G3RIG.thigh, 0, 0, 0, -kn, mc, 10 + k * 3); P.shin.setMatrixAt(sq + k, G3M.sn);
+    g3Jm(G3M.hip, G3M.sn, 0, -G3RIG.shin, 0, 0, 0, Math.min(.6, kn * .3), mc, 11 + k * 3); P.boot.setMatrixAt(sq + k, G3M.hip);
     if (SKo) { g3SkPut(SKo, n, 9 + k * 3, G3M.th); g3SkPut(SKo, n, 10 + k * 3, G3M.sn); g3SkPut(SKo, n, 11 + k * 3, G3M.hip); }
   }
 }
@@ -444,7 +463,8 @@ function g3Camera(M, t, dt, bx, bz, by, paused, celeb) {
   else if (view === 'tac') { const cx = clamp(C.tx * .6, -22, 22); px = cx; py = 92; pz = 30; lx = cx; ly = 0; lz = 3; fov = 46; }
   else if (view === 'large') { const cx = clamp(C.tx * .85, -34, 34), B = G3.camB || [74, 16]; px = cx * .9; py = (B[1] + 8) * (1 + .6 * pf); pz = (B[0] + 2) * (1 - .1 * pf); lx = cx; ly = 0; lz = C.tz * .35 - pf * 7; fov = 33; }
   else { const cx = clamp(C.tx, -40, 40), near = Math.abs(bx) > 34 ? 1 : 0, B = G3.camB || [74, 16], fd = Math.hypot(B[0], B[1]) / 78; px = cx * .9; py = B[1] * (1 + .85 * pf); pz = B[0] * (1 - .1 * pf); lx = cx; ly = Math.min(3, by * .3); lz = C.tz * .55 - 2 + pf * 4; fov = (18.5 - near * 1.5 + Math.min(3, Math.abs(bz) * .04) + (LV.spd > 6 ? 4 : 0) + (paused ? -1 : 0)) / fd; }
-  const s = RP || celeb ? 1 - Math.exp(-dt * 3) : 1;
+  const gc = !RP && UI.gest && typeof geCam === 'function' ? geCam(M) : null; if (gc) [px, py, pz, lx, ly, lz, fov] = gc;
+  const s = RP || celeb ? 1 - Math.exp(-dt * 3) : gc || C.gcWas ? 1 - Math.exp(-Math.max(dt, .05) * 7) : 1; C.gcWas = gc ? 1 : Math.max(0, (C.gcWas || 0) - dt * 1.4);
   if (!C.p) C.p = [px, py, pz, lx, ly, lz, fov];
   const P = C.p, f = RP && !C.wasRP ? 1 : s; C.wasRP = !!RP;
   P[0] += (px - P[0]) * f; P[1] += (py - P[1]) * f; P[2] += (pz - P[2]) * f; P[3] += (lx - P[3]) * f; P[4] += (ly - P[4]) * f; P[5] += (lz - P[5]) * f; P[6] += (fov - P[6]) * Math.min(1, dt * 2);

@@ -192,6 +192,8 @@ function engP(M, o) { return clamp(o.p + DF().mom + (hasPerk('big') && M.big ? .
 function buildDecision(M) {
   const E = M.E, D = E.dec, c = liveNames(M);
   if (D.kind === 'att' && D.pen) return { dec: true, q: `Penalty pour ton équipe ! ${D.gkn || c.gk} se balance sur sa ligne. Tu prends le ballon.`, o: D.opts.map(o => Object.assign({}, o, { mt: 'pen' })) };
+  if (D.kind === 'att' && D.fk) return { dec: true, q: `Coup franc à ${D.d} mètres du but ! Le mur est en place, ${D.gkn || c.gk} replace ses défenseurs. C'est toi qui le tires.`, o: D.opts.map(o => Object.assign({}, o)) };
+  if (D.kind === 'corner') return { dec: true, q: D.mode === 'take' ? 'Corner pour ton équipe ! Tu poses le ballon près du drapeau. Où l\'envoies-tu ?' : `Corner pour ton équipe, ${D.tn || 'ton coéquipier'} va le tirer. Tu montes dans la surface : quelle zone attaques-tu ?`, o: D.opts.map(o => Object.assign({}, o)) };
   if (D.kind === 'att') {
     const where = D.box ? 'dans la surface' : `à ${D.d} mètres du but`;
     return { dec: true, q: `Tu as le ballon ${where}${D.fo ? ', ' + D.fo + ' sort sur toi' : ''}. À toi de jouer !`, o: D.opts.map(o => Object.assign({}, o)) };
@@ -213,7 +215,9 @@ function momProb(M, o) {
   return clamp(p, .05, o.out === 'pen' ? .92 : o.out === 'goal' ? .72 : .85);
 }
 const LIVE_OK = { goal: ['BUUUT ! Imparable !', 'Quel but ! Le stade explose !', 'Lucarne ! Tu cours vers tes supporters.'], pass: ['Passe parfaite.', 'Ballon dans la course de ton coéquipier.'], assist: ['Centre parfait, ton coéquipier est à la réception !'], drib: ['Tu l\'élimines d\'un crochet !', 'Grand pont ! Le public se lève.'], stop: ['Intervention parfaite, le danger est écarté.', 'Superbe lecture du jeu, ballon récupéré.'], save: ['Arrêt réflexe exceptionnel !', 'Parade magnifique, le public scande ton nom.'], pen: ['Penalty transformé !', 'Imparable, le gardien n\'a rien pu faire.'], gkpen: ['Tu arrêtes le penalty !! Énorme !'] };
+LIVE_OK.head = ['Le centre arrive dans ta zone, tu t\'élèves…']; LIVE_OK.corner = LIVE_OK.assist;
 const LIVE_KO = { goal: ['Frappe à côté…', 'Le gardien s\'interpose.', 'Ta tentative est contrée.'], pass: ['Ta passe est interceptée.', 'Le ballon est trop long.'], assist: ['Ton centre est repoussé.'], drib: ['Il te prend le ballon.', 'Tu perds ton duel.'], stop: ['Tu es éliminé…', 'Trop tard, il t\'a pris de vitesse.'], save: ['Pas cette fois.', 'Le ballon file sous ton corps.'], pen: ['Raté ! Le gardien a deviné.', 'Sur le poteau !'], gkpen: ['Il te prend à contre-pied.'] };
+LIVE_KO.head = ['Le centre est mal tiré : il ne t\'arrive pas.']; LIVE_KO.corner = LIVE_KO.assist;
 function liveChoose(M, i, mg) {
   if (M.coach) return coachChoose(M, i);
   const m = M.pending; if (!m) return;
@@ -228,6 +232,7 @@ function liveChoose(M, i, mg) {
     ok = D.kind === 'gk' || D.kind === 'gkpen' ? res !== 'goal' : res === 'goal';
     if (D.kind === 'gk' || D.kind === 'gkpen') { if (ok) S.cnt.save++; }
   } else if (o.act === 'pass' || o.act === 'thru' || o.act === 'cross') { ok = !!f && (f.res === 'ok' || f.res === 'duel'); at = f ? f.t0 + f.dur + .2 : at; }
+  else if (o.act === 'corner' || o.act === 'head') { ok = !!D.ok; at = f ? f.t0 + Math.min(f.dur, 1.2) : at; }
   else ok = !!D.ok;
   if (D.kind === 'def' && ok) S.cnt.stop++;
   if (o.act === 'drib' && ok) S.cnt.drib++;

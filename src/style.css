@@ -869,3 +869,9 @@ details.alert.vhelp>span{display:block;margin-top:6px;font-size:13px;color:var(-
 
 /* matchs en 3D : léger vignettage, comme une image de télévision */
 .lv2 .lstage.on3d::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse 85% 75% at 50% 46%,rgba(0,0,0,0) 62%,rgba(0,0,0,.26) 100%)}
+/* moments clés au doigt : le panneau se fait discret, la scène 3D reçoit le geste */
+.live .lcv canvas{touch-action:none}
+.moment.gest{padding-block:10px}
+.moment.gest .q{margin:4px 0 3px;font-size:12.5px;line-height:1.35;opacity:.85}
+.moment.gest .ghow{color:var(--acc,#f5c542);font-weight:600;margin:0}
+.moment.gest .link{font-size:12px;opacity:.85}

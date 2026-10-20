@@ -51,7 +51,7 @@ function lvStop() { const was = !!LV.raf; if (LV.raf) cancelAnimationFrame(LV.ra
 function lvCanvas() {
   const cv = document.getElementById('lCan');
   if (!cv) { LV.cv = null; return false; }
-  if (cv !== LV.cv) { LV.cv = cv; LV.cx = cv.getContext && cv.getContext('2d'); if (!LV.cx) { LV.off = true; return false; } LV.w = 0; }
+  if (cv !== LV.cv) { LV.cv = cv; LV.cx = cv.getContext && cv.getContext('2d'); if (!LV.cx) { LV.off = true; return false; } LV.w = 0; if (typeof geHook === 'function') geHook(cv); }
   // le terrain prend toute la hauteur disponible (3D : jusqu'à un format portrait ; 2D : format télé)
   const stage = cv.closest ? cv.closest('.lstage') : null, sh = stage ? stage.clientHeight : 0, w = cv.clientWidth || 360;
   const maxA = typeof g3On === 'function' && g3On() ? 1.2 : .74, h = Math.round(sh > 40 ? Math.max(Math.min(sh, w * maxA), Math.min(sh, w * .5)) : w * .6), dpr = Math.min(2.5, window.devicePixelRatio || 1);
@@ -105,6 +105,7 @@ function lvFrame(now) {
   }
   if (lvCanvas()) lvDraw(M, LV.replay ? LV.replay.pt : LV.pt, dt, paused);
   if (M.sfx && M.sfx.length) sfxDrain(M);
+  if (UI.gest && typeof geTick === 'function') geTick(M, now);
   // pendant les pauses et les ralentis, le temps du match est figé mais les commentateurs continuent (temps réel)
   if ((paused || LV.replay) && M.com && typeof comTick === 'function') comTick(M, M.clockAt ?? LV.pt, now / 1000);
   if (rebuild) { save(); render(); }
@@ -198,6 +199,7 @@ function lvOverlay(M, t) {
       cx.fillStyle = 'rgba(8,10,14,.72)'; cx.fillRect(8, y - 8, tw + 18, 16); cx.fillStyle = E.T[k].col; cx.fillRect(12, y - 4, 6, 8); cx.fillStyle = '#fff'; cx.fillText(txt, 22, y); }
   }
   lvHud(cx, w, h, E, fa, own, M.cond || {});
+  if (UI.gest && typeof geDraw === 'function') geDraw(cx, M);
 }
 function lvDraw2D(M, t, dt, paused) {
   const cx = LV.cx, w = LV.w, h = LV.h, E = M.E, C = M.cond || {}, FX = LV.fx || { patches: [], flares: [], drops: [], crowdA: .5 };

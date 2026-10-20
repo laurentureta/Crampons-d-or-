@@ -44,6 +44,8 @@ function vLivePanel(M, P) {
     if (M.done) { const mine = M.side === 'h' ? M.hg : M.ag, th = M.side === 'h' ? M.ag : M.hg, win = mine > th || (mine === th && M.pen === M.side), loss = mine < th || (mine === th && M.pen && M.pen !== M.side); return `<div class="moment end"><div class="lbl ${win ? 'ok' : loss ? 'bad' : ''}">${win ? 'Victoire' : loss ? 'Défaite' : 'Match nul'}${M.pen ? ' aux tirs au but' : ''}</div><p class="note">Le président et les supporters jugeront. Confiance actuelle : ${Math.round(S.mgr.board)} / 100.</p></div>`; }
     return '';
   }
+  if (UI.gest && (!M.pending || UI.gest.m !== M.pending)) UI.gest = null;
+  if (M.pending && !UI.mg && typeof geAvail === 'function' && geAvail(M)) { if (!UI.gest) { UI.gest = geNew(M); LV.replay = null; } return vGest(M); }
   if (UI.mg && (M.pending || M.shoot)) return vMg(M);
   if (M.press && typeof voOnce === 'function') voOnce(M.press, M.press.q, 'J');
   if (M.half && typeof voOnce === 'function') voOnce(M.half, coachHalfLine(M), 'C');
@@ -80,7 +82,7 @@ function vLive() {
   const cam = has3d ? `<button class="ib${UI.lcam ? ' on' : ''}" data-a="lCam" aria-label="Choisir la caméra">${icon('cam')}</button>` : '';
   const camPick = has3d && UI.lcam && !M.done ? `<div class="campick" role="menu" aria-label="Caméras"><b>Caméra</b>${CAM_VIEWS.map(([k, n]) => `<button data-a="lCamSet" data-v="${k}" class="${cur === k ? 'on' : ''}" role="menuitemradio" aria-checked="${cur === k}">${n}</button>`).join('')}</div>` : '';
   const bar = M.done ? `<div class="lbar">${liveStatus(M)}<span class="grow"></span>${snd}</div>`
-    : `<div class="lbar"><div class="seg spd">${['×1', '×2', '×4', '×8', 'Résumé'].map((t, i) => `<button data-a="lSpeed" data-v="${i}" class="${(UI.lspeed ?? 1) === i ? 'on' : ''}" aria-label="${i < 4 ? 'Vitesse ' + t : 'Temps forts seulement'}">${t}</button>`).join('')}</div>${cam}<button class="ib${UI.lstat ? ' on' : ''}" data-a="lStat" aria-label="Stats et fil du match">${icon('chart')}</button>${snd}</div>`;
+    : `<div class="lbar"><div class="seg spd">${['×1', '×2', '×4', '×8', 'Résumé'].map((t, i) => `<button data-a="lSpeed" data-v="${i}" class="${(UI.lspeed ?? 1) === i ? 'on' : ''}" aria-label="${i < 4 ? 'Vitesse ' + t : 'Temps forts seulement'}">${t}</button>`).join('')}</div>${cam}<button class="ib${UI.lstat ? ' on' : ''}" data-a="lStat" aria-label="Stats et fil du match">${icon('chart')}</button>${M.coach ? '' : `<button class="ib" data-a="lSim" aria-label="Simuler la fin du match">${icon('next')}</button>`}${snd}</div>`;
   return `<div class="live lv2">${liveHead(M, P)}<div class="lstage">${view}${sheet}${camPick}</div>${comBox}<div class="lfoot">${M.done ? '' : liveStatus(M)}${M.cond ? `<span class="lcond">${esc(condTxt(M.cond).replace(/ spectateurs/, ' spect.'))}</span>` : ''}</div>${bar}</div>`;
 }
 // boîte de commentaire : qui parle (Lo Sol / Nathalie), la réplique en cours et la précédente
