@@ -42,6 +42,14 @@ async function shrink(b, it, out) {
   else p = p.jpeg({ quality: q, mozjpeg: true, progressive: true });
   return p.toBuffer();
 }
+// détourage (sujet sur fond transparent, PNG) : rembg sur le robot, installé seulement si une liste le demande
+function detour(b, it) {
+  const os = require('os'), cp = require('child_process'), d = fs.mkdtempSync(path.join(os.tmpdir(), 'dt-')), a = path.join(d, 'in.png'), o = path.join(d, 'out.png');
+  fs.writeFileSync(a, b);
+  const model = /^[\w-]{3,40}$/.test(String(it.detour)) ? String(it.detour) : 'birefnet-general';
+  cp.execFileSync('rembg', ['i', '-m', model, a, o], { stdio: 'inherit', timeout: 15 * 60 * 1000 });
+  return fs.readFileSync(o);
+}
 async function get(url) {
   for (let i = 0; i < 3; i++) {
     try {
@@ -68,7 +76,8 @@ async function get(url) {
         let b = await get(it.url);
         if (imgOut(out)) {
           if (!isImage(b)) throw new Error('ce n\'est pas une image');
-          const n0 = b.length; b = await shrink(b, it, out);
+          const n0 = b.length; b = await shrink(b, Object.assign({}, it, it.detour ? { quality: it.quality || 95 } : {}), it.detour ? out.replace(/\.\w+$/, '.png') : out);
+          if (it.detour) { if (!/\.(png|webp)$/.test(out)) throw new Error('un détourage se range en .png ou .webp'); b = detour(b, it); if (/\.webp$/.test(out) && sharp) b = await sharp(b).webp({ quality: +it.quality || 90, alphaQuality: 95 }).toBuffer(); }
           if (b.length > MAX_OUT) throw new Error('image encore trop lourde après réduction');
           if (b.length !== n0) log.push(`  ${out} : ${Math.round(n0 / 1024)} Ko → ${Math.round(b.length / 1024)} Ko`);
         } else if (!isAudio(b)) throw new Error('ce n\'est pas un fichier audio');
