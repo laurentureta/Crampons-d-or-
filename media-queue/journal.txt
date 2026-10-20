@@ -33,3 +33,6 @@
       media-raw/intro/joueur_src.jpg : 1380 Ko → 1201 Ko
       media-raw/apercus/uARU18GpF6QQ.jpg : 44 Ko → 15 Ko
       media-raw/apercus/u5IS7UghgoMA.jpg : 97 Ko → 19 Ko
+2026-10-20T16:21:54.759Z · 2 importé(s), 0 échec(s)
+      media-raw/intro/joueur_detoure.png : 1739 Ko → 680 Ko
+      media-raw/intro/stade_src.jpg : 2146 Ko → 1921 Ko
