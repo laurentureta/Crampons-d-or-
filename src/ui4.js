@@ -76,10 +76,12 @@ function vLive() {
     if (panel) sheet = `<div class="lsheet${M.last && !M.pending && !M.shoot && !M.press && !M.half ? ' res' : ''}"><div class="shb">${panel}</div></div>`;
     else if (UI.lstat) { const tb = UI.lstat === 'fd' ? 'fd' : 'st'; sheet = `<div class="lsheet"><div class="row"><div class="seg grow">${[['st', 'Stats'], ['fd', 'Fil du match']].map(([k, n]) => `<button data-a="lStatTab" data-v="${k}" class="${tb === k ? 'on' : ''}">${n}</button>`).join('')}</div><button class="ib" data-a="lStat" aria-label="Fermer">${icon('close')}</button></div><div class="shb">${tb === 'st' ? vLiveStats(M) : `<div class="lfeed" id="lFeed">${vFeed(M, 40)}</div>`}</div>${!M.done ? '<button class="btn wide" data-a="lAuto">Résultat direct (finir sans regarder)</button>' : ''}</div>`; }
   }
-  const cam = M.eng && !LV.off && typeof g3On === 'function' && g3On() ? `<button class="ib" data-a="lCam" aria-label="Changer de caméra">${icon('cam')}</button>` : '';
+  const has3d = M.eng && !LV.off && typeof g3On === 'function' && g3On(), cur = OPTS.cam || 'tv';
+  const cam = has3d ? `<button class="ib${UI.lcam ? ' on' : ''}" data-a="lCam" aria-label="Choisir la caméra">${icon('cam')}</button>` : '';
+  const camPick = has3d && UI.lcam && !M.done ? `<div class="campick" role="menu" aria-label="Caméras"><b>Caméra</b>${CAM_VIEWS.map(([k, n]) => `<button data-a="lCamSet" data-v="${k}" class="${cur === k ? 'on' : ''}" role="menuitemradio" aria-checked="${cur === k}">${n}</button>`).join('')}</div>` : '';
   const bar = M.done ? `<div class="lbar">${liveStatus(M)}<span class="grow"></span>${snd}</div>`
     : `<div class="lbar"><div class="seg spd">${['×1', '×2', '×4', '×8', 'Résumé'].map((t, i) => `<button data-a="lSpeed" data-v="${i}" class="${(UI.lspeed ?? 1) === i ? 'on' : ''}" aria-label="${i < 4 ? 'Vitesse ' + t : 'Temps forts seulement'}">${t}</button>`).join('')}</div>${cam}<button class="ib${UI.lstat ? ' on' : ''}" data-a="lStat" aria-label="Stats et fil du match">${icon('chart')}</button>${snd}</div>`;
-  return `<div class="live lv2">${liveHead(M, P)}<div class="lstage">${view}${sheet}</div>${comBox}<div class="lfoot">${M.done ? '' : liveStatus(M)}${M.cond ? `<span class="lcond">${esc(condTxt(M.cond).replace(/ spectateurs/, ' spect.'))}</span>` : ''}</div>${bar}</div>`;
+  return `<div class="live lv2">${liveHead(M, P)}<div class="lstage">${view}${sheet}${camPick}</div>${comBox}<div class="lfoot">${M.done ? '' : liveStatus(M)}${M.cond ? `<span class="lcond">${esc(condTxt(M.cond).replace(/ spectateurs/, ' spect.'))}</span>` : ''}</div>${bar}</div>`;
 }
 // boîte de commentaire : qui parle (Lo Sol / Nathalie), la réplique en cours et la précédente
 function vComL(x) { const w = x.who === 'N' || x.who === 'P' ? x.who : 'S', t = x.song ? '♪ ' + String(x.txt).split('/').map(v => v.trim()).join(' ♪ ') + ' ♪' : x.txt; return `<i class="who ${w.toLowerCase()}">${typeof CM_WHO !== 'undefined' ? CM_WHO[w] : ''}</i>${esc(t)}`; }

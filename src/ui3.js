@@ -297,7 +297,8 @@ const ACT = {
   optChat: v => { OPTS.chat = v === 'match' ? 'match' : 'all'; saveOpts(); render(); toast(v === 'match' ? 'Commentaires : le match seulement.' : 'Commentaires : Lo Sol peut raconter sa vie.'); },
   optReplay: v => { OPTS.replay = v; saveOpts(); render(); },
   optGfx: v => { OPTS.gfx = v; if (typeof G3 !== 'undefined') { G3.lowAuto = false; G3.fail = false; } saveOpts(); render(); },
-  lCam: () => { const L = ['tv', 'large', 'tac'], c = OPTS.cam || 'tv'; OPTS.cam = L[(L.indexOf(c) + 1) % L.length]; saveOpts(); render(); toast({ tv: 'Caméra TV', large: 'Caméra large', tac: 'Vue tactique : les lignes des deux équipes' }[OPTS.cam]); },
+  lCam: () => { UI.lcam = !UI.lcam; render(); },
+  lCamSet: v => { if (!CAM_VIEWS.some(c => c[0] === v)) return; OPTS.cam = v; saveOpts(); UI.lcam = false; render(); toast(CAM_VIEWS.find(c => c[0] === v)[2]); },
   lvTap: () => lvTap(),
   lDone: () => {
     clearInterval(UI.lt); lvStop(); LV.M = null; UI.lend = 'sum'; liveEnd(); UI.screen = 'game'; UI.tab = 'home'; UI.sub = null;

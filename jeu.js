@@ -1,10 +1,11 @@
-/* Crampons d'Or 11.2.0 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
-var GAME_VERSION = "11.2.0";
+/* Crampons d'Or 11.3.0 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
+var GAME_VERSION = "11.3.0";
 var CRWD_FILES = ["chant_2","chant_3","chant_4","cheer_loop","goal_1","goal_2","goal_3","goal_4","ooh_1","roar_1","roar_2","roar_3","roar_4","surge"];
 var SONS_FILES = ["catch","glass","header","kick","net","post","shot","tackle","whistle1","whistle3"];
-var MEDIA_H = {"foule/chant_2":"3ebb4bce","foule/chant_3":"4f555b3f","foule/chant_4":"e9942adb","foule/cheer_loop":"e5b4a150","foule/goal_1":"a49bc043","foule/goal_2":"db0cbb88","foule/goal_3":"05dbbca2","foule/goal_4":"09720ea4","foule/ooh_1":"155d868a","foule/roar_1":"aff56709","foule/roar_2":"a3f978be","foule/roar_3":"6bed5e29","foule/roar_4":"df5f4aa6","foule/surge":"ce5de2be","sons/catch":"082b1f8c","sons/glass":"149bfce3","sons/header":"ac052ba0","sons/kick":"877b4236","sons/net":"fe0694be","sons/post":"ae984141","sons/shot":"9695a8e3","sons/tackle":"601ffa60","sons/whistle1":"cc2e8cf9","sons/whistle3":"dbccf110","joueur":"cbcc8acf"};
+var MEDIA_H = {"foule/chant_2":"3ebb4bce","foule/chant_3":"4f555b3f","foule/chant_4":"e9942adb","foule/cheer_loop":"e5b4a150","foule/goal_1":"a49bc043","foule/goal_2":"db0cbb88","foule/goal_3":"05dbbca2","foule/goal_4":"09720ea4","foule/ooh_1":"155d868a","foule/roar_1":"aff56709","foule/roar_2":"a3f978be","foule/roar_3":"6bed5e29","foule/roar_4":"df5f4aa6","foule/surge":"ce5de2be","sons/catch":"082b1f8c","sons/glass":"149bfce3","sons/header":"ac052ba0","sons/kick":"877b4236","sons/net":"fe0694be","sons/post":"ae984141","sons/shot":"9695a8e3","sons/tackle":"601ffa60","sons/whistle1":"cc2e8cf9","sons/whistle3":"dbccf110","stade":"180b7b01","joueur":"cbcc8acf"};
 var VOIX_INDEX = {"S|Ah, les matchs du soir… Les projecteurs, l'herbe qui brille comme un miroir, l'odeur des frites. C'est ma madeleine de Proust, ça !":"S/033043fb565a.mp3","S|Chacun ses madeleines, Nathalie.":"S/184ed733a2a2.mp3","S|De la neige ! Regardez-moi ça, on se croirait au Canigou en plein mois de janvier !":"S/3330ac9a394b.mp3","S|Il pleut, mes amis ! Il pleut des cordes, des ficelles, des lacets !":"S/e5474d79c72a.mp3","S|Je le salue aussi ! Les petits matchs, c'est là que naissent les grands joueurs. Ne l'oubliez jamais.":"S/51e8f0b12016.mp3","S|La tête, les jambes, le cœur, les tripes, tout compte ! Ce soir, les familles sont divisées et les voisins ne se parlent plus jusqu'à lundi !":"S/d08542c8b556.mp3","S|Le ballon orange ! Comme une mandarine posée sur un gâteau à la crème. Magnifique.":"S/bcbce0b09960.mp3","S|Le papier, Nathalie ! Le papier ne court pas, le papier ne transpire pas ! C'est le terrain qui va parler !":"S/c5a3ec573ddf.mp3","S|Moi je sens des buts, des larmes, de la sueur et de la poésie ! On verra qui a raison !":"S/8daba191eb47.mp3","S|On va voir du ski nautique ce soir. Sortez les bouées !":"S/380bb6427e7c.mp3","S|Si vous êtes chez vous, montez le son. Si vous êtes au stade, vous n'entendez rien de ce que je dis… bonsoir quand même !":"S/56d80e607aac.mp3","S|Un derby ! Un DERBY ! J'ai des frissons jusque dans les chaussettes !":"S/665153ff867c.mp3"};
 var JOUEUR_3D = {"name":"A footballer 3d model","auteur":"AP 3d models (https://sketchfab.com/jeetu.143p)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/a-footballer-3d-model-afd601d0e0ea471f90b26c0d3b6c1cb7","bin":"joueur.bin","parts":[{"name":"corps","tris":12577,"alpha":false,"arr":{"pos":[0,22554],"nor":[90216,22554],"uv":[180432,15036],"bi":[240576,30072],"bw":[360864,30072],"reg":[481152,7518],"idx":[511224,37731]},"map":"corps.jpg","nmap":"corps_n.jpg"},{"name":"cheveux","tris":3669,"alpha":true,"arr":{"pos":[662148,11472],"nor":[708036,11472],"uv":[753924,7648],"bi":[784516,15296],"bw":[845700,15296],"reg":[906884,3824],"idx":[922180,11007]},"map":"cheveux.png"}],"bind":[[1,0,0,0,0,1,0,0,0,0,1,0,0,0.9561621074541208,0,1],[1,0,0,0,0,1,0,0,0,0,1,0,0,1.1114961124377731,0,1],[1,0,0,0,0,1,0,0,0,0,1,0,0,1.5915074134701013,0,1],[1,0,0,0,0,0.06507265101264002,0.9978805289663624,0,0,-0.9978805289663624,0.06507265101264002,0,0,1.4698137585331512,-0.19810914412195205,1],[1,0,0,0,0,0.06507265101264002,0.9978805289663624,0,0,-0.9978805289663624,0.06507265101264002,0,0,1.451196050022711,-0.483609250963011,1],[1,0,0,0,0,0.06507265101264002,0.9978805289663624,0,0,-0.9978805289663624,0.06507265101264002,0,0,1.436920698147589,-0.7025198909730603,1],[1,0,0,0,0,0.06876318803696509,-0.9976330106662434,0,0,0.9976330106662434,0.06876318803696509,0,0,1.4698137585331512,0.19810914412195205,1],[1,0,0,0,0,0.06876318803696509,-0.9976330106662434,0,0,0.9976330106662434,0.06876318803696509,0,0,1.4501401633868256,0.48353843436816046,1],[1,0,0,0,0,0.06876318803696509,-0.9976330106662434,0,0,0.9976330106662434,0.06876318803696509,0,0,1.4350551977367836,0.7023947749025508,1],[0.9982234212070645,-0.059581887798754285,0,0,0.059318219422530634,0.9938059722422536,0.0939736046992415,0,-0.0055991247712346955,-0.09380665318603713,0.9955746891217306,0,0,0.9017922101197102,-0.09436051729552487,1],[0.9982234212070645,-0.059581887798754285,0,0,0.059318219422530634,0.9938059722422536,0.0939736046992415,0,-0.0055991247712346955,-0.09380665318603713,0.9955746891217306,0,-0.021932103902617326,0.5343459844162471,-0.1291059780061074,1],[0.9982234212070645,-0.059581887798754285,0,0,0.059318219422530634,0.9938059722422536,0.0939736046992415,0,-0.0055991247712346955,-0.09380665318603713,0.9955746891217306,0,-0.046543159907541404,0.122017113472557,-0.16809551057726158,1],[0.9987227153012338,-0.05052660627165251,0,0,0.05030278712397283,0.9942986448282388,-0.09402039406579786,0,0.0047505314324681825,0.09390030325508565,0.9955702715025756,0,0,0.9017922101197102,0.09436051729552487,1],[0.9987227153012338,-0.05052660627165251,0,0,0.05030278712397283,0.9942986448282388,-0.09402039406579786,0,0.0047505314324681825,0.09390030325508565,0.9955702715025756,0,-0.01859877057225307,0.5341638254362409,0.12912327773726662,1],[0.9987227153012338,-0.05052660627165251,0,0,0.05030278712397283,0.9942986448282388,-0.09402039406579786,0,0.0047505314324681825,0.09390030325508565,0.9955702715025756,0,-0.03946933484683819,0.12163054524487249,0.16813222315883952,1]],"rig":{"hp":0.9562,"hipY":-0.0544,"hipW":0.0944,"thigh":0.3697,"shin":0.4149,"torY":0.1553,"shY":0.3583,"shW":0.1981,"ua":0.2861,"fa":0.2194,"neck":0.48,"numX":-0.1502,"numY":0.2222},"lum":[0.469,0.765,0.747,0.842,0.231,0.5]};
+var STADE_3D = {"name":"football stade","auteur":"mohamed ouartassi (https://sketchfab.com/mohamedouartassi)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/football-stade-cda2fcbaefb84fa280a5bf7213c67a71","bin":"stade.bin","pieces":{"pylone":[{"mat":"metal_dark.002","col":[0.3131,0.3131,0.3131],"rough":0,"metal":1,"tris":801,"arr":{"pos":[0,1320],"nor":[5280,1320],"idx":[6600,2403]}},{"mat":"metal_clear","col":[0.0593,0.0593,0.0593],"rough":0.98,"metal":0,"tris":462,"arr":{"pos":[11408,1206],"nor":[16232,1206],"idx":[17440,1386]}},{"mat":"metal_dark","col":[0.0593,0.0593,0.0593],"rough":0.98,"metal":0,"tris":294,"arr":{"pos":[20212,573],"nor":[22504,573],"idx":[23080,882]}},{"mat":"light_cold","col":[0.8,0.8,0.8],"rough":0.8,"metal":0,"tris":172,"arr":{"pos":[24844,378],"nor":[26356,378],"idx":[26736,516]}}],"siege":[{"mat":"PlasticRAL3018","col":[0.6627,0.0235,0.0235],"rough":0.98,"metal":0,"tris":210,"arr":{"pos":[27768,321],"nor":[29052,321],"idx":[29376,630]}}],"banc":[{"mat":"PlasticRAL3018","col":[0.6627,0.0235,0.0235],"rough":0.98,"metal":0,"tris":2100,"arr":{"pos":[30636,3210],"nor":[43476,3210],"idx":[46688,6300]}},{"mat":"MetalPaint_RAL5010_riffl","col":[0.004,0.0158,0.0671],"rough":0.96,"metal":0,"tris":4,"arr":{"pos":[59288,12],"nor":[59336,12],"idx":[59348,12]}},{"mat":"MetalPaint_RAL5010","col":[0.004,0.0158,0.0671],"rough":0.96,"metal":0,"tris":202,"arr":{"pos":[59372,228],"nor":[60284,228],"idx":[60512,606]}}],"siege_b":[{"mat":"PlasticRAL3018","col":[0.6627,0.0235,0.0235],"rough":0.98,"metal":0,"tris":42,"arr":{"pos":[61724,69],"nor":[62000,69],"idx":[62072,126]}}]}};
 (function(){
 // ===== src/data.js =====
 // ===== DONNÉES RÉELLES — saison 2026-27 (après le mercato d'été 2026, état au 11/10/2026) =====
@@ -6057,18 +6058,13 @@ function g3Match(M) {
   // buts et filets
   G3.nets = [];
   const postM = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .35, metalness: .1 });
-  const [nc, nx2] = g3Canvas(64, 64); nx2.strokeStyle = 'rgba(255,255,255,.85)'; nx2.lineWidth = 3; for (let i = 0; i <= 64; i += 16) { nx2.beginPath(); nx2.moveTo(i, 0); nx2.lineTo(i, 64); nx2.moveTo(0, i); nx2.lineTo(64, i); nx2.stroke(); }
+  G3.netWind = wet || snow ? 1.7 : .6;
   for (const s of [-1, 1]) {
     const gx = s * 52.5, g = new THREE.Group(); g.position.x = gx; S3.add(g);
     const post = new THREE.CylinderGeometry(.06, .06, 2.44, 10); post.translate(0, 1.22, 0);
     for (const z of [-3.72, 3.72]) { const m = new THREE.Mesh(post, postM); m.position.z = z; m.castShadow = true; g.add(m); }
     const bar = new THREE.Mesh(new THREE.CylinderGeometry(.06, .06, 7.56, 10), postM); bar.rotation.x = Math.PI / 2; bar.position.y = 2.44; bar.castShadow = true; g.add(bar);
-    const depth = 2, nm = new THREE.MeshBasicMaterial({ map: g3Tex(nc, [14, 5]), transparent: true, side: THREE.DoubleSide, depthWrite: false, opacity: .9 });
-    const back = new THREE.PlaneGeometry(7.44, 2.3, 18, 8); back.rotateY(Math.PI / 2); back.translate(s * depth, 1.15, 0); const bm = new THREE.Mesh(back, nm); g.add(bm);
-    const topG = new THREE.PlaneGeometry(depth, 7.44, 4, 12); topG.rotateX(-Math.PI / 2); topG.translate(s * depth / 2, 2.38, 0); g.add(new THREE.Mesh(topG, nm));
-    for (const z of [-3.72, 3.72]) { const sg = new THREE.PlaneGeometry(depth, 2.4, 3, 4); sg.translate(s * depth / 2, 1.2, z); g.add(new THREE.Mesh(sg, nm)); }
-    const sup = new THREE.CylinderGeometry(.03, .03, 3.1, 6); for (const z of [-3.72, 3.72]) { const m = new THREE.Mesh(sup, postM); m.position.set(s * depth / 2, 1.2, z); m.rotation.z = s * Math.atan2(depth, 2.4); g.add(m); }
-    G3.nets.push({ s, geo: back, base: back.attributes.position.array.slice(), amp: 0 });
+    G3.nets.push(g3NetBuild(g, s, low, postM)); // filet déformable (m3dnet.js)
   }
   // poteaux de corner
   for (const x of [-52.5, 52.5]) for (const z of [-34, 34]) { const f = new THREE.Mesh(g3Merge([g3Tint(new THREE.CylinderGeometry(.025, .025, 1.5, 5).translate(0, .75, 0), 0xffffff), g3Tint(new THREE.BoxGeometry(.01, .32, .45).translate(0, 1.33, .23), night ? 0xffd23a : 0xf3c12a)]), new THREE.MeshLambertMaterial({ vertexColors: true })); f.position.set(x, 0, z); S3.add(f); }
@@ -6102,23 +6098,29 @@ function g3Stands(S3, M, cls, rnd, night) {
   const seatT = g3Tex(sc2);
   const cap = { 0: 400, 1: 6000, 2: 30000, 3: 80000 }[cls], fill = clamp(att / cap, .05, 1), perM2 = cls === 0 ? .7 : 1;
   const people = []; let budget = clamp(Math.round(att / (cls >= 2 ? 22 : cls === 1 ? 4 : 1)), 30, g3Low() ? 1800 : 3600);
-  const totalArea = stands.reduce((a, s) => a + s[3] * s[4], 0);
+  const totalArea = stands.reduce((a, s) => a + s[3] * s[4], 0), seats = [];
   for (const [x, z, ry, len, dep, h0, h1] of stands) {
     const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry; S3.add(g);
     // pente (le devant de la tribune est en z = 0, elle s'élève vers -z)
-    const slope = new THREE.PlaneGeometry(len, Math.hypot(dep, h1 - h0)); const a = Math.atan2(h1 - h0, dep); slope.rotateX(-Math.PI / 2 + a); slope.translate(0, (h0 + h1) / 2, -dep / 2);
-    const tex = seatT.clone(); tex.needsUpdate = true; tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(len / 2, Math.max(2, dep / 8));
-    const sm = new THREE.Mesh(slope, new THREE.MeshLambertMaterial({ map: tex })); sm.receiveShadow = !g3Low(); g.add(sm);
+    if (cls <= 1) g.add(g3Terraces(len, dep, h0, h1, Math.max(3, Math.round(dep / .85)), night)); // petits stades : de vraies marches (les sièges du modèle 3D s'y posent)
+    else {
+      const slope = new THREE.PlaneGeometry(len, Math.hypot(dep, h1 - h0)); const a = Math.atan2(h1 - h0, dep); slope.rotateX(-Math.PI / 2 + a); slope.translate(0, (h0 + h1) / 2, -dep / 2);
+      const tex = seatT.clone(); tex.needsUpdate = true; tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(len / 2, Math.max(2, dep / 8));
+      const sm = new THREE.Mesh(slope, new THREE.MeshLambertMaterial({ map: tex })); sm.receiveShadow = !g3Low(); g.add(sm);
+    }
     const front = new THREE.Mesh(new THREE.BoxGeometry(len, h0 + .2, .3), wallM); front.position.set(0, (h0 + .2) / 2, .15); g.add(front);
     const camSide = ry === Math.PI && cls <= 1; // tribune sous la caméra : ni toit ni mur du fond
     if (!camSide) { const back = new THREE.Mesh(new THREE.BoxGeometry(len, h1 + (cls >= 2 ? 6 : 2), .6), wallM); back.position.set(0, (h1 + (cls >= 2 ? 6 : 2)) / 2, -dep - .3); g.add(back); }
     for (const sx2 of [-1, 1]) { const tg = new THREE.BufferGeometry(), H = h1 + (cls >= 2 ? 6 : 2); tg.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, .2, 0, h0 + .3, .2, 0, H, -dep - .6, 0, 0, .2, 0, H, -dep - .6, 0, 0, -dep - .6], 3)); tg.computeVertexNormals(); const sw = new THREE.Mesh(tg, sideM); sw.position.x = sx2 * len / 2; g.add(sw); }
-    if (cls >= 1 && !camSide) { const rh = h1 + (cls >= 2 ? 7 : 3), rd = dep * (cls === 3 ? .85 : .7); const roof = new THREE.Mesh(new THREE.BoxGeometry(len + 1, .5, rd), roofM); roof.position.set(0, rh, -dep + rd / 2 - .3); g.add(roof); if (night && cls >= 2) { const strip = new THREE.Mesh(new THREE.BoxGeometry(len * .9, .25, .25), new THREE.MeshBasicMaterial({ color: 0xfff6dc })); strip.position.set(0, rh - .35, -dep + rd); g.add(strip); } for (let i = -2; i <= 2; i++) { const pil = new THREE.Mesh(new THREE.BoxGeometry(.4, rh, .4), roofM); pil.position.set(i * len / 5, rh / 2, -dep - .2); g.add(pil); } }
+    if (cls >= 1 && !camSide && ry !== Math.PI) { const rh = h1 + (cls >= 2 ? 7 : 3), rd = dep * (cls === 3 ? .85 : .7); const roof = new THREE.Mesh(new THREE.BoxGeometry(len + 1, .5, rd), roofM); roof.position.set(0, rh, -dep + rd / 2 - .3); g.add(roof); if (night && cls >= 2) { const strip = new THREE.Mesh(new THREE.BoxGeometry(len * .9, .25, .25), new THREE.MeshBasicMaterial({ color: 0xfff6dc })); strip.position.set(0, rh - .35, -dep + rd); g.add(strip); } for (let i = -2; i <= 2; i++) { const pil = new THREE.Mesh(new THREE.BoxGeometry(.4, rh, .4), roofM); pil.position.set(i * len / 5, rh / 2, -dep - .2); g.add(pil); } }
     // public : réparti selon la surface et l'affluence
-    const n = Math.round(budget * len * dep / totalArea), rows = Math.max(3, Math.round(dep / .85)), perRow = Math.max(4, Math.round(len / .62));
+    const n = Math.round(budget * len * dep / totalArea), rows = Math.max(3, Math.round(dep / .85)), perRow = Math.max(4, Math.round(len / .62)), taken = cls <= 1 ? new Set() : null;
+    const toW = (lx, ld) => [x + Math.cos(ry) * lx - Math.sin(ry) * ld, z - Math.sin(ry) * lx - Math.cos(ry) * ld];
+    if (taken) for (let r = 0; r < rows; r++) for (let c = 0; c < perRow; c++) { const lx = -len / 2 + (c + .5) * len / perRow, ld = (r + .5) * dep / rows, [wx, wz] = toW(lx, ld); seats.push(wx, h0 + (h1 - h0) * ld / dep, wz, ry); }
     for (let k = 0; k < n; k++) {
       let r, c; if (fill > .85) { r = Math.floor(rnd() * rows); c = Math.floor(rnd() * perRow); } else { r = Math.floor(Math.pow(rnd(), 1.4) * rows); c = Math.floor((.5 + (rnd() - .5) * Math.min(1, fill * 1.6)) * perRow); }
-      const lx = -len / 2 + (c + .5) * len / perRow + (rnd() - .5) * .2, ld = (r + .5) * dep / rows, ly = h0 + (h1 - h0) * ld / dep;
+      if (taken) { let key = r * perRow + c, tries = 0; while (taken.has(key) && tries++ < 8) { c = (c + 1) % perRow; key = r * perRow + c; } if (taken.has(key)) continue; taken.add(key); }
+      const lx = -len / 2 + (c + .5) * len / perRow + (taken ? 0 : (rnd() - .5) * .2), ld = (r + .5) * dep / rows, ly = h0 + (h1 - h0) * ld / dep;
       const wx = x + Math.cos(ry) * lx - Math.sin(ry) * ld, wz = z - Math.sin(ry) * lx - Math.cos(ry) * ld;
       const col = rnd() < (C.derby ? .5 : .62) ? (rnd() < .82 ? hc : oc) : new THREE.Color().setHSL(rnd(), .15 + rnd() * .3, .25 + rnd() * .5);
       people.push([wx, ly, wz, ry, col, rnd()]);
@@ -6139,19 +6141,23 @@ function g3Stands(S3, M, cls, rnd, night) {
     people.forEach(([x, y, z, ry, col, r], i) => { q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), ry + Math.PI + (r - .5) * .4); const s = .9 + r * .25; one.set(s, s, s); m4.compose(v.set(x, y, z), q, one); im.setMatrixAt(i, m4); im.setColorAt(i, col); ph[i] = r; });
     S3.add(im);
   }
-  // pylônes d'éclairage (ou poteaux pour les petits terrains)
+  // pylônes d'éclairage (ou poteaux pour les petits terrains) — remplacés par les mâts du modèle 3D dès qu'il est chargé
+  let mastG = null;
   if (cls <= 2) {
     const pts = cls === 0 ? [[-40, -45], [0, -46], [40, -45], [-40, 45], [0, 46], [40, 45]] : [[-66, -52], [66, -52], [-66, 52], [66, 52]];
-    const hgt = cls === 0 ? 16 : cls === 1 ? 30 : 42, mastM = new THREE.MeshLambertMaterial({ color: 0x6b7178 }), lampM = new THREE.MeshBasicMaterial({ color: night ? 0xfffbea : 0xd7dbe0 });
-    for (const [x, z] of pts) { const m = new THREE.Mesh(new THREE.CylinderGeometry(.25, .45, hgt, 8), mastM); m.position.set(x, hgt / 2, z); S3.add(m); const p = new THREE.Mesh(new THREE.BoxGeometry(cls === 0 ? 1.5 : 5, cls === 0 ? 1 : 3.5, .4), lampM); p.position.set(x, hgt + 1, z); p.lookAt(0, 0, 0); S3.add(p); if (night) g3Glow(S3, x * .98, hgt + 1, z * .98, cls === 0 ? 10 : 26); }
+    const hgt = cls === 0 ? 16 : cls === 1 ? 30 : 42, mastM = new THREE.MeshLambertMaterial({ color: 0x6b7178 }), lampM = new THREE.MeshBasicMaterial({ color: night ? 0xfffbea : 0xd7dbe0 }), mg = new THREE.Group(); S3.add(mg); mastG = mg;
+    for (const [x, z] of pts) { const m = new THREE.Mesh(new THREE.CylinderGeometry(.25, .45, hgt, 8), mastM); m.position.set(x, hgt / 2, z); mg.add(m); const p = new THREE.Mesh(new THREE.BoxGeometry(cls === 0 ? 1.5 : 5, cls === 0 ? 1 : 3.5, .4), lampM); p.position.set(x, hgt + 1, z); p.lookAt(0, 0, 0); mg.add(p); if (night) g3Glow(mg, x * .98, hgt + 1, z * .98, cls === 0 ? 10 : 26); }
     G3.lamps = pts.map(([x, z]) => [x, hgt, z]);
   } else { G3.lamps = [[-58, 30, -46], [58, 30, -46], [-58, 30, 46], [58, 30, 46]]; if (night) for (const [x, y, z] of G3.lamps) g3Glow(S3, x, y, z, 20); }
   // petits terrains : arbres et barrière
   if (cls === 0) {
     const tr = new THREE.InstancedMesh(g3Merge([g3Tint(new THREE.CylinderGeometry(.2, .3, 3, 6).translate(0, 1.5, 0), 0x5a4026), g3Tint(new THREE.ConeGeometry(2.4, 6, 8).translate(0, 5.5, 0), 0x2f5a2c)]), new THREE.MeshLambertMaterial({ vertexColors: true }), 40);
     const m4 = new THREE.Matrix4(); for (let i = 0; i < 40; i++) { const a = i / 40 * Math.PI * 2, rr = 78 + rnd() * 20; m4.makeTranslation(Math.cos(a) * rr, 0, Math.sin(a) * rr * .75); tr.setMatrixAt(i, m4); } S3.add(tr);
-    const fence = new THREE.MeshLambertMaterial({ color: 0x9aa0a6 }); for (const [w, x, z, ry] of [[120, 0, -40, 0], [120, 0, 40, 0], [84, -60, 0, Math.PI / 2], [84, 60, 0, Math.PI / 2]]) { const f = new THREE.Mesh(new THREE.BoxGeometry(w, 1.1, .08), fence); f.position.set(x, .55, z); f.rotation.y = ry; S3.add(f); }
   }
+  // main courante, grillage et pare-ballons (petits stades)
+  if (cls <= 1) g3StFence(S3, cls, night);
+  // ce qu'il faut pour « habiller » le stade avec les vraies pièces 3D (mâts, sièges, bancs) dès qu'elles sont chargées
+  S3.userData.st = { cls, night, seats: seats.length ? new Float32Array(seats) : null, seatCol: hc.clone().multiplyScalar(.6), mastG };
   // écran géant (grands stades)
   if (cls >= 2) { const [c, x] = g3Canvas(512, 160); G3.sb = { c, x, t: g3Tex(c) }; const scr = new THREE.Mesh(new THREE.PlaneGeometry(16, 5), new THREE.MeshBasicMaterial({ map: G3.sb.t })); scr.position.set(-(cls === 3 ? 59 + 30 : 59 + 17), cls === 3 ? 30 : 17, -10); scr.rotation.y = Math.PI / 2; S3.add(scr); } else G3.sb = null;
   // fumigènes (derbies)
@@ -6292,6 +6298,14 @@ function g3Camera(M, t, dt, bx, bz, by, paused, celeb) {
   if (RC === 'goal') { const e = RP.end; px = e * (52.5 + 5.5); py = 3.4; pz = clamp(C.tz * .4, -6, 6); lx = C.tx * .8 + e * 52.5 * .2; ly = 1; lz = C.tz; fov = 48; }
   else if (RC === 'cine') { const e = RP.end, sd = RP.sd || 1; px = C.tx - e * 9; py = 1.7; pz = C.tz + sd * 11; lx = C.tx + e * 4; ly = 1.1; lz = C.tz; fov = 38; }
   else if (celeb) { const B = G3.camB || [74, 16]; px = celeb[0] * .85; py = B[1]; pz = B[0]; lx = celeb[0]; ly = 1; lz = celeb[1]; fov = 9; }
+  else if (view === 'joueur' && G3.me) { // derrière ton joueur, dans le sens de l'attaque
+    const me = G3.me; if (C.mx == null || paused) { C.mx = me.x; C.mz = me.z; } C.mx += (me.x - C.mx) * k * 1.4; C.mz += (me.z - C.mz) * k * 1.4; C.md = C.md == null ? me.dir : C.md + (me.dir - C.md) * k * .5;
+    px = C.mx - C.md * 10; py = 4.6; pz = C.mz + (C.tz - C.mz) * .15; lx = C.mx + C.md * 12; ly = .4; lz = C.mz + (C.tz - C.mz) * .4; fov = 54; }
+  else if (view === 'drone') { const sw = Math.sin(t * .05) * 7; px = C.tx * .9 + sw; py = 25; pz = C.tz + 21; lx = C.tx; ly = 0; lz = C.tz - 2; fov = 46; }
+  else if (view === 'but') { // derrière le but du côté du ballon (change de côté quand le jeu bascule)
+    if (!C.gs || Math.abs(C.tx) > 10 && Math.sign(C.tx) !== C.gs) C.gs = Math.sign(C.tx) || 1; const e = C.gs;
+    px = e * 60; py = 5.4; pz = clamp(C.tz * .25, -6, 6); lx = C.tx * .9 + e * 3; ly = 0; lz = C.tz * .8; fov = 48; }
+  else if (view === 'bord') { px = clamp(C.tx * .92, -50, 50); py = 3.3; pz = 40.5; lx = C.tx; ly = .8; lz = C.tz * .85; fov = 40 + Math.min(8, Math.max(0, 15 - Math.abs(41 - C.tz)) * .5); }
   else if (view === 'tac') { const cx = clamp(C.tx * .6, -22, 22); px = cx; py = 92; pz = 30; lx = cx; ly = 0; lz = 3; fov = 46; }
   else if (view === 'large') { const cx = clamp(C.tx * .85, -34, 34), B = G3.camB || [74, 16]; px = cx * .9; py = (B[1] + 8) * (1 + .6 * pf); pz = (B[0] + 2) * (1 - .1 * pf); lx = cx; ly = 0; lz = C.tz * .35 - pf * 7; fov = 33; }
   else { const cx = clamp(C.tx, -40, 40), near = Math.abs(bx) > 34 ? 1 : 0, B = G3.camB || [74, 16], fd = Math.hypot(B[0], B[1]) / 78; px = cx * .9; py = B[1] * (1 + .85 * pf); pz = B[0] * (1 - .1 * pf); lx = cx; ly = Math.min(3, by * .3); lz = C.tz * .55 - 2 + pf * 4; fov = (18.5 - near * 1.5 + Math.min(3, Math.abs(bz) * .04) + (LV.spd > 6 ? 4 : 0) + (paused ? -1 : 0)) / fd; }
@@ -6316,7 +6330,7 @@ function g3Draw(M, t, dt, paused) {
   const pr = lvPair(t); if (!pr) return false;
   const [fa, fb, a] = pr, L = i => fa[i] + (fb[i] - fa[i]) * a, mir = fa[2] === 2, E = M.E, P = G3.P;
   const X = x => (mir ? PL - x : x) - 52.5, Z = y => (mir ? PW - y : y) - 34, YAW = f => mir ? f + Math.PI : f;
-  g3SkAttach(P);
+  g3SkAttach(P); g3StDress(G3.stad);
   const ros = LV.ros[fa[8]] || LV.ros[Object.keys(LV.ros).pop()] || meRoster(E); g3Kits(M, ros);
   // temps de jeu écoulé depuis l'image précédente (phases de course)
   const snap = G3.lastT == null || Math.abs(t - G3.lastT) > 1;
@@ -6326,7 +6340,7 @@ function g3Draw(M, t, dt, paused) {
   g3BallSkin();
   const bx = X(L(3)), bz = Z(L(4)), by = L(5), own = fa[6] >= 0 ? [fa[6], fa[7]] : null, hold = fa[10] > .5;
   const fdt = Math.max(.05, fb[0] - fa[0]);
-  let celeb = null, meIdx = -1;
+  let celeb = null, meIdx = -1; G3.me = null;
   for (let kk = 0; kk < 2; kk++) for (let i = 0; i < 11; i++) {
     const n = kk * 11 + i, o = MF_H + n * MF_S;
     if (fa[o + 2] < .5 && fb[o + 2] < .5) { g3Hide(P, n); continue; }
@@ -6344,7 +6358,7 @@ function g3Draw(M, t, dt, paused) {
     if (act === 5) st.aa = (mir ? -1 : 1) * fa[o + 6] * (Math.cos(yaw) >= 0 ? 1 : -1);
     g3Pose(P, n, st);
     if (act === 8 && at >= 0 && at < 10) celeb = [x, z];
-    if (r.me) meIdx = n;
+    if (r.me) { meIdx = n; G3.me = { x, z, dir: (kk === 0) !== mir ? 1 : -1 }; } // sens d'attaque de ton équipe (caméra « Mon joueur »)
   }
   // arbitres
   if (fa.length >= MF_N) {
@@ -6378,8 +6392,8 @@ function g3Draw(M, t, dt, paused) {
     const camD = G3.cam.position.distanceTo(b.position), sc2 = clamp(camD / 34, 1, 2.3); b.scale.setScalar(sc2);
     b.position.set(bx, by + .11 * sc2, bz);
     if (sp > .2 && gdt > 0) { const ax = _m.av || (_m.av = new THREE.Vector3()); ax.set(vz, 0, -vx).normalize(); const qq = _m.bq || (_m.bq = new THREE.Quaternion()); qq.setFromAxisAngle(ax, sp * gdt / .11); b.quaternion.premultiply(qq); } }
-  // filets : le ballon au fond fait trembler le filet
-  for (const N of G3.nets || []) { const inNet = Math.sign(bx) === N.s && Math.abs(bx) > 52.6 && Math.abs(bz) < 3.7 && by < 2.5; if (inNet) N.amp = Math.max(N.amp, Math.min(1, (Math.abs(bx) - 52.5) / 1.5)); N.amp *= Math.pow(.2, dt); const pa = N.geo.attributes.position, B = N.base; if (N.amp > .005 || N.was) { for (let i = 0; i < pa.count; i++) { const y = B[i * 3 + 1], z = B[i * 3 + 2], d = Math.hypot(y - Math.min(2, by + .3), z - bz), w = Math.exp(-d * d / 1.6) * N.amp; pa.array[i * 3] = B[i * 3] + N.s * .7 * w; } pa.needsUpdate = true; N.was = N.amp > .005; } }
+  // filets : la toile épouse le ballon et ondule (temps de jeu : ralenti au ralenti, figée en pause)
+  { const rb = .11 * G3.ball.scale.x; g3NetUpdate(snap ? 0 : gdt, bx, by + rb, bz, rb); }
   // ambiance du public, panneaux, météo, écran géant
   const now = performance.now() / 1000;
   if (G3.crowdU) { G3.crowdU.uT.value = now; const hot = lvHlSpeed(t) ? .55 : 0, gl = celeb ? 1 : 0; G3.crowdExc = (G3.crowdExc || 0) + ((Math.max(hot, gl, .08)) - (G3.crowdExc || 0)) * Math.min(1, dt * 2); G3.crowdU.uE.value = G3.crowdExc; }
@@ -6710,6 +6724,244 @@ function g3PvFrame(now) {
   V.ring.position.set(st.x, .01, st.z); g3Halo(V.ring, tm);
   g3FxUpdate(V.sc, V.cam, dt, h * V.r.getPixelRatio());
   V.r.render(V.sc, V.cam);
+}
+
+// ===== src/m3dst.js =====
+// ---------- Stade : vraies pièces 3D (mâts d'éclairage, sièges, bancs de touche) + clôtures et pare-ballons ----------
+// Les pièces viennent du modèle « football stade » de mohamed ouartassi (CC-BY 4.0), préparé par tools/stade3d.py :
+// chaque objet est ramené à sa taille réelle et le jeu les place lui-même autour de son terrain.
+// Le stade du match est d'abord construit avec des formes simples ; dès que le fichier (60 Ko) est là, on « l'habille ».
+const G3ST = { model: null, loading: null, fail: false };
+function g3StLoad() {
+  if (G3ST.model || G3ST.loading || G3ST.fail) return G3ST.loading;
+  if (typeof STADE_3D === 'undefined' || !STADE_3D || !STADE_3D.pieces) { G3ST.fail = true; return null; }
+  const J = STADE_3D, q = typeof MEDIA_H !== 'undefined' && MEDIA_H.stade ? '?h=' + MEDIA_H.stade : '';
+  G3ST.loading = fetch('assets/stade/' + J.bin + q).then(r => { if (!r.ok) throw new Error('stade'); return r.arrayBuffer(); })
+    .then(buf => {
+      const out = {};
+      for (const [name, parts] of Object.entries(J.pieces)) out[name] = parts.map(p => {
+        const g = new THREE.BufferGeometry(), A = p.arr;
+        g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(buf, A.pos[0], A.pos[1]), 3));
+        g.setAttribute('normal', new THREE.BufferAttribute(new Int8Array(buf, A.nor[0], A.nor[1]), 3, true));
+        g.setIndex(new THREE.BufferAttribute(new Uint16Array(buf, A.idx[0], A.idx[1]), 1)); g.computeBoundingBox(); g.computeBoundingSphere();
+        return { mat: p.mat, col: new THREE.Color(p.col[0], p.col[1], p.col[2]), geo: g };
+      });
+      G3ST.model = out; return out;
+    }).catch(() => { G3ST.fail = true; return null; });
+  return G3ST.loading;
+}
+// gradins en marches (petits stades) : une marche par rang, le dessus clair, la contremarche plus sombre
+function g3Terraces(len, dep, h0, h1, rows, night) {
+  const P = [], N = [], C = [], rd = dep / rows, top = new THREE.Color(night ? 0x3a3f46 : 0x6c7177), rise = new THREE.Color(night ? 0x23272e : 0x474c53);
+  const quad = (a, b, c, d, n, col) => { for (const v of [a, b, c, a, c, d]) { P.push(...v); N.push(...n); C.push(col.r, col.g, col.b); } };
+  let y0 = h0;
+  for (let r = 0; r < rows; r++) {
+    const y = h0 + (h1 - h0) * (r + .5) / rows, zf = -r * rd, zb = -(r + 1) * rd, x = len / 2;
+    quad([-x, y0, zf], [x, y0, zf], [x, y, zf], [-x, y, zf], [0, 0, 1], rise);
+    quad([-x, y, zf], [x, y, zf], [x, y, zb], [-x, y, zb], [0, 1, 0], top);
+    y0 = y;
+  }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); g.setAttribute('normal', new THREE.Float32BufferAttribute(N, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(C, 3));
+  const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ vertexColors: true })); m.receiveShadow = !g3Low(); return m;
+}
+// textures de grillage (losanges) et de filet pare-ballons (mailles carrées)
+function g3StTex(kind) {
+  const K = '_t' + kind; if (G3ST[K]) return G3ST[K];
+  const [c, x] = g3Canvas(64, 64); x.clearRect(0, 0, 64, 64);
+  if (kind === 'grille') { x.strokeStyle = 'rgba(176,186,182,.95)'; x.lineWidth = 3.2; x.beginPath(); x.moveTo(0, 32); x.lineTo(32, 0); x.lineTo(64, 32); x.lineTo(32, 64); x.closePath(); x.stroke(); }
+  else { x.strokeStyle = 'rgba(28,40,34,.95)'; x.lineWidth = 3; x.strokeRect(1.5, 1.5, 61, 61); }
+  const t = g3Tex(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; G3ST[K] = t; return t;
+}
+// clôtures des petits stades : main courante bleue, grillage, et grands filets pare-ballons derrière les buts
+function g3StFence(S3, cls, night) {
+  const low = g3Low(), blue = g3Lin('#1f4f8f'), gray = new THREE.MeshLambertMaterial({ color: night ? 0x3a4046 : 0x5c646b });
+  const tubes = [], posts = [];
+  const rail = (x1, z1, x2, z2, step) => { const L = Math.hypot(x2 - x1, z2 - z1), n = Math.max(1, Math.round(L / step)); for (const y of [1.05, .55]) tubes.push([x1, z1, x2, z2, y]); for (let i = 0; i <= n; i++) posts.push([x1 + (x2 - x1) * i / n, z1 + (z2 - z1) * i / n, 1.1]); };
+  if (cls === 0) { rail(-59.5, -38.2, 59.5, -38.2, 2.5); rail(-59.5, 38.6, 59.5, 38.6, 2.5); rail(-59.5, -38.2, -59.5, 38.6, 2.5); rail(59.5, -38.2, 59.5, 38.6, 2.5); }
+  if (tubes.length) {
+    const tm = new THREE.MeshLambertMaterial({ color: blue }), geos = [];
+    for (const [x1, z1, x2, z2, y] of tubes) { const L = Math.hypot(x2 - x1, z2 - z1), g = new THREE.CylinderGeometry(.03, .03, L, 5, 1, true); g.rotateZ(Math.PI / 2); g.rotateY(-Math.atan2(z2 - z1, x2 - x1)); g.translate((x1 + x2) / 2, y, (z1 + z2) / 2); geos.push(g); }
+    S3.add(new THREE.Mesh(g3Merge(geos), tm));
+    const pm = new THREE.InstancedMesh(new THREE.CylinderGeometry(.035, .035, 1.1, 6).translate(0, .55, 0), tm, posts.length), m4 = new THREE.Matrix4();
+    posts.forEach(([x, z], i) => { m4.makeTranslation(x, 0, z); pm.setMatrixAt(i, m4); }); S3.add(pm);
+  }
+  // grillage (losanges) et filet pare-ballons : plans transparents tendus entre des poteaux
+  const panel = (kind, x1, z1, x2, z2, y0, y1, cell) => {
+    const L = Math.hypot(x2 - x1, z2 - z1), g = new THREE.PlaneGeometry(L, y1 - y0); g.rotateY(-Math.atan2(z2 - z1, x2 - x1)); g.translate((x1 + x2) / 2, (y0 + y1) / 2, (z1 + z2) / 2);
+    const t = g3StTex(kind).clone(); t.needsUpdate = true; t.repeat.set(L / cell, (y1 - y0) / cell);
+    const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ map: t, transparent: true, side: THREE.DoubleSide, depthWrite: false, opacity: kind === 'grille' ? .85 : .5 })); m.renderOrder = 2; S3.add(m);
+    const n = Math.max(1, Math.round(L / (kind === 'grille' ? 3 : 6))); for (let i = 0; i <= n; i++) posts.push([x1 + (x2 - x1) * i / n, z1 + (z2 - z1) * i / n, y1, 1]);
+  };
+  posts.length = 0;
+  if (cls <= 1) {
+    const ex = cls === 0 ? 62 : 61, hb = cls === 0 ? 8 : 10;
+    for (const s of [-1, 1]) {
+      if (cls === 0) panel('grille', s * ex, -44, s * ex, 44, 0, 3, .16);
+      panel('filet', s * ex, -24, s * ex, 24, cls === 0 ? 3 : 0, hb, .14);
+    }
+    if (cls === 0) panel('grille', -62, 44, 62, 44, 0, 2.5, .16);
+    const pm = new THREE.InstancedMesh(new THREE.CylinderGeometry(.05, .06, 1, 6).translate(0, .5, 0), gray, posts.length), m4 = new THREE.Matrix4(), v = new THREE.Vector3(), q = new THREE.Quaternion(), sc = new THREE.Vector3();
+    posts.forEach(([x, z, h], i) => { m4.compose(v.set(x, 0, z), q, sc.set(1, h, 1)); pm.setMatrixAt(i, m4); }); S3.add(pm);
+    // câble en haut des pare-ballons
+    if (!low) for (const s of [-1, 1]) { const c = new THREE.Mesh(new THREE.CylinderGeometry(.015, .015, 48, 4, 1, true).rotateX(Math.PI / 2), gray); c.position.set(s * ex, hb, 0); S3.add(c); }
+  }
+}
+// banc de touche : deux modules de 10 sièges du modèle, abri en polycarbonate
+function g3Dugout(S3, md, x, z, night) {
+  const g = new THREE.Group(); g.position.set(x, 0, z); S3.add(g);
+  for (const p of md.banc) { const mat = g3StMat(p, night); for (const dx of [-1.37, 1.37]) { const m = new THREE.Mesh(p.geo, mat); m.position.x = dx; m.castShadow = !g3Low(); g.add(m); } }
+  const frame = new THREE.MeshLambertMaterial({ color: night ? 0x30353c : 0x50575f }), poly = new THREE.MeshStandardMaterial({ color: 0xd6ecf7, transparent: true, opacity: .32, roughness: .15, metalness: 0, side: THREE.DoubleSide, depthWrite: false });
+  const back = new THREE.Mesh(new THREE.BoxGeometry(5.9, 2.2, .06), frame); back.position.set(0, 1.1, -.72); g.add(back);
+  const roof = new THREE.Mesh(new THREE.PlaneGeometry(5.9, 1.75), poly); roof.rotation.x = -Math.PI / 2 + .16; roof.position.set(0, 2.08, .12); g.add(roof);
+  for (const sx of [-1, 1]) { const sg = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 2.1), poly); sg.rotation.y = Math.PI / 2; sg.position.set(sx * 2.95, 1.05, .1); g.add(sg); const bar = new THREE.Mesh(new THREE.BoxGeometry(.06, 2.15, .06), frame); bar.position.set(sx * 2.95, 1.07, .92); g.add(bar); }
+  const fb = new THREE.Mesh(new THREE.BoxGeometry(5.96, .07, .07), frame); fb.position.set(0, 1.94, .96); g.add(fb);
+  return g;
+}
+function g3StMat(p, night) {
+  const K = '_m' + p.mat + (night ? 'n' : 'd'); if (G3ST[K]) return G3ST[K];
+  let m;
+  if (p.mat === 'light_cold') m = night ? new THREE.MeshBasicMaterial({ color: 0xfffbea }) : new THREE.MeshStandardMaterial({ color: 0xc9d0d8, roughness: .3, metalness: .1, emissive: 0x20262c });
+  else m = new THREE.MeshStandardMaterial({ color: p.col.clone(), roughness: /metal/i.test(p.mat) ? .5 : .6, metalness: /metal/i.test(p.mat) ? .35 : 0 });
+  G3ST[K] = m; return m;
+}
+// habille le stade du match dès que les pièces sont chargées (appelé à chaque image, ne fait rien une fois fait)
+function g3StDress(S3) {
+  const U = S3 && S3.userData, st = U && U.st; if (!st || U.dressed) return;
+  const md = G3ST.model; if (!md) { if (G3ST.fail) U.dressed = true; else g3StLoad(); return; }
+  U.dressed = true;
+  try {
+    const { cls, night } = st, low = g3Low(), m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), v = new THREE.Vector3(), sc = new THREE.Vector3(), Y = new THREE.Vector3(0, 1, 0);
+    // mâts d'éclairage du modèle, projecteurs tournés vers le rond central
+    if (cls <= 2 && md.pylone) {
+      if (st.mastG) { S3.remove(st.mastG); g3Dispose(st.mastG); st.mastG = null; }
+      const pts = cls === 0 ? [[-57, -47], [57, -47], [-57, 47], [57, 47]] : [[-66, -52], [66, -52], [-66, 52], [66, 52]], H = cls === 0 ? 19 : cls === 1 ? 29 : 40;
+      const head = md.pylone.find(p => p.mat === 'light_cold'), hc = head ? head.geo.boundingBox.getCenter(new THREE.Vector3()) : new THREE.Vector3(0, .97, 0);
+      for (const p of md.pylone) {
+        const im = new THREE.InstancedMesh(p.geo, g3StMat(p, night), pts.length);
+        pts.forEach(([x, z], i) => { q.setFromAxisAngle(Y, Math.atan2(-x, -z)); m4.compose(v.set(x, 0, z), q, sc.set(H, H, H)); im.setMatrixAt(i, m4); });
+        im.castShadow = false; S3.add(im);
+      }
+      G3.lamps = pts.map(([x, z]) => { const a = Math.atan2(-x, -z), c = Math.cos(a), s = Math.sin(a); return [x + (hc.x * c + hc.z * s) * H, hc.y * H, z + (-hc.x * s + hc.z * c) * H]; });
+      if (night) for (const [x, y, z] of G3.lamps) g3Glow(S3, x * .985, y, z * .985, cls === 0 ? 13 : cls === 1 ? 22 : 28);
+    }
+    // sièges des tribunes (petits stades) : un vrai siège coque à chaque place
+    const sp = cls === 0 ? md.siege : md.siege_b, n = st.seats ? st.seats.length / 4 : 0;
+    if (sp && n && !(low && cls === 1)) for (const p of sp) {
+      const mat = new THREE.MeshLambertMaterial({ color: cls === 0 ? p.col : st.seatCol });
+      const im = new THREE.InstancedMesh(p.geo, mat, n);
+      for (let i = 0; i < n; i++) { const S = st.seats; q.setFromAxisAngle(Y, S[i * 4 + 3]); m4.compose(v.set(S[i * 4], S[i * 4 + 1], S[i * 4 + 2]), q, sc.set(1, 1, 1)); im.setMatrixAt(i, m4); }
+      S3.add(im);
+    }
+    // bancs de touche, de part et d'autre de la ligne médiane (côté tribune principale)
+    if (md.banc) for (const x of [-8.6, 8.6]) g3Dugout(S3, md, x, -39.6, night);
+  } catch (e) { console.warn('stade 3D', e); }
+}
+
+// ===== src/m3dnet.js =====
+// ---------- Filets de but : une vraie toile qui ondule ----------
+// Chaque filet est une grille de nœuds (toit + fond, et deux côtés). Chaque nœud se déplace le long de la normale de la toile
+// selon une onde amortie : le ballon qui entre pousse la toile (elle se creuse autour de lui), l'onde se propage puis s'éteint ;
+// un ballon qui tombe sur le toit ou frappe le côté de l'extérieur l'enfonce vers l'intérieur ; un léger vent fait respirer le filet.
+// Forme « à l'européenne » : toit court, fond incliné jusqu'au sol. Repère local : x = profondeur derrière la ligne, y = hauteur, z = largeur.
+const G3NET = { R: 1.0, B: 1.9, H: 2.44, W: 3.66, mesh: .12 };
+function g3NetTex() {
+  if (G3NET.tex) return G3NET.tex;
+  const [c, x] = g3Canvas(64, 64); x.clearRect(0, 0, 64, 64); x.strokeStyle = 'rgba(255,255,255,.95)'; x.lineWidth = 5; x.strokeRect(0, 0, 64, 64);
+  x.fillStyle = '#fff'; for (const [a, b] of [[0, 0], [64, 0], [0, 64], [64, 64]]) { x.beginPath(); x.arc(a, b, 5, 0, 7); x.fill(); } // nœuds
+  const t = g3Tex(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; G3NET.tex = t; return t;
+}
+// une toile : (nu+1)×(nv+1) nœuds ; f(i, j) → [x, y, z] au repos ; bord fixé (poteaux, barre, sol, coutures)
+function g3NetSheet(nu, nv, f, inside, side) {
+  const n = (nu + 1) * (nv + 1), rest = new Float32Array(n * 3), nrm = new Float32Array(n * 3), uv = new Float32Array(n * 2), pin = new Uint8Array(n), lo = [1e9, 1e9, 1e9], hi = [-1e9, -1e9, -1e9];
+  for (let j = 0; j <= nv; j++) for (let i = 0; i <= nu; i++) { const k = j * (nu + 1) + i, p = f(i, j); rest.set(p.slice(0, 3), k * 3); uv[k * 2] = p[3] / G3NET.mesh; uv[k * 2 + 1] = p[4] / G3NET.mesh; pin[k] = i === 0 || j === 0 || i === nu || j === nv ? 1 : 0; for (let a = 0; a < 3; a++) { lo[a] = Math.min(lo[a], p[a]); hi[a] = Math.max(hi[a], p[a]); } }
+  // normales vers l'extérieur du but (différences centrées sur la grille)
+  const P = k => [rest[k * 3], rest[k * 3 + 1], rest[k * 3 + 2]];
+  for (let j = 0; j <= nv; j++) for (let i = 0; i <= nu; i++) {
+    const k = j * (nu + 1) + i, a = P(j * (nu + 1) + Math.min(nu, i + 1)), b = P(j * (nu + 1) + Math.max(0, i - 1)), c = P(Math.min(nv, j + 1) * (nu + 1) + i), d = P(Math.max(0, j - 1) * (nu + 1) + i);
+    const du = [a[0] - b[0], a[1] - b[1], a[2] - b[2]], dv = [c[0] - d[0], c[1] - d[1], c[2] - d[2]];
+    let x = du[1] * dv[2] - du[2] * dv[1], y = du[2] * dv[0] - du[0] * dv[2], z = du[0] * dv[1] - du[1] * dv[0]; const l = Math.hypot(x, y, z) || 1; x /= l; y /= l; z /= l;
+    const p = P(k); if ((p[0] - inside[0]) * x + (p[1] - inside[1]) * y + (p[2] - inside[2]) * z < 0) { x = -x; y = -y; z = -z; }
+    nrm[k * 3] = x; nrm[k * 3 + 1] = y; nrm[k * 3 + 2] = z;
+  }
+  const idx = []; for (let j = 0; j < nv; j++) for (let i = 0; i < nu; i++) { const a = j * (nu + 1) + i, b = a + 1, c = a + nu + 1, d = c + 1; idx.push(a, c, b, b, c, d); }
+  return { nu, nv, n, rest, nrm, uv, pin, idx, d: new Float32Array(n), v: new Float32Array(n), lo, hi, side, sd: 0, off: 0 };
+}
+// construit le filet d'un but (dans le groupe du but, placé sur la ligne ; s = ±1 : sens vers l'extérieur du terrain)
+function g3NetBuild(g, s, low, postM) {
+  const { R, B, H, W } = G3NET, h = low ? .3 : .2, sheets = [], inside = [.4, 1, 0];
+  // toit + fond : u sur la largeur, v le long du profil (barre → arrière du toit → sol)
+  const Lb = Math.hypot(B - R, H), nR = Math.max(2, Math.round(R / h)), nB = Math.max(4, Math.round(Lb / h)), nU = Math.round(2 * W / h);
+  const prof = j => { if (j <= nR) return [R * j / nR, H, R * j / nR]; const k = (j - nR) / nB; return [R + (B - R) * k, H * (1 - k), R + k * Lb]; };
+  sheets.push(g3NetSheet(nU, nR + nB, (i, j) => { const [x, y, t] = prof(j), z = -W + 2 * W * i / nU; return [x, y, z, z + W, t]; }, inside, 'main'));
+  // côtés : a = fraction de profondeur, b = fraction de hauteur (trapèze : B au sol, R en haut)
+  const nA = Math.max(4, Math.round(B / h)), nH = Math.max(6, Math.round(H / h));
+  for (const sz of [-1, 1]) sheets.push(g3NetSheet(nA, nH, (i, j) => { const y = H * j / nH, dd = B + (R - B) * y / H, x = dd * i / nA; return [x, y, sz * W, x, y]; }, inside, sz));
+  // une seule géométrie par filet
+  let nv = 0, ni = 0; for (const S of sheets) { S.off = nv; nv += S.n; ni += S.idx.length; }
+  const pos = new Float32Array(nv * 3), uv = new Float32Array(nv * 2), index = new (nv > 65535 ? Uint32Array : Uint16Array)(ni); let o = 0;
+  for (const S of sheets) { for (let k = 0; k < S.n; k++) { pos[(S.off + k) * 3] = s * S.rest[k * 3]; pos[(S.off + k) * 3 + 1] = S.rest[k * 3 + 1]; pos[(S.off + k) * 3 + 2] = S.rest[k * 3 + 2]; } uv.set(S.uv, S.off * 2); for (const q of S.idx) index[o++] = q + S.off; }
+  const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2)); geo.setIndex(new THREE.BufferAttribute(index, 1)); geo.computeVertexNormals();
+  geo.attributes.position.setUsage(THREE.DynamicDrawUsage);
+  const mat = new THREE.MeshLambertMaterial({ map: g3NetTex(), transparent: true, side: THREE.DoubleSide, depthWrite: false, opacity: .95 });
+  const mesh = new THREE.Mesh(geo, mat); mesh.renderOrder = 2; mesh.frustumCulled = false; g.add(mesh);
+  // armature : barres du toit, montants arrière inclinés, barre au sol
+  const tube = (a, b, r) => { const d = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], L = Math.hypot(...d), c = new THREE.CylinderGeometry(r, r, L, 6, 1, true); c.applyMatrix4(new THREE.Matrix4().makeRotationFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(d[0] / L, d[1] / L, d[2] / L)))); c.translate((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2); return c; };
+  const fr = []; for (const z of [-W, W]) { fr.push(tube([0, H, z], [s * R, H, z], .025), tube([s * R, H, z], [s * B, .02, z], .03), tube([0, .02, z], [s * B, .02, z], .025)); }
+  fr.push(tube([s * B, .02, -W], [s * B, .02, W], .025)); const fm = new THREE.Mesh(g3Merge(fr), postM); fm.castShadow = !low; g.add(fm);
+  return { s, sheets, geo, mesh, t: 0, last: null, wind: 0, live: 2 };
+}
+// une étape de simulation pour tous les filets : dt = temps de jeu écoulé (ralenti → filet au ralenti, pause → figé)
+function g3NetUpdate(dt, bx, by, bz, rb) {
+  const nets = G3.nets || []; if (!nets.length) return;
+  if (!(dt > 0)) { for (const N of nets) N.last = null; return; }
+  const steps = Math.min(12, Math.ceil(dt / (1 / 120))), h = Math.min(dt, .12) / steps, wind = G3.netWind || .6;
+  for (const N of nets) {
+    // ballon dans le repère du filet (x = profondeur derrière la ligne)
+    const lx = (bx - N.s * 52.5) * N.s, ly = by, lz = bz, last = N.last; N.last = [lx, ly, lz];
+    const vb = last ? [(lx - last[0]) / dt, (ly - last[1]) / dt, (lz - last[2]) / dt] : [0, 0, 0];
+    let touch = false;
+    for (const S of N.sheets) {
+      const near = lx > S.lo[0] - rb - .7 && lx < S.hi[0] + rb + .7 && ly > S.lo[1] - rb - .7 && ly < S.hi[1] + rb + .7 && lz > S.lo[2] - rb - .7 && lz < S.hi[2] + rb + .7;
+      // de quel côté de la toile est le ballon ? (mémorisé tant qu'il est au contact, pour ne pas « traverser »)
+      if (!near || S.sd === 0) { const { R, B, H, W } = G3NET; S.sd = S.side === 'main' ? (ly < H && lx < B + (R - B) * Math.max(0, ly) / H && Math.abs(lz) < W + .3 ? -1 : 1) : (S.side * lz < W ? -1 : 1); }
+      if (!near) { S.sd = 0; continue; }
+      S.near = true;
+    }
+    for (let st = 0; st < steps; st++) {
+      N.t += h; const T = N.t;
+      for (const S of N.sheets) {
+        const { nu, nv, d, v, pin, rest, nrm } = S, w1 = nu + 1, K = 900, Sk = 28, C = 3.2;
+        for (let j = 1; j < nv; j++) for (let i = 1; i < nu; i++) {
+          const k = j * w1 + i; if (pin[k]) continue;
+          const lap = d[k - 1] + d[k + 1] + d[k - w1] + d[k + w1] - 4 * d[k];
+          const y = rest[k * 3 + 1], z = rest[k * 3 + 2], F = wind * (.6 * Math.sin(1.3 * T + .8 * z + .5 * y) + .4 * Math.sin(2.7 * T - 1.7 * z + y));
+          v[k] += (K * lap - Sk * d[k] - C * v[k] + F) * h;
+        }
+        for (let k = 0; k < S.n; k++) if (!pin[k]) { d[k] += v[k] * h; if (d[k] > 1.1) { d[k] = 1.1; v[k] = Math.min(0, v[k]); } else if (d[k] < -.7) { d[k] = -.7; v[k] = Math.max(0, v[k]); } }
+        // contact avec le ballon : la toile épouse le ballon (creux en cloche autour du point d'impact)
+        if (S.near) {
+          const sg = .28 + rb, side = S.sd;
+          for (let k = 0; k < S.n; k++) {
+            if (pin[k]) continue;
+            const ex = lx - rest[k * 3], ey = ly - rest[k * 3 + 1], ez = lz - rest[k * 3 + 2], r2 = ex * ex + ey * ey + ez * ez; if (r2 > 1.6) continue;
+            const nx = nrm[k * 3], ny = nrm[k * 3 + 1], nz = nrm[k * 3 + 2], sd = ex * nx + ey * ny + ez * nz, lat2 = Math.max(0, r2 - sd * sd), w = Math.exp(-lat2 / (2 * sg * sg));
+            if (w < .02 || (side < 0 ? sd + rb < -.02 : sd - rb > .02)) continue;
+            const vn = vb[0] * nx + vb[1] * ny + vb[2] * nz;
+            // la toile prend la vitesse du ballon (la moitié : elle freine), ce qui lance l'onde
+            if (side < 0) { const tg = (sd + rb) * w; if (d[k] < tg) { d[k] = tg; v[k] = Math.max(v[k], .5 * Math.max(0, vn) * w); touch = true; } }
+            else { const tg = (sd - rb) * w; if (d[k] > tg) { d[k] = tg; v[k] = Math.min(v[k], .5 * Math.min(0, vn) * w); touch = true; } }
+          }
+        }
+      }
+    }
+    for (const S of N.sheets) S.near = false;
+    // géométrie (seulement si la toile bouge encore de façon visible)
+    let mx = 0; for (const S of N.sheets) for (let k = 0; k < S.n; k++) mx = Math.max(mx, Math.abs(S.d[k]));
+    if (mx < .002 && !touch) { if (N.live-- <= 0) continue; } else N.live = 2;
+    const pa = N.geo.attributes.position.array;
+    for (const S of N.sheets) for (let k = 0; k < S.n; k++) { const o = (S.off + k) * 3, dd = S.d[k]; pa[o] = N.s * (S.rest[k * 3] + S.nrm[k * 3] * dd); pa[o + 1] = S.rest[k * 3 + 1] + S.nrm[k * 3 + 1] * dd; pa[o + 2] = S.rest[k * 3 + 2] + S.nrm[k * 3 + 2] * dd; }
+    N.geo.attributes.position.needsUpdate = true; N.geo.computeVertexNormals();
+  }
 }
 
 // ===== src/intro.js =====
@@ -7753,6 +8005,8 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const UI = { screen: 'splash', page: null, tab: 'home', sub: null, arg: null, stack: [], step: 0, create: { first: '', last: '', num: 10, foot: 'Droit', nat: 'FRA', city: 'Paris', pos: 'AIL', fam: null, diff: 1, pref: 'F' }, load: null, tblL: null, trialL: null, calM: 0, calSel: null, eInt: 'N', nego: null, adv: null, anim: null, agentList: null, lspeed: 1, lt: null, cardImg: null };
 let MODAL = null, TOAST_T = null;
 const OPTS_KEY = 'cdo2_opts';
+// caméras du match en 3D : [clé, nom court, description]
+const CAM_VIEWS = [['tv', 'TV', 'Caméra TV'], ['large', 'Large', 'Caméra large'], ['tac', 'Tactique', 'Vue tactique : les lignes des deux équipes'], ['joueur', 'Mon joueur', 'Caméra derrière ton joueur'], ['but', 'Derrière le but', 'Caméra derrière le but'], ['bord', 'Bord du terrain', 'Caméra au bord du terrain'], ['drone', 'Drone', 'Caméra drone au-dessus de l\'action']];
 const OPT_DEF = { live: 'all', speed: 1, music: true, mvol: .55, svol: .8, shuffle: true, mg: true, interrupt: 'all', voice: true, replay: 'all', gfx: '3d', cam: 'tv', chat: 'all', v1: '', v2: '', aiv: 'off', aivMode: 'all', aivS: '', aivN: '', aivM: 'eleven_flash_v2_5', aivEL: [], intro: true };
 function loadOpts() { try { return Object.assign({}, OPT_DEF, JSON.parse(localStorage.getItem(OPTS_KEY) || '{}')); } catch (e) { return Object.assign({}, OPT_DEF); } }
 let OPTS = loadOpts();
@@ -8590,7 +8844,7 @@ function vHelp() {
 function vCredits() {
   return `<section class="card sec"><h3>Ce qui est réel</h3><p class="note">Clubs, entraîneurs, sélectionneurs et effectifs principaux de la saison 2026-27, mis à jour au 11 octobre 2026 (mercato d'été 2026 compris). Coupe du monde 2026 : ${REAL_FACTS.wc2026}. Ballon d'Or 2025 : ${REAL_FACTS.bdo2025}.</p></section>
   <section class="card sec"><h3>Ce qui est simulé</h3><p class="note">Tous les résultats à partir du début de ta carrière, le Ballon d'Or 2026 (cérémonie réelle le ${REAL_FACTS.bdo2026date}), les transferts futurs, les jeunes joueurs générés, les sponsors (marques fictives) et ta vie.</p></section>
-  ${typeof JOUEUR_3D !== 'undefined' && JOUEUR_3D ? `<section class="card sec"><h3>Joueurs en 3D</h3><p class="note">Modèle « ${esc(JOUEUR_3D.name)} » par ${esc(String(JOUEUR_3D.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(JOUEUR_3D.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(JOUEUR_3D.source || 'Sketchfab')}. Adapté pour le jeu : allégé, squelette et animations du jeu, couleurs des clubs.</p></section>` : ''}
+  ${typeof JOUEUR_3D !== 'undefined' && JOUEUR_3D ? `<section class="card sec"><h3>Joueurs en 3D</h3><p class="note">Modèle « ${esc(JOUEUR_3D.name)} » par ${esc(String(JOUEUR_3D.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(JOUEUR_3D.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(JOUEUR_3D.source || 'Sketchfab')}. Adapté pour le jeu : allégé, squelette et animations du jeu, couleurs des clubs.</p></section>` : ''}${typeof STADE_3D !== 'undefined' && STADE_3D ? `<section class="card sec"><h3>Stade en 3D</h3><p class="note">Mâts d'éclairage, sièges et bancs de touche tirés du modèle « ${esc(STADE_3D.name)} » par ${esc(String(STADE_3D.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(STADE_3D.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(STADE_3D.source || 'Sketchfab')}. Adapté pour le jeu : pièces allégées et remises à l'échelle, placées autour du terrain.</p></section>` : ''}
   <section class="card sec"><h3>Crampons d'Or</h3><p class="note">Un simulateur de carrière pensé pour iPhone. Ajoute-le à l'écran d'accueil depuis Safari pour l'avoir comme une app : il marche aussi hors connexion et se met à jour tout seul.</p><p class="note">Version ${typeof GAME_VERSION !== 'undefined' ? GAME_VERSION : 'dev'}${typeof VOIX_INDEX !== 'undefined' ? ' · ' + Object.keys(VOIX_INDEX).length + ' répliques enregistrées' : ''}</p></section>`;
 }
 
@@ -8913,7 +9167,8 @@ const ACT = {
   optChat: v => { OPTS.chat = v === 'match' ? 'match' : 'all'; saveOpts(); render(); toast(v === 'match' ? 'Commentaires : le match seulement.' : 'Commentaires : Lo Sol peut raconter sa vie.'); },
   optReplay: v => { OPTS.replay = v; saveOpts(); render(); },
   optGfx: v => { OPTS.gfx = v; if (typeof G3 !== 'undefined') { G3.lowAuto = false; G3.fail = false; } saveOpts(); render(); },
-  lCam: () => { const L = ['tv', 'large', 'tac'], c = OPTS.cam || 'tv'; OPTS.cam = L[(L.indexOf(c) + 1) % L.length]; saveOpts(); render(); toast({ tv: 'Caméra TV', large: 'Caméra large', tac: 'Vue tactique : les lignes des deux équipes' }[OPTS.cam]); },
+  lCam: () => { UI.lcam = !UI.lcam; render(); },
+  lCamSet: v => { if (!CAM_VIEWS.some(c => c[0] === v)) return; OPTS.cam = v; saveOpts(); UI.lcam = false; render(); toast(CAM_VIEWS.find(c => c[0] === v)[2]); },
   lvTap: () => lvTap(),
   lDone: () => {
     clearInterval(UI.lt); lvStop(); LV.M = null; UI.lend = 'sum'; liveEnd(); UI.screen = 'game'; UI.tab = 'home'; UI.sub = null;
@@ -9058,10 +9313,12 @@ function vLive() {
     if (panel) sheet = `<div class="lsheet${M.last && !M.pending && !M.shoot && !M.press && !M.half ? ' res' : ''}"><div class="shb">${panel}</div></div>`;
     else if (UI.lstat) { const tb = UI.lstat === 'fd' ? 'fd' : 'st'; sheet = `<div class="lsheet"><div class="row"><div class="seg grow">${[['st', 'Stats'], ['fd', 'Fil du match']].map(([k, n]) => `<button data-a="lStatTab" data-v="${k}" class="${tb === k ? 'on' : ''}">${n}</button>`).join('')}</div><button class="ib" data-a="lStat" aria-label="Fermer">${icon('close')}</button></div><div class="shb">${tb === 'st' ? vLiveStats(M) : `<div class="lfeed" id="lFeed">${vFeed(M, 40)}</div>`}</div>${!M.done ? '<button class="btn wide" data-a="lAuto">Résultat direct (finir sans regarder)</button>' : ''}</div>`; }
   }
-  const cam = M.eng && !LV.off && typeof g3On === 'function' && g3On() ? `<button class="ib" data-a="lCam" aria-label="Changer de caméra">${icon('cam')}</button>` : '';
+  const has3d = M.eng && !LV.off && typeof g3On === 'function' && g3On(), cur = OPTS.cam || 'tv';
+  const cam = has3d ? `<button class="ib${UI.lcam ? ' on' : ''}" data-a="lCam" aria-label="Choisir la caméra">${icon('cam')}</button>` : '';
+  const camPick = has3d && UI.lcam && !M.done ? `<div class="campick" role="menu" aria-label="Caméras"><b>Caméra</b>${CAM_VIEWS.map(([k, n]) => `<button data-a="lCamSet" data-v="${k}" class="${cur === k ? 'on' : ''}" role="menuitemradio" aria-checked="${cur === k}">${n}</button>`).join('')}</div>` : '';
   const bar = M.done ? `<div class="lbar">${liveStatus(M)}<span class="grow"></span>${snd}</div>`
     : `<div class="lbar"><div class="seg spd">${['×1', '×2', '×4', '×8', 'Résumé'].map((t, i) => `<button data-a="lSpeed" data-v="${i}" class="${(UI.lspeed ?? 1) === i ? 'on' : ''}" aria-label="${i < 4 ? 'Vitesse ' + t : 'Temps forts seulement'}">${t}</button>`).join('')}</div>${cam}<button class="ib${UI.lstat ? ' on' : ''}" data-a="lStat" aria-label="Stats et fil du match">${icon('chart')}</button>${snd}</div>`;
-  return `<div class="live lv2">${liveHead(M, P)}<div class="lstage">${view}${sheet}</div>${comBox}<div class="lfoot">${M.done ? '' : liveStatus(M)}${M.cond ? `<span class="lcond">${esc(condTxt(M.cond).replace(/ spectateurs/, ' spect.'))}</span>` : ''}</div>${bar}</div>`;
+  return `<div class="live lv2">${liveHead(M, P)}<div class="lstage">${view}${sheet}${camPick}</div>${comBox}<div class="lfoot">${M.done ? '' : liveStatus(M)}${M.cond ? `<span class="lcond">${esc(condTxt(M.cond).replace(/ spectateurs/, ' spect.'))}</span>` : ''}</div>${bar}</div>`;
 }
 // boîte de commentaire : qui parle (Lo Sol / Nathalie), la réplique en cours et la précédente
 function vComL(x) { const w = x.who === 'N' || x.who === 'P' ? x.who : 'S', t = x.song ? '♪ ' + String(x.txt).split('/').map(v => v.trim()).join(' ♪ ') + ' ♪' : x.txt; return `<i class="who ${w.toLowerCase()}">${typeof CM_WHO !== 'undefined' ? CM_WHO[w] : ''}</i>${esc(t)}`; }

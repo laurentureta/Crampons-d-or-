@@ -14,6 +14,7 @@ Sur iPhone, ouvre le lien dans Safari puis *Partager → Sur l'écran d'accueil*
 | `assets/sons/` | Bruitages (frappe, poteau, filet, sifflet…), fabriqués sur ElevenLabs |
 | `assets/voix/` | Répliques enregistrées des commentateurs et personnages + `index.json` |
 | `assets/joueur/` | Le modèle 3D des joueurs (géométrie, textures, squelette) préparé par `tools/joueur3d.py` |
+| `assets/stade/` | Les pièces 3D du stade (mâts d'éclairage, sièges, bancs de touche) préparées par `tools/stade3d.py` |
 | `assets/icones/` | Icônes de l'app |
 | `lib/` | Three.js (3D) |
 | `tools/build.js` | Fabrique le jeu publié à partir de `src/` et `assets/` |
@@ -71,6 +72,17 @@ node tools/build.js
 ```
 
 Les 25 joueurs sont dessinés en une seule fois par pièce (instanciation + texture d'os) ; les animations restent celles du jeu (`g3Pose`).
+
+## Stade, filets et caméras en 3D
+
+Les mâts d'éclairage, les sièges des tribunes et les bancs de touche viennent du modèle **« football stade »** par **mohamed ouartassi** ([Sketchfab](https://sketchfab.com/3d-models/football-stade-cda2fcbaefb84fa280a5bf7213c67a71)), sous licence [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/). Le modèle d'origine est un city-stade aux échelles mélangées (900 000 triangles) : `tools/stade3d.py` en extrait seulement ces pièces, les allège (gltfpack) et les ramène à leur taille réelle (60 Ko dans `assets/stade/`) ; le jeu les place lui-même autour du terrain (`src/m3dst.js`) — mâts aux quatre coins, un vrai siège à chaque place des petites tribunes, bancs de touche sous abri. Clôtures, main courante et pare-ballons sont dessinés par le jeu.
+
+```sh
+GLTFPACK=chemin/vers/gltfpack python3 tools/stade3d.py football_stade.glb
+node tools/build.js
+```
+
+Les filets de but (`src/m3dnet.js`) sont une toile de nœuds qui ondule : le ballon la creuse, l'onde se propage puis s'amortit, un ballon sur le toit ou dans le petit filet l'enfonce de l'extérieur, et le vent la fait respirer (plus fort sous la pluie). Caméras au choix pendant le match : TV, Large, Tactique, Mon joueur, Derrière le but, Bord du terrain, Drone.
 
 ## Pépites et Boutique
 

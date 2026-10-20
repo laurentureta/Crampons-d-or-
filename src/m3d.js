@@ -174,18 +174,13 @@ function g3Match(M) {
   // buts et filets
   G3.nets = [];
   const postM = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .35, metalness: .1 });
-  const [nc, nx2] = g3Canvas(64, 64); nx2.strokeStyle = 'rgba(255,255,255,.85)'; nx2.lineWidth = 3; for (let i = 0; i <= 64; i += 16) { nx2.beginPath(); nx2.moveTo(i, 0); nx2.lineTo(i, 64); nx2.moveTo(0, i); nx2.lineTo(64, i); nx2.stroke(); }
+  G3.netWind = wet || snow ? 1.7 : .6;
   for (const s of [-1, 1]) {
     const gx = s * 52.5, g = new THREE.Group(); g.position.x = gx; S3.add(g);
     const post = new THREE.CylinderGeometry(.06, .06, 2.44, 10); post.translate(0, 1.22, 0);
     for (const z of [-3.72, 3.72]) { const m = new THREE.Mesh(post, postM); m.position.z = z; m.castShadow = true; g.add(m); }
     const bar = new THREE.Mesh(new THREE.CylinderGeometry(.06, .06, 7.56, 10), postM); bar.rotation.x = Math.PI / 2; bar.position.y = 2.44; bar.castShadow = true; g.add(bar);
-    const depth = 2, nm = new THREE.MeshBasicMaterial({ map: g3Tex(nc, [14, 5]), transparent: true, side: THREE.DoubleSide, depthWrite: false, opacity: .9 });
-    const back = new THREE.PlaneGeometry(7.44, 2.3, 18, 8); back.rotateY(Math.PI / 2); back.translate(s * depth, 1.15, 0); const bm = new THREE.Mesh(back, nm); g.add(bm);
-    const topG = new THREE.PlaneGeometry(depth, 7.44, 4, 12); topG.rotateX(-Math.PI / 2); topG.translate(s * depth / 2, 2.38, 0); g.add(new THREE.Mesh(topG, nm));
-    for (const z of [-3.72, 3.72]) { const sg = new THREE.PlaneGeometry(depth, 2.4, 3, 4); sg.translate(s * depth / 2, 1.2, z); g.add(new THREE.Mesh(sg, nm)); }
-    const sup = new THREE.CylinderGeometry(.03, .03, 3.1, 6); for (const z of [-3.72, 3.72]) { const m = new THREE.Mesh(sup, postM); m.position.set(s * depth / 2, 1.2, z); m.rotation.z = s * Math.atan2(depth, 2.4); g.add(m); }
-    G3.nets.push({ s, geo: back, base: back.attributes.position.array.slice(), amp: 0 });
+    G3.nets.push(g3NetBuild(g, s, low, postM)); // filet déformable (m3dnet.js)
   }
   // poteaux de corner
   for (const x of [-52.5, 52.5]) for (const z of [-34, 34]) { const f = new THREE.Mesh(g3Merge([g3Tint(new THREE.CylinderGeometry(.025, .025, 1.5, 5).translate(0, .75, 0), 0xffffff), g3Tint(new THREE.BoxGeometry(.01, .32, .45).translate(0, 1.33, .23), night ? 0xffd23a : 0xf3c12a)]), new THREE.MeshLambertMaterial({ vertexColors: true })); f.position.set(x, 0, z); S3.add(f); }
@@ -219,23 +214,29 @@ function g3Stands(S3, M, cls, rnd, night) {
   const seatT = g3Tex(sc2);
   const cap = { 0: 400, 1: 6000, 2: 30000, 3: 80000 }[cls], fill = clamp(att / cap, .05, 1), perM2 = cls === 0 ? .7 : 1;
   const people = []; let budget = clamp(Math.round(att / (cls >= 2 ? 22 : cls === 1 ? 4 : 1)), 30, g3Low() ? 1800 : 3600);
-  const totalArea = stands.reduce((a, s) => a + s[3] * s[4], 0);
+  const totalArea = stands.reduce((a, s) => a + s[3] * s[4], 0), seats = [];
   for (const [x, z, ry, len, dep, h0, h1] of stands) {
     const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry; S3.add(g);
     // pente (le devant de la tribune est en z = 0, elle s'élève vers -z)
-    const slope = new THREE.PlaneGeometry(len, Math.hypot(dep, h1 - h0)); const a = Math.atan2(h1 - h0, dep); slope.rotateX(-Math.PI / 2 + a); slope.translate(0, (h0 + h1) / 2, -dep / 2);
-    const tex = seatT.clone(); tex.needsUpdate = true; tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(len / 2, Math.max(2, dep / 8));
-    const sm = new THREE.Mesh(slope, new THREE.MeshLambertMaterial({ map: tex })); sm.receiveShadow = !g3Low(); g.add(sm);
+    if (cls <= 1) g.add(g3Terraces(len, dep, h0, h1, Math.max(3, Math.round(dep / .85)), night)); // petits stades : de vraies marches (les sièges du modèle 3D s'y posent)
+    else {
+      const slope = new THREE.PlaneGeometry(len, Math.hypot(dep, h1 - h0)); const a = Math.atan2(h1 - h0, dep); slope.rotateX(-Math.PI / 2 + a); slope.translate(0, (h0 + h1) / 2, -dep / 2);
+      const tex = seatT.clone(); tex.needsUpdate = true; tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(len / 2, Math.max(2, dep / 8));
+      const sm = new THREE.Mesh(slope, new THREE.MeshLambertMaterial({ map: tex })); sm.receiveShadow = !g3Low(); g.add(sm);
+    }
     const front = new THREE.Mesh(new THREE.BoxGeometry(len, h0 + .2, .3), wallM); front.position.set(0, (h0 + .2) / 2, .15); g.add(front);
     const camSide = ry === Math.PI && cls <= 1; // tribune sous la caméra : ni toit ni mur du fond
     if (!camSide) { const back = new THREE.Mesh(new THREE.BoxGeometry(len, h1 + (cls >= 2 ? 6 : 2), .6), wallM); back.position.set(0, (h1 + (cls >= 2 ? 6 : 2)) / 2, -dep - .3); g.add(back); }
     for (const sx2 of [-1, 1]) { const tg = new THREE.BufferGeometry(), H = h1 + (cls >= 2 ? 6 : 2); tg.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, .2, 0, h0 + .3, .2, 0, H, -dep - .6, 0, 0, .2, 0, H, -dep - .6, 0, 0, -dep - .6], 3)); tg.computeVertexNormals(); const sw = new THREE.Mesh(tg, sideM); sw.position.x = sx2 * len / 2; g.add(sw); }
-    if (cls >= 1 && !camSide) { const rh = h1 + (cls >= 2 ? 7 : 3), rd = dep * (cls === 3 ? .85 : .7); const roof = new THREE.Mesh(new THREE.BoxGeometry(len + 1, .5, rd), roofM); roof.position.set(0, rh, -dep + rd / 2 - .3); g.add(roof); if (night && cls >= 2) { const strip = new THREE.Mesh(new THREE.BoxGeometry(len * .9, .25, .25), new THREE.MeshBasicMaterial({ color: 0xfff6dc })); strip.position.set(0, rh - .35, -dep + rd); g.add(strip); } for (let i = -2; i <= 2; i++) { const pil = new THREE.Mesh(new THREE.BoxGeometry(.4, rh, .4), roofM); pil.position.set(i * len / 5, rh / 2, -dep - .2); g.add(pil); } }
+    if (cls >= 1 && !camSide && ry !== Math.PI) { const rh = h1 + (cls >= 2 ? 7 : 3), rd = dep * (cls === 3 ? .85 : .7); const roof = new THREE.Mesh(new THREE.BoxGeometry(len + 1, .5, rd), roofM); roof.position.set(0, rh, -dep + rd / 2 - .3); g.add(roof); if (night && cls >= 2) { const strip = new THREE.Mesh(new THREE.BoxGeometry(len * .9, .25, .25), new THREE.MeshBasicMaterial({ color: 0xfff6dc })); strip.position.set(0, rh - .35, -dep + rd); g.add(strip); } for (let i = -2; i <= 2; i++) { const pil = new THREE.Mesh(new THREE.BoxGeometry(.4, rh, .4), roofM); pil.position.set(i * len / 5, rh / 2, -dep - .2); g.add(pil); } }
     // public : réparti selon la surface et l'affluence
-    const n = Math.round(budget * len * dep / totalArea), rows = Math.max(3, Math.round(dep / .85)), perRow = Math.max(4, Math.round(len / .62));
+    const n = Math.round(budget * len * dep / totalArea), rows = Math.max(3, Math.round(dep / .85)), perRow = Math.max(4, Math.round(len / .62)), taken = cls <= 1 ? new Set() : null;
+    const toW = (lx, ld) => [x + Math.cos(ry) * lx - Math.sin(ry) * ld, z - Math.sin(ry) * lx - Math.cos(ry) * ld];
+    if (taken) for (let r = 0; r < rows; r++) for (let c = 0; c < perRow; c++) { const lx = -len / 2 + (c + .5) * len / perRow, ld = (r + .5) * dep / rows, [wx, wz] = toW(lx, ld); seats.push(wx, h0 + (h1 - h0) * ld / dep, wz, ry); }
     for (let k = 0; k < n; k++) {
       let r, c; if (fill > .85) { r = Math.floor(rnd() * rows); c = Math.floor(rnd() * perRow); } else { r = Math.floor(Math.pow(rnd(), 1.4) * rows); c = Math.floor((.5 + (rnd() - .5) * Math.min(1, fill * 1.6)) * perRow); }
-      const lx = -len / 2 + (c + .5) * len / perRow + (rnd() - .5) * .2, ld = (r + .5) * dep / rows, ly = h0 + (h1 - h0) * ld / dep;
+      if (taken) { let key = r * perRow + c, tries = 0; while (taken.has(key) && tries++ < 8) { c = (c + 1) % perRow; key = r * perRow + c; } if (taken.has(key)) continue; taken.add(key); }
+      const lx = -len / 2 + (c + .5) * len / perRow + (taken ? 0 : (rnd() - .5) * .2), ld = (r + .5) * dep / rows, ly = h0 + (h1 - h0) * ld / dep;
       const wx = x + Math.cos(ry) * lx - Math.sin(ry) * ld, wz = z - Math.sin(ry) * lx - Math.cos(ry) * ld;
       const col = rnd() < (C.derby ? .5 : .62) ? (rnd() < .82 ? hc : oc) : new THREE.Color().setHSL(rnd(), .15 + rnd() * .3, .25 + rnd() * .5);
       people.push([wx, ly, wz, ry, col, rnd()]);
@@ -256,19 +257,23 @@ function g3Stands(S3, M, cls, rnd, night) {
     people.forEach(([x, y, z, ry, col, r], i) => { q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), ry + Math.PI + (r - .5) * .4); const s = .9 + r * .25; one.set(s, s, s); m4.compose(v.set(x, y, z), q, one); im.setMatrixAt(i, m4); im.setColorAt(i, col); ph[i] = r; });
     S3.add(im);
   }
-  // pylônes d'éclairage (ou poteaux pour les petits terrains)
+  // pylônes d'éclairage (ou poteaux pour les petits terrains) — remplacés par les mâts du modèle 3D dès qu'il est chargé
+  let mastG = null;
   if (cls <= 2) {
     const pts = cls === 0 ? [[-40, -45], [0, -46], [40, -45], [-40, 45], [0, 46], [40, 45]] : [[-66, -52], [66, -52], [-66, 52], [66, 52]];
-    const hgt = cls === 0 ? 16 : cls === 1 ? 30 : 42, mastM = new THREE.MeshLambertMaterial({ color: 0x6b7178 }), lampM = new THREE.MeshBasicMaterial({ color: night ? 0xfffbea : 0xd7dbe0 });
-    for (const [x, z] of pts) { const m = new THREE.Mesh(new THREE.CylinderGeometry(.25, .45, hgt, 8), mastM); m.position.set(x, hgt / 2, z); S3.add(m); const p = new THREE.Mesh(new THREE.BoxGeometry(cls === 0 ? 1.5 : 5, cls === 0 ? 1 : 3.5, .4), lampM); p.position.set(x, hgt + 1, z); p.lookAt(0, 0, 0); S3.add(p); if (night) g3Glow(S3, x * .98, hgt + 1, z * .98, cls === 0 ? 10 : 26); }
+    const hgt = cls === 0 ? 16 : cls === 1 ? 30 : 42, mastM = new THREE.MeshLambertMaterial({ color: 0x6b7178 }), lampM = new THREE.MeshBasicMaterial({ color: night ? 0xfffbea : 0xd7dbe0 }), mg = new THREE.Group(); S3.add(mg); mastG = mg;
+    for (const [x, z] of pts) { const m = new THREE.Mesh(new THREE.CylinderGeometry(.25, .45, hgt, 8), mastM); m.position.set(x, hgt / 2, z); mg.add(m); const p = new THREE.Mesh(new THREE.BoxGeometry(cls === 0 ? 1.5 : 5, cls === 0 ? 1 : 3.5, .4), lampM); p.position.set(x, hgt + 1, z); p.lookAt(0, 0, 0); mg.add(p); if (night) g3Glow(mg, x * .98, hgt + 1, z * .98, cls === 0 ? 10 : 26); }
     G3.lamps = pts.map(([x, z]) => [x, hgt, z]);
   } else { G3.lamps = [[-58, 30, -46], [58, 30, -46], [-58, 30, 46], [58, 30, 46]]; if (night) for (const [x, y, z] of G3.lamps) g3Glow(S3, x, y, z, 20); }
   // petits terrains : arbres et barrière
   if (cls === 0) {
     const tr = new THREE.InstancedMesh(g3Merge([g3Tint(new THREE.CylinderGeometry(.2, .3, 3, 6).translate(0, 1.5, 0), 0x5a4026), g3Tint(new THREE.ConeGeometry(2.4, 6, 8).translate(0, 5.5, 0), 0x2f5a2c)]), new THREE.MeshLambertMaterial({ vertexColors: true }), 40);
     const m4 = new THREE.Matrix4(); for (let i = 0; i < 40; i++) { const a = i / 40 * Math.PI * 2, rr = 78 + rnd() * 20; m4.makeTranslation(Math.cos(a) * rr, 0, Math.sin(a) * rr * .75); tr.setMatrixAt(i, m4); } S3.add(tr);
-    const fence = new THREE.MeshLambertMaterial({ color: 0x9aa0a6 }); for (const [w, x, z, ry] of [[120, 0, -40, 0], [120, 0, 40, 0], [84, -60, 0, Math.PI / 2], [84, 60, 0, Math.PI / 2]]) { const f = new THREE.Mesh(new THREE.BoxGeometry(w, 1.1, .08), fence); f.position.set(x, .55, z); f.rotation.y = ry; S3.add(f); }
   }
+  // main courante, grillage et pare-ballons (petits stades)
+  if (cls <= 1) g3StFence(S3, cls, night);
+  // ce qu'il faut pour « habiller » le stade avec les vraies pièces 3D (mâts, sièges, bancs) dès qu'elles sont chargées
+  S3.userData.st = { cls, night, seats: seats.length ? new Float32Array(seats) : null, seatCol: hc.clone().multiplyScalar(.6), mastG };
   // écran géant (grands stades)
   if (cls >= 2) { const [c, x] = g3Canvas(512, 160); G3.sb = { c, x, t: g3Tex(c) }; const scr = new THREE.Mesh(new THREE.PlaneGeometry(16, 5), new THREE.MeshBasicMaterial({ map: G3.sb.t })); scr.position.set(-(cls === 3 ? 59 + 30 : 59 + 17), cls === 3 ? 30 : 17, -10); scr.rotation.y = Math.PI / 2; S3.add(scr); } else G3.sb = null;
   // fumigènes (derbies)
@@ -409,6 +414,14 @@ function g3Camera(M, t, dt, bx, bz, by, paused, celeb) {
   if (RC === 'goal') { const e = RP.end; px = e * (52.5 + 5.5); py = 3.4; pz = clamp(C.tz * .4, -6, 6); lx = C.tx * .8 + e * 52.5 * .2; ly = 1; lz = C.tz; fov = 48; }
   else if (RC === 'cine') { const e = RP.end, sd = RP.sd || 1; px = C.tx - e * 9; py = 1.7; pz = C.tz + sd * 11; lx = C.tx + e * 4; ly = 1.1; lz = C.tz; fov = 38; }
   else if (celeb) { const B = G3.camB || [74, 16]; px = celeb[0] * .85; py = B[1]; pz = B[0]; lx = celeb[0]; ly = 1; lz = celeb[1]; fov = 9; }
+  else if (view === 'joueur' && G3.me) { // derrière ton joueur, dans le sens de l'attaque
+    const me = G3.me; if (C.mx == null || paused) { C.mx = me.x; C.mz = me.z; } C.mx += (me.x - C.mx) * k * 1.4; C.mz += (me.z - C.mz) * k * 1.4; C.md = C.md == null ? me.dir : C.md + (me.dir - C.md) * k * .5;
+    px = C.mx - C.md * 10; py = 4.6; pz = C.mz + (C.tz - C.mz) * .15; lx = C.mx + C.md * 12; ly = .4; lz = C.mz + (C.tz - C.mz) * .4; fov = 54; }
+  else if (view === 'drone') { const sw = Math.sin(t * .05) * 7; px = C.tx * .9 + sw; py = 25; pz = C.tz + 21; lx = C.tx; ly = 0; lz = C.tz - 2; fov = 46; }
+  else if (view === 'but') { // derrière le but du côté du ballon (change de côté quand le jeu bascule)
+    if (!C.gs || Math.abs(C.tx) > 10 && Math.sign(C.tx) !== C.gs) C.gs = Math.sign(C.tx) || 1; const e = C.gs;
+    px = e * 60; py = 5.4; pz = clamp(C.tz * .25, -6, 6); lx = C.tx * .9 + e * 3; ly = 0; lz = C.tz * .8; fov = 48; }
+  else if (view === 'bord') { px = clamp(C.tx * .92, -50, 50); py = 3.3; pz = 40.5; lx = C.tx; ly = .8; lz = C.tz * .85; fov = 40 + Math.min(8, Math.max(0, 15 - Math.abs(41 - C.tz)) * .5); }
   else if (view === 'tac') { const cx = clamp(C.tx * .6, -22, 22); px = cx; py = 92; pz = 30; lx = cx; ly = 0; lz = 3; fov = 46; }
   else if (view === 'large') { const cx = clamp(C.tx * .85, -34, 34), B = G3.camB || [74, 16]; px = cx * .9; py = (B[1] + 8) * (1 + .6 * pf); pz = (B[0] + 2) * (1 - .1 * pf); lx = cx; ly = 0; lz = C.tz * .35 - pf * 7; fov = 33; }
   else { const cx = clamp(C.tx, -40, 40), near = Math.abs(bx) > 34 ? 1 : 0, B = G3.camB || [74, 16], fd = Math.hypot(B[0], B[1]) / 78; px = cx * .9; py = B[1] * (1 + .85 * pf); pz = B[0] * (1 - .1 * pf); lx = cx; ly = Math.min(3, by * .3); lz = C.tz * .55 - 2 + pf * 4; fov = (18.5 - near * 1.5 + Math.min(3, Math.abs(bz) * .04) + (LV.spd > 6 ? 4 : 0) + (paused ? -1 : 0)) / fd; }
@@ -433,7 +446,7 @@ function g3Draw(M, t, dt, paused) {
   const pr = lvPair(t); if (!pr) return false;
   const [fa, fb, a] = pr, L = i => fa[i] + (fb[i] - fa[i]) * a, mir = fa[2] === 2, E = M.E, P = G3.P;
   const X = x => (mir ? PL - x : x) - 52.5, Z = y => (mir ? PW - y : y) - 34, YAW = f => mir ? f + Math.PI : f;
-  g3SkAttach(P);
+  g3SkAttach(P); g3StDress(G3.stad);
   const ros = LV.ros[fa[8]] || LV.ros[Object.keys(LV.ros).pop()] || meRoster(E); g3Kits(M, ros);
   // temps de jeu écoulé depuis l'image précédente (phases de course)
   const snap = G3.lastT == null || Math.abs(t - G3.lastT) > 1;
@@ -443,7 +456,7 @@ function g3Draw(M, t, dt, paused) {
   g3BallSkin();
   const bx = X(L(3)), bz = Z(L(4)), by = L(5), own = fa[6] >= 0 ? [fa[6], fa[7]] : null, hold = fa[10] > .5;
   const fdt = Math.max(.05, fb[0] - fa[0]);
-  let celeb = null, meIdx = -1;
+  let celeb = null, meIdx = -1; G3.me = null;
   for (let kk = 0; kk < 2; kk++) for (let i = 0; i < 11; i++) {
     const n = kk * 11 + i, o = MF_H + n * MF_S;
     if (fa[o + 2] < .5 && fb[o + 2] < .5) { g3Hide(P, n); continue; }
@@ -461,7 +474,7 @@ function g3Draw(M, t, dt, paused) {
     if (act === 5) st.aa = (mir ? -1 : 1) * fa[o + 6] * (Math.cos(yaw) >= 0 ? 1 : -1);
     g3Pose(P, n, st);
     if (act === 8 && at >= 0 && at < 10) celeb = [x, z];
-    if (r.me) meIdx = n;
+    if (r.me) { meIdx = n; G3.me = { x, z, dir: (kk === 0) !== mir ? 1 : -1 }; } // sens d'attaque de ton équipe (caméra « Mon joueur »)
   }
   // arbitres
   if (fa.length >= MF_N) {
@@ -495,8 +508,8 @@ function g3Draw(M, t, dt, paused) {
     const camD = G3.cam.position.distanceTo(b.position), sc2 = clamp(camD / 34, 1, 2.3); b.scale.setScalar(sc2);
     b.position.set(bx, by + .11 * sc2, bz);
     if (sp > .2 && gdt > 0) { const ax = _m.av || (_m.av = new THREE.Vector3()); ax.set(vz, 0, -vx).normalize(); const qq = _m.bq || (_m.bq = new THREE.Quaternion()); qq.setFromAxisAngle(ax, sp * gdt / .11); b.quaternion.premultiply(qq); } }
-  // filets : le ballon au fond fait trembler le filet
-  for (const N of G3.nets || []) { const inNet = Math.sign(bx) === N.s && Math.abs(bx) > 52.6 && Math.abs(bz) < 3.7 && by < 2.5; if (inNet) N.amp = Math.max(N.amp, Math.min(1, (Math.abs(bx) - 52.5) / 1.5)); N.amp *= Math.pow(.2, dt); const pa = N.geo.attributes.position, B = N.base; if (N.amp > .005 || N.was) { for (let i = 0; i < pa.count; i++) { const y = B[i * 3 + 1], z = B[i * 3 + 2], d = Math.hypot(y - Math.min(2, by + .3), z - bz), w = Math.exp(-d * d / 1.6) * N.amp; pa.array[i * 3] = B[i * 3] + N.s * .7 * w; } pa.needsUpdate = true; N.was = N.amp > .005; } }
+  // filets : la toile épouse le ballon et ondule (temps de jeu : ralenti au ralenti, figée en pause)
+  { const rb = .11 * G3.ball.scale.x; g3NetUpdate(snap ? 0 : gdt, bx, by + rb, bz, rb); }
   // ambiance du public, panneaux, météo, écran géant
   const now = performance.now() / 1000;
   if (G3.crowdU) { G3.crowdU.uT.value = now; const hot = lvHlSpeed(t) ? .55 : 0, gl = celeb ? 1 : 0; G3.crowdExc = (G3.crowdExc || 0) + ((Math.max(hot, gl, .08)) - (G3.crowdExc || 0)) * Math.min(1, dt * 2); G3.crowdU.uE.value = G3.crowdExc; }
