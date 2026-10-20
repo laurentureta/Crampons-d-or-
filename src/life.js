@@ -249,7 +249,7 @@ function ballonDor() {
   if (rr) S.rival.best = S.rival.best ? Math.min(S.rival.best, rr) : rr;
   S.W.hist.push({ s: String(yr), bdo: winner.n + ' (' + winner.c + ')' });
   S.bdo.push({ y: yr, w: winner.n, rank, rr });
-  if (me && rank === 1) { S.awards.push({ t: 'Ballon d\'Or', s: String(yr) }); winTrophy('Ballon d\'Or', S.club.n || L.club, yr + ' '); S.p.followers = Math.round(S.p.followers + fameTarget() * .3); }
+  if (me && rank === 1) { S.awards.push({ t: 'Ballon d\'Or', s: String(yr) }); winTrophy('Ballon d\'Or', S.club.n || L.club, yr + ' '); S.p.followers = Math.round(S.p.followers + fameTarget() * .3); if (typeof feteQueue === 'function') feteQueue({ k: 'bdo', yr, club: S.club.n || L.club }); }
   const podium = top.slice(0, 3).map((c, i) => `<div class="mline"><span>${i + 1}. ${c.me ? '<b>' + c.n + '</b>' : c.n}</span><span class="note">${c.c}</span></div>`).join('');
   queueEvent({ title: `Ballon d'Or ${yr}`, text: (yr === 2026 ? `<p class="note">Cérémonie à Londres ce soir (26 octobre 2026). Le vrai résultat n\'était pas encore connu à la création du jeu : ce classement est simulé.</p>` : '<p class="note">Cérémonie du Ballon d\'Or ce soir.</p>') + podium + (me ? `<p>${rank === 1 ? '🏆 <b>C\'EST TOI ! Tu remportes le Ballon d\'Or !</b>' : rank <= 30 ? `Tu termines <b>${rank}e</b> du classement.` : 'Tu n\'es pas dans les 30 nommés.'}</p>` : '') + (rr && rr <= 30 ? `<p class="note">Ton rival ${S.rival.n} : ${rr === 1 ? '<b>vainqueur</b>' : rr + 'e'}.</p>` : ''), ch: [{ t: 'Continuer', f: () => null }] });
   addNews('Ballon d\'Or', `${winner.n} remporte le Ballon d'Or ${yr}${yr === 2026 ? ' (simulation du jeu)' : ''}.`);
@@ -504,7 +504,7 @@ function save() {
 }
 function loadSlot(n) { try { const t = localStorage.getItem(SAVE_PREFIX + n); if (!t) return null; const s = JSON.parse(t); if (!s || s.v !== VERSION) return null; s.slot = n; return s; } catch (e) { return null; } }
 function deleteSlot(n) { try { localStorage.removeItem(SAVE_PREFIX + n); const m = slotsMeta(); delete m[n]; localStorage.setItem(META_KEY, JSON.stringify(m)); } catch (e) { } }
-function hydrate(s) { S = s; IDX = null; EVQ = []; if (S.squad) for (const x of S.squad) if (x.star) x.ref = S.W.stars.find(st => st.n === x.n); ensureV3(); if (S.live && S.live.M && !S.live.M.eng && typeof liveSetup === 'function') { try { S.live.M = liveSetup(S.live.prep); } catch (e) { S.live = null; } } if (S.live && S.live.M && S.live.M.eng && typeof meUpgrade === 'function') { meUpgrade(S.live.M.E); const M = S.live.M; if (!M.com) { M.com = []; M.cmT = M.clockAt || 0; M.comLast = -99; M.say = []; } } }
+function hydrate(s) { S = s; IDX = null; EVQ = []; if (typeof FQ !== 'undefined') FQ.q = []; if (S.squad) for (const x of S.squad) if (x.star) x.ref = S.W.stars.find(st => st.n === x.n); ensureV3(); if (S.live && S.live.M && !S.live.M.eng && typeof liveSetup === 'function') { try { S.live.M = liveSetup(S.live.prep); } catch (e) { S.live = null; } } if (S.live && S.live.M && S.live.M.eng && typeof meUpgrade === 'function') { meUpgrade(S.live.M.E); const M = S.live.M; if (!M.com) { M.com = []; M.cmT = M.clockAt || 0; M.comLast = -99; M.say = []; } } }
 function exportSave() {
   try { if (typeof shopSnap === 'function') S.shopW = shopSnap(); } catch (e) { }
   const json = JSON.stringify(S, (k, v) => k === 'ref' ? undefined : v);

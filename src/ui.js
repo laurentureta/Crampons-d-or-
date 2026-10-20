@@ -6,7 +6,7 @@ let MODAL = null, TOAST_T = null;
 const OPTS_KEY = 'cdo2_opts';
 // caméras du match en 3D : [clé, nom court, description]
 const CAM_VIEWS = [['tv', 'TV', 'Caméra TV'], ['large', 'Large', 'Caméra large'], ['tac', 'Tactique', 'Vue tactique : les lignes des deux équipes'], ['joueur', 'Mon joueur', 'Caméra derrière ton joueur'], ['but', 'Derrière le but', 'Caméra derrière le but'], ['bord', 'Bord du terrain', 'Caméra au bord du terrain'], ['drone', 'Drone', 'Caméra drone au-dessus de l\'action']];
-const OPT_DEF = { live: 'all', speed: 1, music: true, mvol: .55, svol: .8, shuffle: true, mg: true, interrupt: 'all', voice: true, replay: 'all', gfx: '3d', cam: 'tv', chat: 'all', v1: '', v2: '', aiv: 'off', aivMode: 'all', aivS: '', aivN: '', aivM: 'eleven_flash_v2_5', aivEL: [], intro: true };
+const OPT_DEF = { live: 'all', speed: 1, music: true, mvol: .55, svol: .8, shuffle: true, mg: true, interrupt: 'all', voice: true, replay: 'all', gfx: '3d', cam: 'tv', chat: 'all', v1: '', v2: '', aiv: 'off', aivMode: 'all', aivS: '', aivN: '', aivM: 'eleven_flash_v2_5', aivEL: [], intro: true, fetes: true };
 function loadOpts() { try { return Object.assign({}, OPT_DEF, JSON.parse(localStorage.getItem(OPTS_KEY) || '{}')); } catch (e) { return Object.assign({}, OPT_DEF); } }
 let OPTS = loadOpts();
 function saveOpts() { try { localStorage.setItem(OPTS_KEY, JSON.stringify(OPTS)); } catch (e) { } }

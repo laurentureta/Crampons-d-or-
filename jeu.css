@@ -1,4 +1,4 @@
-/* Crampons d'Or 11.4.1 — GÉNÉRÉ à partir de src/style.css */
+/* Crampons d'Or 11.5.0 — GÉNÉRÉ à partir de src/style.css */
 html,body{margin:0;height:100%}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 [hidden]{display:none!important}
@@ -855,3 +855,19 @@ details.alert.vhelp>span{display:block;margin-top:6px;font-size:13px;color:var(-
 .pepbar b{font-family:var(--f-display);font-weight:800;font-size:20px;color:#ffd36b;font-variant-numeric:tabular-nums}
 .pepbar .grow{color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .pepbar .pepnew{font-family:var(--f-label);font-weight:700;font-size:12px;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--acc);color:var(--ink);animation:dailyPulse 1.8s ease-in-out infinite}
+
+/* ---------- grandes soirées en 3D (fete.js) ---------- */
+#fete{position:fixed;inset:0;z-index:70;background:#000;overflow:hidden;animation:feteIn .5s ease both;transition:opacity .5s ease;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#fete canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#fete .fete-txt{position:absolute;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 78px);text-align:center;opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1);text-shadow:0 4px 24px rgba(0,0,0,.85)}
+#fete.txt .fete-txt{opacity:1;transform:none}
+#fete .fete-kick{font-family:var(--f-label);font-weight:700;letter-spacing:.34em;text-transform:uppercase;font-size:13px;color:#ffd27a;padding-left:.34em}
+#fete .fete-big{margin:.18em 0 .1em;font-family:var(--f-display);font-weight:800;text-transform:uppercase;line-height:.9;font-size:clamp(34px,11vw,72px);background:linear-gradient(100deg,#c98418 0%,#ffd36b 28%,#fff6d8 40%,#ffc23d 52%,#c98418 72%,#ffd36b 100%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:ldShine 2.8s linear infinite;filter:drop-shadow(0 6px 18px rgba(0,0,0,.9))}
+#fete .fete-sub{font-family:var(--f-label);font-weight:700;font-size:18px;letter-spacing:.06em;color:#fff}
+#fete .fete-small{margin-top:6px;font-size:13px;color:rgba(255,255,255,.72)}
+#fete .fete-hint{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);text-align:center;font-family:var(--f-label);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);animation:feteIn 1s 2.2s ease both}
+#fete .fete-flash{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 40%,rgba(255,246,222,.85),rgba(255,206,120,.25) 45%,rgba(255,200,120,0) 75%)}
+#fete.flash .fete-flash{animation:ldFlash .6s ease-out both}
+#fete.out{opacity:0}
+@keyframes feteIn{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){#fete .fete-big{animation:none}}

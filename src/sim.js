@@ -451,6 +451,7 @@ function winTrophy(name, clubN, extra) {
   addNews('Trophée', `${pName()} remporte : ${name} ${extra || ''}avec ${clubN} !`);
   feedPost(handle(), `${name} 🏆 Merci à tous ceux qui ont cru en moi.`, 'me');
   inbox('info', 'Trophée : ' + name, `Tu soulèves ${name} avec ${clubN}. ${S.fam.sac ? 'Tes parents, qui se sont tant sacrifiés, sont en tribune.' : ''}`);
+  if (name !== 'Ballon d\'Or' && typeof feteQueue === 'function') feteQueue({ k: 'titre', name, club: clubN, season: seasonLabel(S.season) }); // la grande soirée du titre (fete.js)
 }
 const handle = () => '@' + (S.p.first + S.p.last).toLowerCase().replace(/[^a-z0-9]/g, '');
 const HANDLES = ['ultra_', 'fan2', 'le_vrai_', 'kop_', 'tribune_', 'scout_', 'foot_'];
@@ -725,7 +726,7 @@ function joinClub(cid, kind, wage, years, fee, opt = {}) {
   buildSquad(); buildMates();
   S.club.role = computeRole(); genObjectives();
   if (kind === 'academy') { addNews('Centre de formation', `${pName()} intègre le centre de formation de ${c.n}.`); S.flags.academy = true; }
-  else { addNews('Officiel', `${pName()} signe à ${c.n}${fee ? ' pour ' + eur(fee) : ''} (contrat jusqu'en juin ${S.club.until + 1}, ${eur(monthly(wage))} par mois).`); S.flags.pro = true; if (fee >= 1e8) S.flags.fee100 = true; S.pendingNum = true; }
+  else { addNews('Officiel', `${pName()} signe à ${c.n}${fee ? ' pour ' + eur(fee) : ''} (contrat jusqu'en juin ${S.club.until + 1}, ${eur(monthly(wage))} par mois).`); S.flags.pro = true; if (fee >= 1e8) S.flags.fee100 = true; S.pendingNum = true; S.club.pres = 0; }
   if (moving) { S.fam.mom.rel = clamp(S.fam.mom.rel - 3, 0, 100); feedPost('Maman', kind === 'academy' ? 'Mon bébé quitte la maison… Sois sérieux là-bas, on t\'aime.' : 'Nouvelle aventure, on est derrière toi !'); }
   S.p.moral = clamp(S.p.moral + 10, 0, 100);
   if (kind === 'pro' && S.plan.filter(a => a && a.k === 'train').length < 3) S.plan = defaultPlan('pro');

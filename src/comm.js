@@ -336,7 +336,7 @@ function comLines(M, key, c, fl) {
 function comVoice(M, rt) { return rt != null && typeof sayPlay === 'function' && OPTS.voice !== false && (OPTS.svol ?? .8) > 0 && typeof LV !== 'undefined' && LV.M === M && typeof UI !== 'undefined' && UI.screen === 'live'; }
 const comAI = () => typeof aivOn === 'function' && aivOn();
 // qu'est-ce qui sera vraiment dit à voix haute ? (le reste s'affiche seulement)
-function comSpeakable(x) { if (x.pri < 1) return false; if (comAI() && OPTS.aivMode === 'eco') return x.kind === 'evt' || x.kind === 'intro' || x.pri >= 2 || x.dig || x.talk; return true; }
+function comSpeakable(x) { if (x.pri < 1) return false; if (!comAI()) return typeof voixFile === 'function' && !!voixFile(x); /* sans ta voix ElevenLabs : seulement les répliques enregistrées */ if (OPTS.aivMode === 'eco') return x.kind === 'evt' || x.kind === 'intro' || x.pri >= 2 || x.dig || x.talk; return true; }
 // durée de parole (secondes réelles)
 function comDur(it, txt) {
   if (it.buf) return it.buf.duration + .3;
@@ -545,9 +545,9 @@ function comStart(M, it, t, rt, prev, voice) {
   if (it.kind !== 'chat' && !it.inChain && (it.pri >= 2 || it.kind === 'evt')) cs.chain = [];
   let txt = it.txt;
   // on coupe Nathalie au milieu d'une phrase : petit mot naturel (seulement avec la voix du téléphone, l'audio IA est déjà fabriqué)
-  if (prev && prev.it.kind === 'chat' && it.kind === 'act' && it.pri >= 2 && !(voice && comAI()) && R() < .45) txt = pick(CM_CUT) + ' ' + txt;
+  if (prev && prev.it.kind === 'chat' && it.kind === 'act' && it.pri >= 2 && !(voice && (comAI() || comSpeakable(it))) && R() < .45) txt = pick(CM_CUT) + ' ' + txt;
   const spoken = voice && comSpeakable(it);
-  cs.cur = { it, endR: rt + (spoken || !voice ? comDur(it, txt) : 0) };
+  cs.cur = { it, endR: rt + (spoken || !voice || !comAI() ? comDur(it, txt) : 0) };
   com(M, txt, it.pri, t, it.who, { song: it.song, dig: it.dig }); cs.txtR = rt;
   if (it.chain && it.chain.length) cs.chain = it.chain.map(x => Object.assign(x, { baseR: rt, inChain: true }));
   if (spoken) sayPlay(Object.assign({}, it, { txt, kind: it.kind }));

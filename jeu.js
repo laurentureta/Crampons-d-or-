@@ -1,5 +1,5 @@
-/* Crampons d'Or 11.4.1 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
-var GAME_VERSION = "11.4.1";
+/* Crampons d'Or 11.5.0 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
+var GAME_VERSION = "11.5.0";
 var CRWD_FILES = ["chant_2","chant_3","chant_4","cheer_loop","goal_1","goal_2","goal_3","goal_4","ooh_1","roar_1","roar_2","roar_3","roar_4","surge"];
 var SONS_FILES = ["catch","glass","header","kick","net","post","shot","tackle","whistle1","whistle3"];
 var MEDIA_H = {"foule/chant_2":"3ebb4bce","foule/chant_3":"4f555b3f","foule/chant_4":"e9942adb","foule/cheer_loop":"e5b4a150","foule/goal_1":"a49bc043","foule/goal_2":"db0cbb88","foule/goal_3":"05dbbca2","foule/goal_4":"09720ea4","foule/ooh_1":"155d868a","foule/roar_1":"aff56709","foule/roar_2":"a3f978be","foule/roar_3":"6bed5e29","foule/roar_4":"df5f4aa6","foule/surge":"ce5de2be","sons/catch":"082b1f8c","sons/glass":"149bfce3","sons/header":"ac052ba0","sons/kick":"877b4236","sons/net":"fe0694be","sons/post":"ae984141","sons/shot":"9695a8e3","sons/tackle":"601ffa60","sons/whistle1":"cc2e8cf9","sons/whistle3":"dbccf110","decor":"49ccd40b","stade":"180b7b01","joueur":"cbcc8acf"};
@@ -1120,6 +1120,7 @@ function winTrophy(name, clubN, extra) {
   addNews('Trophée', `${pName()} remporte : ${name} ${extra || ''}avec ${clubN} !`);
   feedPost(handle(), `${name} 🏆 Merci à tous ceux qui ont cru en moi.`, 'me');
   inbox('info', 'Trophée : ' + name, `Tu soulèves ${name} avec ${clubN}. ${S.fam.sac ? 'Tes parents, qui se sont tant sacrifiés, sont en tribune.' : ''}`);
+  if (name !== 'Ballon d\'Or' && typeof feteQueue === 'function') feteQueue({ k: 'titre', name, club: clubN, season: seasonLabel(S.season) }); // la grande soirée du titre (fete.js)
 }
 const handle = () => '@' + (S.p.first + S.p.last).toLowerCase().replace(/[^a-z0-9]/g, '');
 const HANDLES = ['ultra_', 'fan2', 'le_vrai_', 'kop_', 'tribune_', 'scout_', 'foot_'];
@@ -1394,7 +1395,7 @@ function joinClub(cid, kind, wage, years, fee, opt = {}) {
   buildSquad(); buildMates();
   S.club.role = computeRole(); genObjectives();
   if (kind === 'academy') { addNews('Centre de formation', `${pName()} intègre le centre de formation de ${c.n}.`); S.flags.academy = true; }
-  else { addNews('Officiel', `${pName()} signe à ${c.n}${fee ? ' pour ' + eur(fee) : ''} (contrat jusqu'en juin ${S.club.until + 1}, ${eur(monthly(wage))} par mois).`); S.flags.pro = true; if (fee >= 1e8) S.flags.fee100 = true; S.pendingNum = true; }
+  else { addNews('Officiel', `${pName()} signe à ${c.n}${fee ? ' pour ' + eur(fee) : ''} (contrat jusqu'en juin ${S.club.until + 1}, ${eur(monthly(wage))} par mois).`); S.flags.pro = true; if (fee >= 1e8) S.flags.fee100 = true; S.pendingNum = true; S.club.pres = 0; }
   if (moving) { S.fam.mom.rel = clamp(S.fam.mom.rel - 3, 0, 100); feedPost('Maman', kind === 'academy' ? 'Mon bébé quitte la maison… Sois sérieux là-bas, on t\'aime.' : 'Nouvelle aventure, on est derrière toi !'); }
   S.p.moral = clamp(S.p.moral + 10, 0, 100);
   if (kind === 'pro' && S.plan.filter(a => a && a.k === 'train').length < 3) S.plan = defaultPlan('pro');
@@ -1737,7 +1738,7 @@ function ballonDor() {
   if (rr) S.rival.best = S.rival.best ? Math.min(S.rival.best, rr) : rr;
   S.W.hist.push({ s: String(yr), bdo: winner.n + ' (' + winner.c + ')' });
   S.bdo.push({ y: yr, w: winner.n, rank, rr });
-  if (me && rank === 1) { S.awards.push({ t: 'Ballon d\'Or', s: String(yr) }); winTrophy('Ballon d\'Or', S.club.n || L.club, yr + ' '); S.p.followers = Math.round(S.p.followers + fameTarget() * .3); }
+  if (me && rank === 1) { S.awards.push({ t: 'Ballon d\'Or', s: String(yr) }); winTrophy('Ballon d\'Or', S.club.n || L.club, yr + ' '); S.p.followers = Math.round(S.p.followers + fameTarget() * .3); if (typeof feteQueue === 'function') feteQueue({ k: 'bdo', yr, club: S.club.n || L.club }); }
   const podium = top.slice(0, 3).map((c, i) => `<div class="mline"><span>${i + 1}. ${c.me ? '<b>' + c.n + '</b>' : c.n}</span><span class="note">${c.c}</span></div>`).join('');
   queueEvent({ title: `Ballon d'Or ${yr}`, text: (yr === 2026 ? `<p class="note">Cérémonie à Londres ce soir (26 octobre 2026). Le vrai résultat n\'était pas encore connu à la création du jeu : ce classement est simulé.</p>` : '<p class="note">Cérémonie du Ballon d\'Or ce soir.</p>') + podium + (me ? `<p>${rank === 1 ? '🏆 <b>C\'EST TOI ! Tu remportes le Ballon d\'Or !</b>' : rank <= 30 ? `Tu termines <b>${rank}e</b> du classement.` : 'Tu n\'es pas dans les 30 nommés.'}</p>` : '') + (rr && rr <= 30 ? `<p class="note">Ton rival ${S.rival.n} : ${rr === 1 ? '<b>vainqueur</b>' : rr + 'e'}.</p>` : ''), ch: [{ t: 'Continuer', f: () => null }] });
   addNews('Ballon d\'Or', `${winner.n} remporte le Ballon d'Or ${yr}${yr === 2026 ? ' (simulation du jeu)' : ''}.`);
@@ -1992,7 +1993,7 @@ function save() {
 }
 function loadSlot(n) { try { const t = localStorage.getItem(SAVE_PREFIX + n); if (!t) return null; const s = JSON.parse(t); if (!s || s.v !== VERSION) return null; s.slot = n; return s; } catch (e) { return null; } }
 function deleteSlot(n) { try { localStorage.removeItem(SAVE_PREFIX + n); const m = slotsMeta(); delete m[n]; localStorage.setItem(META_KEY, JSON.stringify(m)); } catch (e) { } }
-function hydrate(s) { S = s; IDX = null; EVQ = []; if (S.squad) for (const x of S.squad) if (x.star) x.ref = S.W.stars.find(st => st.n === x.n); ensureV3(); if (S.live && S.live.M && !S.live.M.eng && typeof liveSetup === 'function') { try { S.live.M = liveSetup(S.live.prep); } catch (e) { S.live = null; } } if (S.live && S.live.M && S.live.M.eng && typeof meUpgrade === 'function') { meUpgrade(S.live.M.E); const M = S.live.M; if (!M.com) { M.com = []; M.cmT = M.clockAt || 0; M.comLast = -99; M.say = []; } } }
+function hydrate(s) { S = s; IDX = null; EVQ = []; if (typeof FQ !== 'undefined') FQ.q = []; if (S.squad) for (const x of S.squad) if (x.star) x.ref = S.W.stars.find(st => st.n === x.n); ensureV3(); if (S.live && S.live.M && !S.live.M.eng && typeof liveSetup === 'function') { try { S.live.M = liveSetup(S.live.prep); } catch (e) { S.live = null; } } if (S.live && S.live.M && S.live.M.eng && typeof meUpgrade === 'function') { meUpgrade(S.live.M.E); const M = S.live.M; if (!M.com) { M.com = []; M.cmT = M.clockAt || 0; M.comLast = -99; M.say = []; } } }
 function exportSave() {
   try { if (typeof shopSnap === 'function') S.shopW = shopSnap(); } catch (e) { }
   const json = JSON.stringify(S, (k, v) => k === 'ref' ? undefined : v);
@@ -4329,7 +4330,7 @@ function comLines(M, key, c, fl) {
 function comVoice(M, rt) { return rt != null && typeof sayPlay === 'function' && OPTS.voice !== false && (OPTS.svol ?? .8) > 0 && typeof LV !== 'undefined' && LV.M === M && typeof UI !== 'undefined' && UI.screen === 'live'; }
 const comAI = () => typeof aivOn === 'function' && aivOn();
 // qu'est-ce qui sera vraiment dit à voix haute ? (le reste s'affiche seulement)
-function comSpeakable(x) { if (x.pri < 1) return false; if (comAI() && OPTS.aivMode === 'eco') return x.kind === 'evt' || x.kind === 'intro' || x.pri >= 2 || x.dig || x.talk; return true; }
+function comSpeakable(x) { if (x.pri < 1) return false; if (!comAI()) return typeof voixFile === 'function' && !!voixFile(x); /* sans ta voix ElevenLabs : seulement les répliques enregistrées */ if (OPTS.aivMode === 'eco') return x.kind === 'evt' || x.kind === 'intro' || x.pri >= 2 || x.dig || x.talk; return true; }
 // durée de parole (secondes réelles)
 function comDur(it, txt) {
   if (it.buf) return it.buf.duration + .3;
@@ -4538,9 +4539,9 @@ function comStart(M, it, t, rt, prev, voice) {
   if (it.kind !== 'chat' && !it.inChain && (it.pri >= 2 || it.kind === 'evt')) cs.chain = [];
   let txt = it.txt;
   // on coupe Nathalie au milieu d'une phrase : petit mot naturel (seulement avec la voix du téléphone, l'audio IA est déjà fabriqué)
-  if (prev && prev.it.kind === 'chat' && it.kind === 'act' && it.pri >= 2 && !(voice && comAI()) && R() < .45) txt = pick(CM_CUT) + ' ' + txt;
+  if (prev && prev.it.kind === 'chat' && it.kind === 'act' && it.pri >= 2 && !(voice && (comAI() || comSpeakable(it))) && R() < .45) txt = pick(CM_CUT) + ' ' + txt;
   const spoken = voice && comSpeakable(it);
-  cs.cur = { it, endR: rt + (spoken || !voice ? comDur(it, txt) : 0) };
+  cs.cur = { it, endR: rt + (spoken || !voice || !comAI() ? comDur(it, txt) : 0) };
   com(M, txt, it.pri, t, it.who, { song: it.song, dig: it.dig }); cs.txtR = rt;
   if (it.chain && it.chain.length) cs.chain = it.chain.map(x => Object.assign(x, { baseR: rt, inChain: true }));
   if (spoken) sayPlay(Object.assign({}, it, { txt, kind: it.kind }));
@@ -4783,7 +4784,7 @@ function auInit() {
     return true;
   } catch (e) { AU.failed = true; AU.ctx = null; return false; }
 }
-function auUnlock() { if (!auInit()) return; if (!AU.unlocked) { sayPrime(); if (typeof pkdb === 'function') pkdb().then(() => sfxGenLoad()); } AU.unlocked = true; if (AU.ctx.state !== 'running') AU.ctx.resume(); auScene(AU.want || 'menu', true); }
+function auUnlock() { if (!auInit()) return; if (!AU.unlocked) { if (typeof pkdb === 'function') pkdb().then(() => sfxGenLoad()); } AU.unlocked = true; if (AU.ctx.state !== 'running') AU.ctx.resume(); auScene(AU.want || 'menu', true); }
 // ---------- Instruments ----------
 function vca(t, peak, a, d, s, r, dur) { const g = AU.ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + a); g.gain.setTargetAtTime(peak * s, t + a, d / 3); g.gain.setTargetAtTime(0, t + Math.max(a, dur), r / 4); return g; }
 function send(node, rev, dly) { if (rev) { const g = AU.ctx.createGain(); g.gain.value = rev; node.connect(g); g.connect(AU.rev); } if (dly) { const g = AU.ctx.createGain(); g.gain.value = dly; node.connect(g); g.connect(AU.dly); } node.connect(AU.bus); }
@@ -5024,7 +5025,7 @@ function sayInit() {
   return SAY.ok;
 }
 // essai d'une voix depuis les Options
-function sayTest(who) { if (!aivOn() && !sayInit()) return; try { if (sayInit()) sayPick(); } catch (e) { } sayStop(); if (typeof VOX_TEST !== 'undefined' && VOX_TEST[who]) sayPush({ txt: VOX_TEST[who], pri: 2, who }); else if (who === 'N') sayPush({ txt: 'Bonsoir, ici Nathalie Ferrand. Je vais essayer de le canaliser pendant quatre-vingt-dix minutes.', pri: 2, who: 'N' }); else sayPush({ txt: 'Bonsoir à tous, ici Lo Sol ! Quel plaisir d\'être avec vous ce soir, mes amis !', pri: 2, who: 'S' }); }
+function sayTest(who) { if (!aivOn()) { if (typeof toast === 'function') toast('Règle ta voix ElevenLabs (clé) pour l\'écouter.'); return; } sayStop(); if (typeof VOX_TEST !== 'undefined' && VOX_TEST[who]) sayPush({ txt: VOX_TEST[who], pri: 2, who }); else if (who === 'N') sayPush({ txt: 'Bonsoir, ici Nathalie Ferrand. Je vais essayer de le canaliser pendant quatre-vingt-dix minutes.', pri: 2, who: 'N' }); else sayPush({ txt: 'Bonsoir à tous, ici Lo Sol ! Quel plaisir d\'être avec vous ce soir, mes amis !', pri: 2, who: 'S' }); }
 function sayPrime() { if (!sayInit()) return; try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) { } }
 // texte → prononçable (les mots en capitales seraient épelés)
 function sayNorm(t) {
@@ -5039,7 +5040,8 @@ const AIV_ELM = [['eleven_flash_v2_5', 'Flash 2.5 (rapide, économique)'], ['ele
 const AIV_TAGS = new Set(['eleven_v3', 'eleven_v3_conversational', 'eleven_v4_turbo']);
 function aivKey() { if (AIV.key == null) { try { AIV.key = localStorage.getItem('cdo_aikey') || ''; } catch (e) { AIV.key = ''; } } return AIV.key; }
 function aivSetKey(k) { AIV.key = String(k || '').trim(); AIV.dead = ''; AIV.cache.clear(); try { if (AIV.key) localStorage.setItem('cdo_aikey', AIV.key); else localStorage.removeItem('cdo_aikey'); } catch (e) { } }
-const aivOn = () => (OPTS.aiv === 'openai' || OPTS.aiv === 'eleven') && !!aivKey() && !AIV.dead && !!AU.ctx;
+const aivOn = () => OPTS.aiv === 'eleven' && !!aivKey() && !AIV.dead && !!AU.ctx; // seulement tes voix ElevenLabs (plus de voix de synthèse génériques)
+const voixAny = () => typeof VOIX_INDEX !== 'undefined' && OPTS.voixRec !== false && Object.keys(VOIX_INDEX).length > 0;
 // voix ElevenLabs créée par le joueur pour Lo Sol : utilisée par défaut (un autre choix dans Options reste prioritaire)
 const AIV_EL_DEF = { S: 'EQHLm8eFXUqKbFzlvnSA', N: '' };
 function aivVoice(who) {
@@ -5048,7 +5050,7 @@ function aivVoice(who) {
   const id = who === 'N' ? OPTS.aivN : who === 'S' ? OPTS.aivS : (OPTS.aivX || {})[who]; if (id && !AIV_OAI.includes(id) && !AIV.bad.has(id)) return id;
   const def = AIV_EL_DEF[who] || (typeof VOX_EL !== 'undefined' && VOX_EL[who]); if (def && !AIV.bad.has(def)) return def;
   // sinon : une voix de ton compte, homme ou femme selon le personnage, jamais celle d'un commentateur
-  const avoid = who === 'S' ? [] : who === 'N' ? [aivVoice('S')] : [aivVoice('S'), aivVoice('N')], L = (OPTS.aivEL || []).filter(v => !avoid.includes(v.id) && !AIV.bad.has(v.id));
+  const avoid = who === 'S' ? [] : who === 'N' ? [aivVoice('S')] : [aivVoice('S'), aivVoice('N')], L0 = (OPTS.aivEL || []).filter(v => !avoid.includes(v.id) && !AIV.bad.has(v.id)), mine = L0.filter(v => v.c && v.c !== 'premade'), L = mine.length ? mine : L0;
   const g = (typeof VOX_G !== 'undefined' && VOX_G[who]) || 'male';
   const f = L.find(v => (v.g || '') === g) || L[who === 'N' ? 1 : 0] || L[0]; return f ? f.id : (who !== 'S' && who !== 'N' ? aivVoice(g === 'female' ? 'N' : 'S') : '');
 }
@@ -5124,7 +5126,7 @@ function aivFetch(x) {
   p.catch(() => AIV.cache.delete(ck));
   return p;
 }
-// panne de la voix IA : on repasse aux voix du téléphone et on prévient une fois
+// panne de la voix IA : les commentaires restent écrits (pas de voix de synthèse) et on prévient une fois
 // détail d'une erreur du fournisseur (JSON ElevenLabs/OpenAI → phrase courte), gardé pour l'afficher dans Options
 function aivErr(e) {
   if (!e) return 'erreur inconnue';
@@ -5136,23 +5138,24 @@ function aivFail(e) {
   AIV.last = aivErr(e) + ' · ' + new Date().toLocaleTimeString('fr-FR');
   const st = e && e.st, msg = st === 401 || st === 403 ? 'Voix IA : clé refusée. Vérifie-la dans Options.' : st === 429 || st === 402 ? 'Voix IA : quota ou crédit épuisé chez le fournisseur.' : st === 0 ? 'Voix IA : choisis les voix ElevenLabs dans Options.' : st ? 'Voix IA indisponible (' + st + ').' : 'Voix IA injoignable (réseau, ou appel bloqué par la page).';
   if (!st || st === 401 || st === 403 || st === 402 || st === 429 || st === 0 || st === 404 || st === 400 || st === 422) AIV.dead = msg;
-  if (typeof toast === 'function' && Date.now() - (AIV.toastT || 0) > 15000) { AIV.toastT = Date.now(); toast(msg + ' Retour aux voix du téléphone.'); }
+  if (typeof toast === 'function' && Date.now() - (AIV.toastT || 0) > 15000) { AIV.toastT = Date.now(); toast(msg + ' Les commentaires restent écrits.'); }
 }
 // la foule baisse un peu quand un commentateur parle (vraie voix)
 function aivDuck(on) { const C = AU.crowd; if (!C || !AU.ctx) return; C.out.gain.setTargetAtTime(on ? .62 : 1, AU.ctx.currentTime, on ? .12 : .6); }
 // liste des voix de ton compte ElevenLabs (pour les menus d'Options)
 async function aivLoadEL() {
   if (!aivKey()) return false;
-  try { const r = await fetch('https://api.elevenlabs.io/v1/voices', { headers: { 'xi-api-key': aivKey() } }); if (!r.ok) { let m = ''; try { m = (await r.text()).slice(0, 300); } catch (er) { } throw Object.assign(new Error(m || ('HTTP ' + r.status)), { st: r.status }); } const j = await r.json(); OPTS.aivEL = (j.voices || []).slice(0, 80).map(v => ({ id: v.voice_id, n: v.name, g: (v.labels && v.labels.gender) || '', a: (v.labels && (v.labels.accent || v.labels.language)) || '' })); saveOpts(); return true; }
+  try { const r = await fetch('https://api.elevenlabs.io/v1/voices', { headers: { 'xi-api-key': aivKey() } }); if (!r.ok) { let m = ''; try { m = (await r.text()).slice(0, 300); } catch (er) { } throw Object.assign(new Error(m || ('HTTP ' + r.status)), { st: r.status }); } const j = await r.json(); OPTS.aivEL = (j.voices || []).slice(0, 80).map(v => ({ id: v.voice_id, n: v.name, c: v.category || '', g: (v.labels && v.labels.gender) || '', a: (v.labels && (v.labels.accent || v.labels.language)) || '' })); saveOpts(); return true; }
   catch (e) { AIV.last = 'Liste des voix : ' + aivErr(e) + ' · ' + new Date().toLocaleTimeString('fr-FR'); if (typeof toast === 'function') toast(e && e.st ? 'ElevenLabs refuse la liste des voix (' + aivErr(e) + ').' : 'Impossible de joindre ElevenLabs (' + aivErr(e) + ').'); return false; }
 }
-const sayOn = () => OPTS.voice !== false && (OPTS.svol ?? .8) > 0 && AU.unlocked && (aivOn() || sayInit());
+// seules les vraies voix humaines parlent : tes répliques enregistrées et ta voix ElevenLabs ; le reste s'affiche en texte (plus jamais la voix robotique du téléphone)
+const sayOn = () => OPTS.voice !== false && (OPTS.svol ?? .8) > 0 && AU.unlocked && !!AU.ctx && (aivOn() || voixAny());
 // it : { txt, pri, who: 'S'|'N', song, dig }
 function sayPush(it) {
   if (!it || !it.txt || !sayOn()) return;
   const ai = aivOn(), now = Date.now(), pri = it.pri || 0, who = it.who || 'S';
   if (ai && OPTS.aivMode === 'eco' && pri < 2 && !it.dig) return; // mode économique : temps forts et histoires seulement
-  const items = it.song && !ai ? String(it.txt).split('/').map(x => x.trim()).filter(Boolean).map((txt, si) => ({ txt, pri, who, song: true, si })) : [{ txt: it.txt, pri, who, dig: !!it.dig, song: !!it.song }];
+  const items = [{ txt: it.txt, pri, who, dig: !!it.dig, song: !!it.song }].filter(x => ai || voixFile(x)); if (!items.length) return;
   const ttl = (pri >= 3 ? 9000 : it.song ? 15000 : it.dig ? 16000 : pri >= 2 ? 7000 : 5000) + (ai ? 2500 : 0);
   items.forEach(x => { x.exp = now + ttl + (x.si || 0) * 4000; });
   const cur = SAY.cur;
@@ -5191,28 +5194,8 @@ function sayNext() {
     }).catch(e => { if (tok !== SAY.tok) return; clearTimeout(SAY.wd); if (x.rec) { x.rec = false; VOIX.off = (VOIX.off || 0) + 1; } else aivFail(e); x.ap = null; SAY.q.unshift(x); SAY.tok++; SAY.cur = null; sayNext(); });
     return;
   }
-  if (!sayInit()) { SAY.cur = null; return; }
-  if (x.song && !x.si && x.si !== 0) { const parts = String(x.txt).split('/').map(v => v.trim()).filter(Boolean); if (parts.length > 1) { SAY.q.unshift(...parts.map((txt, si) => ({ txt, pri: x.pri, who: x.who, song: true, si, id: x.id, exp: x.exp + si * 4000 }))); SAY.tok++; SAY.cur = null; return sayNext(); } }
-  try {
-    const u = new SpeechSynthesisUtterance(sayNorm(x.txt)), nat = x.who === 'N' || x.who === 'J', v = nat ? (SAY.voice2 || SAY.voice) : SAY.voice;
-    u.lang = v ? v.lang : 'fr-FR'; if (v) u.voice = v;
-    // une voix de qualité se dégrade vite quand on force la hauteur : petites variations seulement
-    const hq = v && sayQual(v) >= 2;
-    if (x.song) { u.rate = .9; u.pitch = (hq ? [1.06, 1.16, 1.02, 1.2] : [1.12, 1.3, 1.05, 1.38])[(x.si || 0) % 4]; }
-    else if (x.who === 'P') { u.rate = .9; u.pitch = .82; }
-    else if (x.who === 'C') { u.rate = 1; u.pitch = .9; }
-    else if (x.who === 'A') { u.rate = 1.08; u.pitch = 1.04; }
-    else if (x.who === 'J') { u.rate = 1.02; u.pitch = SAY.voice2 ? 1.06 : 1.25; }
-    else if (nat) { u.rate = 1; u.pitch = SAY.voice2 ? 1 : 1.18; }
-    else { u.rate = x.pri >= 3 ? 1.1 : x.dig ? .97 : 1.03; u.pitch = x.pri >= 3 ? (hq ? 1.05 : 1.08) : 1; }
-    u.volume = clamp((OPTS.svol ?? .8) * 1.15, 0, 1);
-    const t0 = now, est = (x.txt.split(/\s+/).length * .42 / u.rate + 1.2) * 1000;
-    u.onend = done; u.onerror = done;
-    // chien de garde : certains navigateurs oublient de signaler la fin
-    const watch = () => { if (tok !== SAY.tok) return; let sp = false; try { sp = speechSynthesis.speaking; } catch (e) { } if (sp && Date.now() - t0 < est * 3) { SAY.wd = setTimeout(watch, 700); return; } if (sp) try { speechSynthesis.cancel(); } catch (e) { } done(); };
-    SAY.wd = setTimeout(watch, est + 1500);
-    aivDuck(true); speechSynthesis.speak(u);
-  } catch (e) { SAY.cur = null; }
+  // pas de vraie voix pour cette réplique : elle reste écrite, on passe à la suivante (jamais la voix robotique du téléphone)
+  SAY.cur = null; return sayNext();
 }
 // le réalisateur des commentaires (comm.js) lance une réplique TOUT DE SUITE, en coupant la précédente
 function sayPlay(it) {
@@ -5221,7 +5204,8 @@ function sayPlay(it) {
   if (AIV.src) { try { AIV.src.stop(); } catch (e) { } AIV.src = null; }
   const x = Object.assign({}, it, { exp: Date.now() + 30000 });
   const vf = voixFile(it); x.rec = !!vf;
-  x.ap = it.buf && (aivOn() || vf) ? Promise.resolve(it.buf) : vf ? voixFetch(it) : null;
+  x.ap = it.buf && (aivOn() || vf) ? Promise.resolve(it.buf) : vf ? voixFetch(it) : aivOn() ? aivFetch(x) : null;
+  if (!x.ap) return; // aucune voix humaine pour cette phrase : texte seulement
   let busy = false; try { busy = SAY.ok && (speechSynthesis.speaking || speechSynthesis.pending); if (busy) speechSynthesis.cancel(); } catch (e) { }
   SAY.q.push(x);
   if (busy && !x.ap) { SAY.cur = { cut: true, pri: 9 }; setTimeout(() => { if (SAY.cur && SAY.cur.cut) sayNext(); }, 70); } else { SAY.cur = null; sayNext(); }
@@ -6229,6 +6213,11 @@ function g3Pose(P, n, s) {
       look = 0;
       if (cel === 'plane') { const w = Math.max(rw, A); abL = mx(abL, 1.45, w); abR = mx(abR, 1.45, w); shL = mx(shL, .05, w); shR = mx(shR, .05, w); elL = mx(elL, .05, w); elR = mx(elR, .05, w); roll += .38 * Math.sin(t * 2.4) * w; lean += .08 * w; }
       else if (cel === 'knee') { const K = ease((t - .7) / .25) * en; hp = mx(hp, KN, K); hipL = mx(hipL, .12, K); hipR = mx(hipR, .12, K); kneeL = mx(kneeL, 1.62, K); kneeR = mx(kneeR, 1.62, K); lean = mx(lean, -.45, K); shL = mx(shL, 2.6, Math.max(K, rw * .5)); shR = mx(shR, 2.6, Math.max(K, rw * .5)); abL = mx(abL, .65, K); abR = mx(abR, .65, K); elL = mx(elL, .15, K); elR = mx(elR, .15, K); nod = mx(nod, -.4, K); roll = mx(roll, 0, K); }
+      // grandes soirées (fete.js) : trophée brandi, écharpe du club au-dessus de la tête, Ballon d'Or tenu contre soi, salut au public
+      else if (cel === 'trophee') { const pm = Math.sin(t * 3.4); shL = mx(shL, 2.78 + .14 * pm, A); shR = mx(shR, 2.78 + .14 * pm, A); abL = mx(abL, .2, A); abR = mx(abR, .2, A); elL = mx(elL, .42 - .22 * pm, A); elR = mx(elR, .42 - .22 * pm, A); lean = mx(lean, -.08, A); nod = mx(nod, -.22, A); hp += .03 * Math.max(0, pm) * A; }
+      else if (cel === 'echarpe') { const sw = Math.sin(t * 2.2); shL = mx(shL, 2.55, A); shR = mx(shR, 2.55, A); abL = mx(abL, .62 + .05 * sw, A); abR = mx(abR, .62 - .05 * sw, A); elL = mx(elL, .12, A); elR = mx(elR, .12, A); roll += .05 * sw * A; nod = mx(nod, -.1, A); }
+      else if (cel === 'ballon') { shL = mx(shL, .95, A); shR = mx(shR, .95, A); elL = mx(elL, 1.45, A); elR = mx(elR, 1.45, A); abL = mx(abL, .16, A); abR = mx(abR, .16, A); nod = mx(nod, .05, A); lean = mx(lean, -.02, A); }
+      else if (cel === 'salut') { shR = mx(shR, 2.5, A); abR = mx(abR, .55, A); elR = mx(elR, .45 + .35 * Math.sin(t * 7), A); shL = mx(shL, .1, A); abL = mx(abL, .1, A); elL = mx(elL, .25, A); nod = mx(nod, -.06, A); }
       else if (cel === 'calm') { const pp = Math.sin(t * 9); shL = mx(shL, .55 + .12 * pp, A); shR = mx(shR, .55 + .12 * pp, A); abL = mx(abL, .5, A); abR = mx(abR, .5, A); elL = mx(elL, .35, A); elR = mx(elR, .35, A); lean = mx(lean, -.06, A); nod = mx(nod, -.12, A); ab2 = .1 * A; kneeL = mx(kneeL, .2, A); kneeR = mx(kneeR, .2, A); hp -= .03 * A; }
       else if (cel === 'heart') { shL = mx(shL, 1.3, A); shR = mx(shR, 1.3, A); abL = mx(abL, -.14, A); abR = mx(abR, -.14, A); elL = mx(elL, 1.35, A); elR = mx(elR, 1.35, A); lean = mx(lean, .02, A); roll += .06 * Math.sin(t * 2) * A; nod = mx(nod, .05, A); }
       else if (cel === 'ear') { shR = mx(shR, .35, A); abR = mx(abR, 1.35, A); elR = mx(elR, 2.35 + .1 * Math.sin(t * 5), A); shL = mx(shL, .45, A); abL = mx(abL, 1.05, A); elL = mx(elL, .2, A); lean = mx(lean, -.12, A); roll += .12 * A; twist += .2 * A; }
@@ -7647,6 +7636,273 @@ function introEnd() {
   }, 520);
 }
 
+// ===== src/fete.js =====
+// ===================== GRANDES SOIRÉES EN 3D =====================
+// Trois moments de carrière en plein écran, construits en code avec le vrai modèle du joueur :
+//  - « pres »  : présentation au nouveau club — l'écharpe au-dessus de la tête, devant son public (flashs, feux d'artifice) ;
+//  - « titre » : le trophée soulevé avec les coéquipiers, pluie de confettis aux couleurs du club ;
+//  - « bdo »   : la cérémonie du Ballon d'Or — scène, projecteurs, mur d'écrans, le ballon doré dans les mains.
+// Elles passent juste avant la fenêtre d'événement correspondante (flow, ui3.js). On touche l'écran pour passer.
+const FQ = { q: [] };
+const FETE = { on: false };
+const feteRank = n => /Coupe du monde/.test(n) ? 7 : /Ligue des champions|Coupe des champions/.test(n) ? 6 : /Euro|Copa América|CAN|Gold Cup|Coupe d'Asie/.test(n) ? 5 : /Ligue Europa|Conference/.test(n) ? 3 : /Coupe|Cup|Pokal|Coppa|Copa del Rey|Taça|Beker/.test(n) ? 1 : 2;
+function feteOk() {
+  try { if (typeof document === 'undefined' || !document.body || typeof THREE === 'undefined' || typeof g3Avail !== 'function' || !g3Avail()) return false; } catch (e) { return false; }
+  if (typeof OPTS !== 'undefined' && OPTS.fetes === false) return false;
+  if (typeof navigator !== 'undefined' && navigator.webdriver && !window.__FETE) return false;
+  return true;
+}
+// plusieurs trophées d'un coup (doublé, triplé) : une seule fête, pour le plus prestigieux
+function feteQueue(f) {
+  if (f.k === 'titre') {
+    const o = FQ.q.find(x => x.k === 'titre');
+    if (o) { o.list.push(f.name); if (feteRank(f.name) > feteRank(o.name)) Object.assign(o, { name: f.name, club: f.club, season: f.season }); return; }
+    f.list = [f.name];
+  }
+  FQ.q.push(f);
+}
+// ---------- outils de scène ----------
+function feteSky(sc, night) {
+  const top = night ? '#02040a' : '#3f78c4', hor = night ? '#16213a' : '#b9d4ee';
+  const m = new THREE.ShaderMaterial({ side: THREE.BackSide, depthWrite: false, uniforms: { a: { value: g3Col(top) }, b: { value: g3Col(hor) } }, vertexShader: 'varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }', fragmentShader: 'uniform vec3 a; uniform vec3 b; varying vec3 vP; void main(){ float h = clamp(normalize(vP).y * 2.2, 0.0, 1.0); gl_FragColor = vec4(mix(b, a, h), 1.0); }' });
+  sc.add(new THREE.Mesh(new THREE.SphereGeometry(400, 24, 12), m));
+}
+// public instancié qui saute (même principe que les tribunes du match)
+function feteCrowd(sc, spots, cols, U) {
+  const body = g3Merge([new THREE.BoxGeometry(.42, .62, .28).translate(0, .31, 0), g3Tint(new THREE.BoxGeometry(.2, .22, .2).translate(0, .74, 0), 0xe0b090)]);
+  const cA = body.attributes.color.array; for (let i = 0; i < body.attributes.position.count; i++) if (body.attributes.position.array[i * 3 + 1] < .63) { cA[i * 3] = cA[i * 3 + 1] = cA[i * 3 + 2] = 1; }
+  const ph = new Float32Array(spots.length); body.setAttribute('aPh', new THREE.InstancedBufferAttribute(ph, 1));
+  const mat = new THREE.MeshLambertMaterial({ vertexColors: true });
+  mat.onBeforeCompile = s => { s.uniforms.uT = U.uT; s.uniforms.uE = U.uE; s.vertexShader = s.vertexShader.replace('#include <common>', '#include <common>\nattribute float aPh; uniform float uT; uniform float uE;').replace('#include <begin_vertex>', '#include <begin_vertex>\ntransformed.y += max(0.0, sin(uT * (6.0 + aPh * 3.0) + aPh * 40.0)) * uE * 0.34;'); };
+  const im = new THREE.InstancedMesh(body, mat, spots.length); im.frustumCulled = false;
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), v = new THREE.Vector3(), one = new THREE.Vector3(), Y = new THREE.Vector3(0, 1, 0);
+  spots.forEach(([x, y, z, ry, c, r], i) => { q.setFromAxisAngle(Y, ry); const s = .9 + r * .25; one.set(s, s, s); m4.compose(v.set(x, y, z), q, one); im.setMatrixAt(i, m4); im.setColorAt(i, c); ph[i] = r; });
+  sc.add(im); return im;
+}
+// flashs d'appareils photo (points qui clignotent au hasard)
+function feteFlashes(sc, pts, U) {
+  const g = new THREE.BufferGeometry(), pos = new Float32Array(pts.length * 3), sd = new Float32Array(pts.length);
+  pts.forEach((p, i) => { pos.set(p, i * 3); sd[i] = Math.random() * 100; });
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('sd', new THREE.BufferAttribute(sd, 1));
+  const m = new THREE.ShaderMaterial({ uniforms: { uT: U.uT, uK: U.uK }, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    vertexShader: 'attribute float sd; uniform float uT; uniform float uK; varying float vA; void main(){ float f = fract(uT * (0.35 + fract(sd) * 0.6) + sd); vA = smoothstep(0.985 - uK * 0.02, 1.0, f) * 1.6; vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_PointSize = min(900.0 / max(1.0, -mv.z), 36.0) * vA; gl_Position = projectionMatrix * mv; }',
+    fragmentShader: 'varying float vA; void main(){ vec2 d = gl_PointCoord - 0.5; float a = smoothstep(0.5, 0.0, length(d)); gl_FragColor = vec4(1.0, 0.97, 0.9, a * vA); if (gl_FragColor.a < 0.01) discard; }' });
+  const o = new THREE.Points(g, m); o.frustumCulled = false; o.renderOrder = 7; sc.add(o);
+}
+// stade de nuit aux couleurs du club : pelouse, quatre tribunes pleines, projecteurs
+function feteStade(sc, cols, night, U) {
+  feteSky(sc, night);
+  const [pc, px] = g3Canvas(512, 512); for (let i = 0; i < 16; i++) { px.fillStyle = i % 2 ? '#2f7a35' : '#3a8a40'; px.fillRect(i * 32, 0, 32, 512); }
+  px.globalAlpha = .06; for (let i = 0; i < 6000; i++) { px.fillStyle = Math.random() < .5 ? '#000' : '#fff'; px.fillRect(Math.random() * 512, Math.random() * 512, 2, 2); } px.globalAlpha = 1;
+  const grass = new THREE.Mesh(new THREE.PlaneGeometry(100, 70), new THREE.MeshStandardMaterial({ map: g3Tex(pc, [2, 1]), roughness: .92 })); grass.rotation.x = -Math.PI / 2; sc.add(grass);
+  const lineM = new THREE.MeshBasicMaterial({ color: 0xdfe8e0 });
+  const ring = new THREE.Mesh(new THREE.RingGeometry(9.06, 9.2, 96), lineM); ring.rotation.x = -Math.PI / 2; ring.position.y = .012; sc.add(ring);
+  const mid = new THREE.Mesh(new THREE.PlaneGeometry(.13, 68), lineM); mid.rotation.x = -Math.PI / 2; mid.position.y = .012; sc.add(mid);
+  const dot = new THREE.Mesh(new THREE.CircleGeometry(.22, 16), lineM); dot.rotation.x = -Math.PI / 2; dot.position.y = .013; sc.add(dot);
+  // tribunes : [x, z, rotY, longueur] ; le devant est à 36 m du centre en largeur, 50 m en longueur
+  const wallM = new THREE.MeshLambertMaterial({ color: night ? 0x1d2129 : 0x5b6068 }), seatM = new THREE.MeshLambertMaterial({ color: new THREE.Color(cols[0]).multiplyScalar(.35) });
+  const spots = [], flash = [], C1 = cols[0], C2 = cols[1];
+  for (const [x, z, ry, len] of [[0, -36, 0, 100], [0, 36, Math.PI, 100], [-50, 0, Math.PI / 2, 72], [50, 0, -Math.PI / 2, 72]]) {
+    const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry; sc.add(g);
+    const dep = 22, h0 = 1.2, h1 = 15, sl = new THREE.PlaneGeometry(len, Math.hypot(dep, h1 - h0)); sl.rotateX(-Math.PI / 2 + Math.atan2(h1 - h0, dep)); sl.translate(0, (h0 + h1) / 2, -dep / 2);
+    g.add(new THREE.Mesh(sl, seatM));
+    const front = new THREE.Mesh(new THREE.BoxGeometry(len, h0 + .3, .3), wallM); front.position.set(0, (h0 + .3) / 2, .15); g.add(front);
+    const roof = new THREE.Mesh(new THREE.BoxGeometry(len + 2, .6, dep * .75), new THREE.MeshLambertMaterial({ color: 0x15181d })); roof.position.set(0, h1 + 6, -dep * .62); g.add(roof);
+    const strip = new THREE.Mesh(new THREE.BoxGeometry(len * .92, .3, .3), new THREE.MeshBasicMaterial({ color: 0xfff4d6 })); strip.position.set(0, h1 + 5.6, -dep * .25); g.add(strip);
+    const rows = 22, per = Math.round(len / 1.05);
+    for (let r = 0; r < rows; r++) for (let c = 0; c < per; c++) {
+      if (Math.random() < .28) continue;
+      const lx = -len / 2 + (c + .5) * len / per + (Math.random() - .5) * .3, ld = (r + .5) * dep / rows, ly = h0 + (h1 - h0) * ld / dep;
+      const wx = x + Math.cos(ry) * lx - Math.sin(ry) * ld, wz = z - Math.sin(ry) * lx - Math.cos(ry) * ld, u = Math.random();
+      spots.push([wx, ly, wz, ry + Math.PI, u < .55 ? C1 : u < .85 ? C2 : new THREE.Color().setHSL(Math.random(), .2, .3 + Math.random() * .4), Math.random()]);
+      if (Math.random() < .05) flash.push([wx, ly + 1.1, wz]);
+    }
+  }
+  const cap = typeof g3Low === 'function' && g3Low() ? 2600 : 5200; if (spots.length > cap) spots.length = cap;
+  feteCrowd(sc, spots, cols, U); feteFlashes(sc, flash, U);
+  // projecteurs (halos) dans les coins et sous les toits
+  for (const [x, z] of [[-46, -33], [46, -33], [-46, 33], [46, 33]]) g3Glow(sc, x, 27, z, 30);
+  sc.add(new THREE.HemisphereLight(night ? 0x9fb3e8 : 0xcfe3ff, 0x22341f, night ? .55 : .7));
+  const key = new THREE.DirectionalLight(0xfff4e6, night ? 1.3 : 1.6); key.position.set(6, 22, 14); sc.add(key);
+  const rim = new THREE.DirectionalLight(0xffc870, .8); rim.position.set(-8, 10, -12); sc.add(rim);
+  sc.fog = new THREE.Fog(night ? 0x0b1220 : 0xb9d4ee, 90, 260);
+}
+// trophée doré (coupe tournée, anses ; « grandes oreilles » pour la Ligue des champions)
+function feteCup(name) {
+  const g = new THREE.Group(), gold = new THREE.MeshStandardMaterial({ color: 0xe0b043, metalness: .75, roughness: .26, emissive: 0x3a2706 });
+  if (/Coupe du monde/.test(name)) {
+    const pts = [[0, 0], [.11, 0], [.11, .05], [.07, .07], [.05, .16], [.075, .26], [.06, .33], [0, .36]].map(([x, y]) => new THREE.Vector2(x, y));
+    g.add(new THREE.Mesh(new THREE.LatheGeometry(pts, 28), gold)); const gl = new THREE.Mesh(new THREE.SphereGeometry(.075, 20, 14), gold); gl.position.y = .38; g.add(gl);
+    const band = new THREE.Mesh(new THREE.TorusGeometry(.105, .012, 8, 28), new THREE.MeshStandardMaterial({ color: 0x1f6b3a, roughness: .5 })); band.rotation.x = Math.PI / 2; band.position.y = .03; g.add(band);
+    return g;
+  }
+  const pts = [[0, 0], [.1, 0], [.1, .03], [.06, .05], [.03, .1], [.025, .18], [.05, .2], [.12, .26], [.15, .34], [.15, .40], [.14, .41], [.11, .33], [0, .3]].map(([x, y]) => new THREE.Vector2(x, y));
+  g.add(new THREE.Mesh(new THREE.LatheGeometry(pts, 32), gold));
+  const big = /Ligue des champions|Coupe des champions/.test(name);
+  for (const sd of [-1, 1]) { const h = new THREE.Mesh(new THREE.TorusGeometry(big ? .09 : .055, .012, 8, 20, Math.PI * 1.25), gold); h.position.set(sd * (big ? .19 : .16), .31, 0); h.rotation.z = sd > 0 ? -Math.PI * .62 : Math.PI * .38; g.add(h); }
+  return g;
+}
+// Ballon d'Or : ballon doré sur un petit socle
+function feteBallonOr() {
+  const g = new THREE.Group();
+  const b = new THREE.Mesh(new THREE.SphereGeometry(.11, 32, 22), new THREE.MeshStandardMaterial({ map: g3Tex(g3BallPaint('gold')), metalness: .7, roughness: .25, emissive: 0x2a1c04 })); b.position.y = .145; g.add(b);
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(.05, .065, .04, 24), new THREE.MeshStandardMaterial({ color: 0xc89a34, metalness: .8, roughness: .3 })); base.position.y = .02; g.add(base);
+  return g;
+}
+// pluie de confettis (instances qui tombent en virevoltant)
+function feteConfetti(sc, cols, n) {
+  const im = new THREE.InstancedMesh(new THREE.PlaneGeometry(.07, .04), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }), n); im.frustumCulled = false;
+  const pal = cols.concat([new THREE.Color(0xffd23d), new THREE.Color(0xffffff), new THREE.Color(0xffd23d)]), P = [];
+  for (let i = 0; i < n; i++) { im.setColorAt(i, pal[i % pal.length]); P.push({ x: (Math.random() - .5) * 14, y: 4 + Math.random() * 14, z: (Math.random() - .5) * 10, v: .8 + Math.random() * .9, ph: Math.random() * 6.28, r: Math.random() * 6.28, w: 2 + Math.random() * 5 }); }
+  sc.add(im); im.userData.P = P; im.count = 0; return im;
+}
+function feteConfettiStep(im, dt, t, on) {
+  const P = im.userData.P, m4 = _m.cf || (_m.cf = new THREE.Matrix4()), e = _m.ce || (_m.ce = new THREE.Euler()), q = _m.cq || (_m.cq = new THREE.Quaternion()), v = _m.cv || (_m.cv = new THREE.Vector3()), one = _m.co || (_m.co = new THREE.Vector3(1, 1, 1));
+  im.count = on ? P.length : 0; if (!on) return;
+  for (let i = 0; i < P.length; i++) { const p = P[i]; p.y -= p.v * dt; p.x += Math.sin(t * 1.3 + p.ph) * .5 * dt; if (p.y < 0) { p.y = 10 + Math.random() * 6; } e.set(t * p.w + p.r, p.ph + t, t * p.w * .7); q.setFromEuler(e); m4.compose(v.set(p.x, p.y, p.z), q, one); im.setMatrixAt(i, m4); }
+  im.instanceMatrix.needsUpdate = true;
+}
+// joueurs : corps du jeu, remplacé par le vrai modèle dès qu'il est chargé
+function feteRig(parent, N) { const P = g3Parts(parent, N); P.num = { setMatrixAt() { } }; for (const k of Object.keys(P)) if (P[k] && P[k].castShadow != null) P[k].castShadow = false; P.N = N; P.parent = parent; return P; }
+function feteSk(P) {
+  if (P.sk || typeof G3SK === 'undefined' || G3SK.fail) return;
+  const skm = G3SK.standIn ? (G3SK.model || (G3SK.model = g3SkStandIn())) : G3SK.model; if (!skm) { if (typeof g3SkLoad === 'function') g3SkLoad(); return; }
+  try { P.sk = g3SkMesh(P.parent, P.N, skm); P.sk.meshes.forEach(m => { m.castShadow = false; }); if (skm.rig) G3RIG = Object.assign({}, G3RIG_DEF, skm.rig); for (const k of ['torso', 'shorts', 'head', 'hair', 'uarm', 'ubare', 'farm', 'hand', 'thigh', 'shin', 'boot']) P[k].visible = false; P.kitDone = false; } catch (e) { P.sk = null; }
+}
+function feteKit(P, kits) {
+  kits.forEach((c, n) => {
+    P.torso.setColorAt(n, c.shirt); P.shorts.setColorAt(n, c.shorts); P.head.setColorAt(n, c.skin); P.hair.setColorAt(n, c.hair);
+    for (const k of [0, 1]) { const i = n * 2 + k; P.uarm.setColorAt(i, c.shirt); P.ubare.setColorAt(i, c.skin); P.farm.setColorAt(i, c.skin); P.hand.setColorAt(i, c.skin); P.thigh.setColorAt(i, c.skin); P.shin.setColorAt(i, c.socks); P.boot.setColorAt(i, c.boots); }
+    if (P.sk) g3SkColors(P.sk, n, c);
+  });
+  for (const k of Object.keys(P)) if (P[k] && P[k].instanceColor) P[k].instanceColor.needsUpdate = true;
+}
+const feteHand = (P, n, k) => { const m = _m.fh || (_m.fh = new THREE.Matrix4()); P.hand.getMatrixAt(n * 2 + k, m); return new THREE.Vector3().setFromMatrixPosition(m); };
+// ---------- la soirée elle-même ----------
+function fetePlay(f, done) {
+  if (FETE.on) return done && done();
+  const low = typeof g3Low === 'function' && g3Low();
+  const el = document.createElement('div'); el.id = 'fete'; el.setAttribute('aria-label', 'Grande soirée');
+  const hasS = typeof S !== 'undefined' && S && S.p, me = hasS && typeof pName === 'function' ? pName() : 'Ton joueur', coach = hasS && typeof isCoach === 'function' && isCoach();
+  const kick = f.k === 'pres' ? 'Présentation officielle' : f.k === 'bdo' ? 'Cérémonie · ' + f.yr : f.list && f.list.length > 1 ? (['', '', 'Doublé !', 'Triplé !', 'Quadruplé !'][f.list.length] || 'Razzia !') : 'Champion !';
+  const big = f.k === 'pres' ? f.club : f.k === 'bdo' ? 'Ballon d\'Or' : f.name;
+  const sub = f.k === 'pres' ? `${esc(me)} · n°${f.num}` : f.k === 'bdo' ? `${esc(me)}` : `${esc(f.club)} · ${esc(f.season || '')}`;
+  const small = f.k === 'pres' ? (f.until ? `Sous contrat jusqu'en juin ${f.until}` : '') : f.k === 'bdo' ? `Meilleur joueur du monde ${f.yr}${f.club ? ' · ' + esc(f.club) : ''}` : f.list && f.list.length > 1 ? f.list.map(esc).join(' · ') : coach ? 'Ton équipe soulève le trophée' : 'Tu soulèves le trophée';
+  el.innerHTML = `<canvas></canvas><div class="fete-txt"><div class="fete-kick">${esc(kick)}</div><h1 class="fete-big">${esc(big)}</h1><div class="fete-sub">${sub}</div>${small ? `<div class="fete-small">${small}</div>` : ''}</div><div class="fete-hint">Touche l'écran pour continuer</div><div class="fete-flash"></div>`;
+  document.body.appendChild(el);
+  const F = FETE; Object.assign(F, { on: true, el, done, f, t0: performance.now(), last: performance.now(), dur: f.k === 'pres' ? 9.5 : 10.5, ending: false, fx: {} });
+  try {
+    const cv = el.querySelector('canvas'), r = new THREE.WebGLRenderer({ canvas: cv, antialias: !low, powerPreference: 'high-performance' });
+    r.setPixelRatio(Math.min(low ? 1.25 : 2, window.devicePixelRatio || 1)); r.outputEncoding = THREE.sRGBEncoding; r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.12; r.setClearColor(0x000000, 1);
+    const sc = new THREE.Scene(), cam = new THREE.PerspectiveCamera(38, 1, .1, 600), U = { uT: { value: 0 }, uE: { value: f.k === 'bdo' ? .15 : 1 }, uK: { value: 1 } };
+    Object.assign(F, { r, cv, sc, cam, U });
+    g3Tmp();
+    const kc = typeof kitColors === 'function' ? kitColors(f.club || '') : { col: '#1f3a8a', col2: '#ffffff' }, cols = [g3Lin(kc.col), g3Lin(kc.col2 || '#ffffff')];
+    const skin = g3Lin(typeof SKIN !== 'undefined' && typeof hashN === 'function' ? SKIN[hashN(me) % SKIN.length] : '#c48a60'), hair = new THREE.Color(0x1b1410);
+    const boots = g3Lin(typeof shopEq === 'function' ? shopEq('boots') : '#111111'), suit = new THREE.Color(0x0e0f12), shirtW = new THREE.Color(0xe8e8e8);
+    const kitMe = (f.k === 'bdo' || coach) ? { shirt: suit, shorts: suit, socks: suit, skin, hair, boots: new THREE.Color(0x07080a) } : { shirt: cols[0], shorts: cols[1], socks: cols[0], skin, hair, boots };
+    if (f.k === 'bdo') {
+      // salle de cérémonie : scène, mur d'écrans doré, public en tenue de soirée, projecteurs qui balaient
+      sc.background = new THREE.Color(0x020203); sc.fog = new THREE.Fog(0x020203, 18, 46);
+      const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 40), new THREE.MeshStandardMaterial({ color: 0x0b0c10, metalness: .3, roughness: .6 })); floor.rotation.x = -Math.PI / 2; sc.add(floor);
+      const stage = new THREE.Mesh(new THREE.BoxGeometry(12, .45, 6), new THREE.MeshStandardMaterial({ color: 0x121318, metalness: .5, roughness: .3 })); stage.position.set(0, .225, -.6); sc.add(stage);
+      const edge = new THREE.Mesh(new THREE.BoxGeometry(12.05, .04, .04), new THREE.MeshBasicMaterial({ color: 0xffc44a })); edge.position.set(0, .45, 2.42); sc.add(edge);
+      const [wc, wx] = g3Canvas(1024, 448), gr = wx.createRadialGradient(512, 230, 20, 512, 230, 560); gr.addColorStop(0, '#8a5a12'); gr.addColorStop(.4, '#4a2e08'); gr.addColorStop(.8, '#140c03'); gr.addColorStop(1, '#050302'); wx.fillStyle = gr; wx.fillRect(0, 0, 1024, 448);
+      wx.globalAlpha = .25; for (let i = 0; i < 240; i++) { wx.fillStyle = '#fff3c4'; wx.beginPath(); wx.arc(Math.random() * 1024, Math.random() * 448, Math.random() * 3, 0, 7); wx.fill(); } wx.globalAlpha = 1;
+      wx.fillStyle = '#ffe6a8'; wx.textAlign = 'center'; wx.font = '800 112px Arial, sans-serif'; wx.fillText('BALLON D\'OR', 512, 240); wx.font = '700 64px Arial, sans-serif'; wx.fillStyle = '#ffe3a0'; wx.fillText(String(f.yr || ''), 512, 330);
+      const wall = new THREE.Mesh(new THREE.PlaneGeometry(16, 7), new THREE.MeshBasicMaterial({ map: g3Tex(wc), color: 0x7a7a7a, toneMapped: false })); wall.position.set(0, 4.2, -4.2); sc.add(wall);
+      for (const sd of [-1, 1]) { const col = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 8), new THREE.MeshBasicMaterial({ color: 0xffb93d, transparent: true, opacity: .16, toneMapped: false })); col.position.set(sd * 9.5, 4, -4); sc.add(col); }
+      // public assis, face à la scène
+      const spots = []; for (let r = 0; r < 9; r++) for (let c = 0; c < 26; c++) { if (Math.random() < .1) continue; const x = (c - 12.5) * .95 + (r % 2) * .4, z = 5 + r * .75, u = Math.random(); spots.push([x, r * .18, z, Math.PI, u < .7 ? new THREE.Color(0x15161b) : u < .85 ? new THREE.Color(0x3a1220) : new THREE.Color(0xd9d9d9), Math.random()]); }
+      feteCrowd(sc, spots, cols, U);
+      const fl = []; for (let i = 0; i < 50; i++) fl.push([(Math.random() - .5) * 26, 1.2 + Math.random() * 1.5, 5 + Math.random() * 5]); feteFlashes(sc, fl, U);
+      // faisceaux de projecteurs (cônes lumineux)
+      F.beams = []; for (let i = 0; i < 4; i++) { const cg = new THREE.ConeGeometry(1.6, 13, 24, 1, true); cg.translate(0, -6.5, 0); const b = new THREE.Mesh(cg, new THREE.MeshBasicMaterial({ color: i % 2 ? 0xffe2a6 : 0xffffff, transparent: true, opacity: .07, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, toneMapped: false })); b.position.set((i - 1.5) * 4.5, 13, 1); sc.add(b); F.beams.push(b); }
+      sc.add(new THREE.HemisphereLight(0xffe9c4, 0x111111, .35));
+      const key = new THREE.SpotLight(0xfff1d6, 1.5, 40, .32, .5); key.position.set(2, 12, 9); key.target.position.set(0, 1.2, 0); sc.add(key); sc.add(key.target);
+      const back = new THREE.DirectionalLight(0xffb84a, .9); back.position.set(0, 6, -8); sc.add(back);
+      const g = new THREE.Group(); g.position.y = .45; sc.add(g); F.stageY = .45;
+      F.P = feteRig(g, 1); F.kits = [kitMe]; F.prop = feteBallonOr(); g.add(F.prop); F.prop.visible = false;
+      F.conf = feteConfetti(sc, [new THREE.Color(0xffd23d), new THREE.Color(0xfff2c0)], low ? 260 : 600);
+    } else {
+      feteStade(sc, cols, f.k === 'pres' || f.night !== false, U);
+      const N = f.k === 'titre' ? 7 : 1; F.P = feteRig(sc, N); F.stageY = 0;
+      F.kits = [kitMe]; for (let i = 1; i < N; i++) F.kits.push({ shirt: cols[0], shorts: cols[1], socks: cols[0], skin: g3Lin(typeof SKIN !== 'undefined' ? SKIN[(i * 7) % SKIN.length] : '#c48a60'), hair: new THREE.Color(i % 3 ? 0x1b1410 : 0x6b4a2a), boots: new THREE.Color(0x111111) });
+      if (f.k === 'pres') {
+        // écharpe aux couleurs du club, avec son nom
+        const [ec, ex] = g3Canvas(512, 64); for (let i = 0; i < 16; i++) { ex.fillStyle = '#' + (i % 2 ? cols[1] : cols[0]).clone().convertLinearToSRGB().getHexString(); ex.fillRect(i * 32, 0, 32, 64); }
+        ex.fillStyle = '#' + cols[0].clone().convertLinearToSRGB().getHexString(); ex.fillRect(70, 8, 372, 48); ex.fillStyle = '#' + cols[1].clone().convertLinearToSRGB().getHexString(); ex.font = '900 34px Arial, sans-serif'; ex.textAlign = 'center'; ex.textBaseline = 'middle'; ex.fillText(String(f.club || '').toUpperCase().slice(0, 18), 256, 33);
+        F.prop = new THREE.Mesh(new THREE.PlaneGeometry(1, .2), new THREE.MeshStandardMaterial({ map: g3Tex(ec), side: THREE.DoubleSide, roughness: .9 })); sc.add(F.prop); F.prop.visible = false;
+      } else { F.prop = feteCup(f.name); sc.add(F.prop); F.conf = feteConfetti(sc, cols, low ? 300 : 700); }
+    }
+    feteKit(F.P, F.kits);
+  } catch (e) { console.warn('soirée 3D', e); return feteEnd(true); }
+  // le son : le stade (ou la salle) qui chante, puis l'explosion de joie
+  try {
+    if (typeof smpLoad === 'function' && typeof AU !== 'undefined' && AU.ctx) {
+      const pr = smpLoad(), go = () => { if (!F.on) return; const lp = f.k === 'bdo' ? 1800 : 0; F.snd = [smpPlay('cheer_loop', f.k === 'bdo' ? .5 : .85, { loop: true, fade: 1.2, lp: lp || undefined })]; F.snd.push(smpPlay(f.k === 'bdo' ? 'surge' : 'roar', .95, { at: f.k === 'pres' ? 1.4 : 1.1, len: 6, lp: lp || undefined })); if (f.k === 'pres') F.snd.push(smpPlay('chant', .75, { at: 3.4, len: 6 })); };
+      if (pr && pr.then) pr.then(go); else go();
+    }
+  } catch (e) { }
+  el.addEventListener('click', () => feteEnd());
+  addEventListener('resize', feteSize); feteSize();
+  requestAnimationFrame(feteFrame);
+}
+function feteSize() { const F = FETE; if (!F.on || !F.r) return; const w = innerWidth, h = innerHeight; F.r.setSize(w, h, false); F.cam.aspect = w / h; F.cam.updateProjectionMatrix(); F.w = w; F.h = h; }
+function feteFrame(now) {
+  const F = FETE; if (!F.on || !F.r) return; requestAnimationFrame(feteFrame);
+  const dt = Math.min(.05, (now - F.last) / 1000); F.last = now; const t = (now - F.t0) / 1000, f = F.f, cam = F.cam, P = F.P;
+  F.U.uT.value = now / 1000; F.U.uE.value = f.k === 'bdo' ? (t > 1.6 ? .35 : .1) : t > 1.2 ? 1 : .35;
+  feteSk(P); if (P.sk && !P.kitDone) { P.kitDone = true; feteKit(P, F.kits); }
+  // poses : le joueur (n° 0) et, pour un titre, les coéquipiers qui sautent autour de lui
+  const face = Math.PI / 2;
+  if (f.k === 'pres') g3Pose(P, 0, { x: 0, z: 0, yaw: face, v: 0, ph: 0, act: t > 1.3 ? 8 : 0, at: Math.min(t - 1.3, 9), cel: 'echarpe', tm: now / 1000, gdt: dt, snap: t < .05, key: 'fete0', idle: 0 });
+  else if (f.k === 'bdo') g3Pose(P, 0, { x: 0, z: 0, yaw: face, v: 0, ph: 0, act: 8, at: Math.min(t, 9), cel: t > 1.7 ? 'ballon' : 'salut', tm: now / 1000, gdt: dt, snap: t < .05, key: 'fete0', idle: 0 });
+  else {
+    g3Pose(P, 0, { x: 0, z: 0, yaw: face, v: 0, ph: 0, act: 8, at: Math.min(t, 9), cel: 'trophee', tm: now / 1000, gdt: dt, snap: t < .05, key: 'fete0', idle: 0 });
+    for (let i = 1; i < P.N; i++) { const a = Math.PI * (1.12 + .76 * (i - 1) / (P.N - 2)), rr = 1.7 + (i % 2) * .7; g3Pose(P, i, { x: Math.cos(a) * rr, z: Math.sin(a) * rr * .8 - .3, yaw: face + (i - 3.5) * .06, v: 0, ph: 0, act: 18, at: Math.min(t + i * .13, 8.9), tm: now / 1000 + i, gdt: dt, snap: t < .05, key: 'fete' + i, idle: 0 }); }
+  }
+  for (const k of ['torso', 'shorts', 'head', 'hair', 'uarm', 'ubare', 'farm', 'hand', 'thigh', 'shin', 'boot']) P[k].instanceMatrix.needsUpdate = true;
+  if (P.sk) g3SkFlush(P.sk);
+  // objet tenu : entre les deux mains
+  const hl = feteHand(P, 0, 0), hr = feteHand(P, 0, 1), mid = hl.clone().add(hr).multiplyScalar(.5), Y = F.stageY || 0;
+  if (f.k === 'pres') {
+    const on = t > 1.5; F.prop.visible = on;
+    if (on) { const dx = hr.x - hl.x, dz = hr.z - hl.z, d = Math.max(.35, Math.hypot(dx, dz, hr.y - hl.y)); F.prop.position.set(mid.x, mid.y - .02, mid.z + .04); let a = -Math.atan2(dz, dx), tilt = Math.atan2(hr.y - hl.y, Math.hypot(dx, dz)) * .6; if (Math.sin(a) * (cam.position.x - mid.x) + Math.cos(a) * (cam.position.z - mid.z) < 0) { a += Math.PI; tilt = -tilt; } F.prop.rotation.set(0, a, tilt); F.prop.scale.set(d + .28, 1, 1); }
+  } else if (f.k === 'bdo') { F.prop.visible = t > 1.7; F.prop.position.set(mid.x, mid.y - .14, mid.z + .06); F.prop.rotation.y = t * .6; }
+  else { F.prop.position.set(mid.x, mid.y - .12, mid.z + .02); F.prop.rotation.set(0, Math.sin(t * .7) * .3, 0); }
+  // effets : feux d'artifice et confettis aux grands moments
+  const fx = (key, at, type, x, z) => { if (t > at && !F.fx[key]) { F.fx[key] = 1; g3FxGoal(F.sc, cam, type, x, z, f.k === 'bdo' ? ['#ffd23d', '#fff2c0'] : (k => [k.col, k.col2 || '#ffffff'])(typeof kitColors === 'function' ? kitColors(f.club || '') : { col: '#ffd23d' })); } };
+  if (f.k === 'pres') { fx('a', 1.6, 'fireworks', 0, -6); fx('b', 4.2, 'fireworks', -6, -10); fx('c', 6.4, 'fireworks', 6, -10); }
+  else if (f.k === 'titre') { fx('a', .9, 'confetti', 0, 0); fx('b', 2.4, 'fireworks', 0, -8); fx('c', 4.8, 'fireworks', -7, -12); fx('d', 7, 'fireworks', 7, -12); }
+  else { fx('a', 1.75, 'confetti', 0, 0); }
+  if (F.conf) feteConfettiStep(F.conf, dt, t, t > (f.k === 'bdo' ? 1.7 : .9));
+  if (F.beams) F.beams.forEach((b, i) => { b.rotation.z = Math.sin(t * .5 + i * 1.7) * .32; b.rotation.x = Math.cos(t * .37 + i) * .18; b.material.opacity = .05 + .03 * Math.sin(t * 2 + i); });
+  g3FxUpdate(F.sc, cam, dt, (F.h || 600) * F.r.getPixelRatio());
+  // caméra
+  const E = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+  if (f.k === 'pres') { const k = E(t / 4.2), ang = Math.PI * 1.5 * (1 - k) + Math.PI * .5 + .35 * k + Math.sin(t * .15) * .05, R = 7.5 - 3.4 * k; cam.position.set(Math.cos(ang) * R, 1.9 - .45 * k, Math.sin(ang) * R); cam.lookAt(0, 1.35, 0); cam.fov = 40; }
+  else if (f.k === 'titre') { const k = E(t / 6), ang = Math.PI * .5 + Math.sin(t * .22) * .5, R = 6.2 - 1.2 * k; cam.position.set(Math.cos(ang) * R, .55 + 1.4 * k, Math.sin(ang) * R); cam.lookAt(0, 1.7 - .4 * k, 0); cam.fov = 42; }
+  else { const k = E(t / 5.5); cam.position.set(Math.sin(t * .12) * 1.2 * (1 - k * .6), 3.1 - 1.3 * k, 13.5 - 8.2 * k); cam.lookAt(0, 1.55 + Y * .5, 0); cam.fov = 36; }
+  cam.updateProjectionMatrix();
+  if (t > 1.1 && !F.txt) { F.txt = 1; F.el.classList.add('txt'); }
+  if (t > 1.6 && !F.flash && f.k !== 'pres') { F.flash = 1; F.el.classList.add('flash'); }
+  if (t > F.dur) feteEnd();
+  try { F.r.render(F.sc, cam); } catch (e) { feteEnd(true); }
+}
+function feteEnd(now) {
+  const F = FETE; if (!F.on || F.ending) return; F.ending = true;
+  try { const c = AU.ctx; for (const s of F.snd || []) if (s) { s.g.gain.setTargetAtTime(0, c.currentTime, .35); s.src.stop(c.currentTime + 1.8); } } catch (e) { }
+  const el = F.el; if (el) el.classList.add('out');
+  setTimeout(() => {
+    removeEventListener('resize', feteSize);
+    try { if (F.sc) F.sc.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material) { const ms = Array.isArray(o.material) ? o.material : [o.material]; ms.forEach(m => { if (m.map) m.map.dispose(); m.dispose(); }); } }); if (F.r) { F.r.dispose(); if (F.r.forceContextLoss) F.r.forceContextLoss(); } } catch (e) { }
+    if (el) el.remove(); const d = F.done; Object.assign(F, { on: false, el: null, r: null, sc: null, P: null, prop: null, conf: null, beams: null, snd: null, txt: 0, flash: 0, done: null });
+    if (typeof G3JS !== 'undefined') for (let i = 0; i < 8; i++) G3JS.delete('fete' + i);
+    if (d) d();
+  }, now ? 0 : 520);
+}
+
 // ===== src/loading.js =====
 // ---------- Écran de chargement : stade de nuit, projecteurs qui s'allument, poussière d'or, ballon qui roule ----------
 // Un seul canvas 2D (léger pour l'iPhone) : décor fixe pré-dessiné, effets animés par-dessus.
@@ -8185,7 +8441,7 @@ let MODAL = null, TOAST_T = null;
 const OPTS_KEY = 'cdo2_opts';
 // caméras du match en 3D : [clé, nom court, description]
 const CAM_VIEWS = [['tv', 'TV', 'Caméra TV'], ['large', 'Large', 'Caméra large'], ['tac', 'Tactique', 'Vue tactique : les lignes des deux équipes'], ['joueur', 'Mon joueur', 'Caméra derrière ton joueur'], ['but', 'Derrière le but', 'Caméra derrière le but'], ['bord', 'Bord du terrain', 'Caméra au bord du terrain'], ['drone', 'Drone', 'Caméra drone au-dessus de l\'action']];
-const OPT_DEF = { live: 'all', speed: 1, music: true, mvol: .55, svol: .8, shuffle: true, mg: true, interrupt: 'all', voice: true, replay: 'all', gfx: '3d', cam: 'tv', chat: 'all', v1: '', v2: '', aiv: 'off', aivMode: 'all', aivS: '', aivN: '', aivM: 'eleven_flash_v2_5', aivEL: [], intro: true };
+const OPT_DEF = { live: 'all', speed: 1, music: true, mvol: .55, svol: .8, shuffle: true, mg: true, interrupt: 'all', voice: true, replay: 'all', gfx: '3d', cam: 'tv', chat: 'all', v1: '', v2: '', aiv: 'off', aivMode: 'all', aivS: '', aivN: '', aivM: 'eleven_flash_v2_5', aivEL: [], intro: true, fetes: true };
 function loadOpts() { try { return Object.assign({}, OPT_DEF, JSON.parse(localStorage.getItem(OPTS_KEY) || '{}')); } catch (e) { return Object.assign({}, OPT_DEF); } }
 let OPTS = loadOpts();
 function saveOpts() { try { localStorage.setItem(OPTS_KEY, JSON.stringify(OPTS)); } catch (e) { } }
@@ -8935,9 +9191,9 @@ function vSaves() {
 // voix IA : fournisseur, clé API (gardée sur l'appareil), voix, mode économique, consommation
 function vAiVoice() {
   const P = OPTS.aiv || 'off', k = typeof aivKey === 'function' ? aivKey() : '', seg = (a, v, l, on) => `<button data-a="${a}" data-v="${v}" class="${on ? 'on' : ''}">${l}</button>`;
-  let h = `<p class="note">Lo Sol et Nathalie parlent avec de vraies voix humaines générées par une IA, au lieu des voix du téléphone. Il te faut un compte et une clé API chez OpenAI ou ElevenLabs : c'est payant à l'usage, sur ton compte.</p>
-  <div class="seg">${seg('aivProv', 'off', 'Désactivé', P === 'off')}${seg('aivProv', 'openai', 'OpenAI', P === 'openai')}${seg('aivProv', 'eleven', 'ElevenLabs', P === 'eleven')}</div>`;
-  if (P === 'off') return h;
+  let h = `<p class="note">Lo Sol, Nathalie et les autres personnages parlent avec les voix que tu as créées sur ElevenLabs. Il te faut ta clé API ElevenLabs : c'est payant à l'usage, sur ton compte. Sans clé, seules tes répliques enregistrées sont dites, le reste s'affiche en texte.</p>
+  <div class="seg">${seg('aivProv', 'off', 'Désactivé', P !== 'eleven')}${seg('aivProv', 'eleven', 'ElevenLabs', P === 'eleven')}</div>`;
+  if (P !== 'eleven') return h;
   const sel = (id, label, cur, opts) => `<div class="vpick"><label class="lbl" for="${id}">${label}</label><div class="vrow"><select id="${id}">${opts.map(([v, l]) => `<option value="${esc(v)}"${cur === v ? ' selected' : ''}>${esc(l)}</option>`).join('')}</select></div></div>`;
   h += `<div class="vpick"><label class="lbl" for="aivKeyIn">Clé API ${P === 'openai' ? 'OpenAI' : 'ElevenLabs'}</label><div class="vrow"><input id="aivKeyIn" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${k ? 'Clé enregistrée ••••' + esc(k.slice(-4)) : 'Colle ta clé ici'}"><button class="btn sm" data-a="aivSaveKey">Enregistrer</button>${k ? '<button class="btn sm" data-a="aivDelKey">Effacer</button>' : ''}</div></div>`;
   if (P === 'openai') {
@@ -8969,16 +9225,6 @@ function vAiVoice() {
   h += `<p class="note">Ce mois-ci : ${U.toLocaleString('fr-FR')} caractères envoyés. Un match regardé en entier en ×1 en consomme environ 13 000 à 16 000 (environ 4 500 en mode économique, qui ne garde que les temps forts et les histoires) ; les répliques déjà entendues sont gardées sur le téléphone et ne sont pas refacturées. Ta clé reste sur ce téléphone, n'est envoyée qu'à ${P === 'openai' ? 'OpenAI' : 'ElevenLabs'} et n'apparaît pas dans les sauvegardes exportées. Pense à fixer un plafond de dépenses sur ton compte. La voix IA marche dans la version Netlify/GitHub ; si la page publiée ici bloque l'appel, le jeu repasse tout seul aux voix du téléphone.</p>`;
   return h;
 }
-// choix des voix des commentateurs (voix françaises installées sur l'appareil)
-function vVoicePick() {
-  if (typeof sayInit !== 'function' || !sayInit()) return '<p class="note">La synthèse vocale n\'est pas disponible sur ce navigateur.</p>';
-  sayPick(); const L = sayVoices().slice().sort((a, b) => sayQual(b) - sayQual(a) || a.name.localeCompare(b.name));
-  const tag = v => ({ 3: ' · premium', 2: ' · améliorée', 1: '', 0: ' · de base', '-1': ' · gadget' })[sayQual(v)] + (/^fr[-_]FR/i.test(v.lang) ? '' : ' · ' + v.lang.slice(3));
-  const sel = (id, cur, who) => `<div class="vpick"><label class="lbl" for="${id}">Voix de ${who === 'N' ? 'Nathalie' : 'Lo Sol'}</label><div class="vrow"><select id="${id}"><option value="">Automatique${(who === 'N' ? SAY.voice2 : SAY.voice) ? ' (' + esc((who === 'N' ? SAY.voice2 : SAY.voice).name) + ')' : ''}</option>${L.map(v => `<option value="${esc(v.voiceURI)}"${cur === v.voiceURI ? ' selected' : ''}>${esc(v.name + tag(v))}</option>`).join('')}</select><button class="btn sm" data-a="vTest" data-v="${who}">Écouter</button></div></div>`;
-  const bestQ = L.length ? Math.max(...L.map(sayQual)) : -2;
-  const hint = bestQ < 2 ? `<details class="alert vhelp"><summary><b>Voix robotiques ?</b> <span class="note">· toucher pour l'astuce</span></summary><span>Ton téléphone n'a que des voix de base. Sur iPhone : Réglages › Accessibilité › Contenu énoncé › Voix › Français, puis télécharge une voix « améliorée » ou « premium » (par exemple Thomas pour Lo Sol, Audrey ou Aurélie pour Nathalie). Reviens ici ensuite : le jeu les choisit tout seul.</span></details>` : `<p class="note">Les voix « améliorées » ou « premium » sonnent bien plus naturel. Pour en ajouter sur iPhone : Réglages › Accessibilité › Contenu énoncé › Voix › Français.</p>`;
-  return (L.length ? sel('vS', OPTS.v1 || '', 'S') + sel('vN', OPTS.v2 || '', 'N') : '<p class="note">Aucune voix française trouvée pour l\'instant (touche « Voix activée » pour les charger).</p>') + hint;
-}
 // Options en trois volets (tout tient à l'écran)
 const OPT_TABS = [['match', 'Matchs'], ['jeu', 'Jeu'], ['son', 'Son'], ['ia', 'Voix IA']];
 function vOptions() {
@@ -8990,12 +9236,13 @@ function vOptionsAll() {
   const o = UI.screen === 'game' && S ? S.settings : OPTS;
   return `<section class="card sec"><h3>Matchs en direct</h3><div class="seg">${[['all', 'Tous'], ['big', 'Les grands'], ['none', 'Aucun']].map(([k, n]) => `<button data-a="optLive" data-v="${k}" class="${o.live === k ? 'on' : ''}">${n}</button>`).join('')}</div><p class="note">En direct, tu décides aux moments clés. « Aucun » : résultat simulé.</p></section>
   <section class="card sec"><h3>Vitesse du temps</h3><div class="seg">${[['0', 'Lente'], ['1', 'Normale'], ['2', 'Rapide'], ['3', 'Instant.']].map(([k, n]) => `<button data-a="optSpeed" data-v="${k}" class="${+o.speed === +k ? 'on' : ''}">${n}</button>`).join('')}</div><p class="note">Animation quand les jours défilent.</p></section>
-  <section class="card sec"><h3>Commentateurs</h3><p class="note">Jordi « Lo Sol » Puig, ancien ailier catalan intarissable, et Nathalie Ferrand, ancienne milieu internationale qui essaie de le ramener au match.</p><div class="seg"><button data-a="optVoice" data-v="1" class="${OPTS.voice !== false ? 'on' : ''}">Voix activée</button><button data-a="optVoice" data-v="0" class="${OPTS.voice === false ? 'on' : ''}">Texte seulement</button></div><div class="seg"><button data-a="optChat" data-v="all" class="${OPTS.chat !== 'match' ? 'on' : ''}">Bavards (histoires, chansons)</button><button data-a="optChat" data-v="match" class="${OPTS.chat === 'match' ? 'on' : ''}">Le match seulement</button></div><p class="note">Les digressions et les chansons arrivent dans les temps calmes, en vitesse ×1 ou ×2.</p>${typeof VOIX_INDEX !== 'undefined' && Object.keys(VOIX_INDEX).length ? `<div class="seg"><button data-a="optRec" data-v="1" class="${OPTS.voixRec !== false ? 'on' : ''}">Voix enregistrées</button><button data-a="optRec" data-v="0" class="${OPTS.voixRec === false ? 'on' : ''}">Voix du téléphone</button></div><p class="note">${Object.keys(VOIX_INDEX).length} répliques enregistrées en studio (ElevenLabs) sont livrées avec le jeu : elles marchent sans clé et hors connexion. Les phrases avec des noms de joueurs passent par la voix IA si elle est réglée, sinon par la voix du téléphone.</p>` : ''}${vVoicePick()}</section>
+  <section class="card sec"><h3>Commentateurs</h3><p class="note">Jordi « Lo Sol » Puig, ancien ailier catalan intarissable, et Nathalie Ferrand, ancienne milieu internationale qui essaie de le ramener au match.</p><div class="seg"><button data-a="optVoice" data-v="1" class="${OPTS.voice !== false ? 'on' : ''}">Voix activée</button><button data-a="optVoice" data-v="0" class="${OPTS.voice === false ? 'on' : ''}">Texte seulement</button></div><div class="seg"><button data-a="optChat" data-v="all" class="${OPTS.chat !== 'match' ? 'on' : ''}">Bavards (histoires, chansons)</button><button data-a="optChat" data-v="match" class="${OPTS.chat === 'match' ? 'on' : ''}">Le match seulement</button></div><p class="note">Les digressions et les chansons arrivent dans les temps calmes, en vitesse ×1 ou ×2.</p>${typeof VOIX_INDEX !== 'undefined' && Object.keys(VOIX_INDEX).length ? `<div class="seg"><button data-a="optRec" data-v="1" class="${OPTS.voixRec !== false ? 'on' : ''}">Voix enregistrées</button><button data-a="optRec" data-v="0" class="${OPTS.voixRec === false ? 'on' : ''}">Désactivées</button></div><p class="note">${Object.keys(VOIX_INDEX).length} répliques enregistrées avec ta voix (ElevenLabs) sont livrées avec le jeu : elles marchent sans clé et hors connexion.</p>` : ''}<p class="note">Seules de vraies voix humaines parlent : tes répliques enregistrées et ta voix ElevenLabs (onglet Voix IA). Les phrases sans voix enregistrée s'affichent en texte — plus de voix robotique du téléphone.</p></section>
   <section class="card sec"><h3>Vraies voix (IA)</h3>${vAiVoice()}</section>
   <section class="card sec"><h3>Graphismes des matchs</h3><div class="seg">${[['3d', '3D'], ['3dl', '3D rapide'], ['2d', '2D léger']].map(([k, n]) => `<button data-a="optGfx" data-v="${k}" class="${(OPTS.gfx || '3d') === k ? 'on' : ''}">${n}</button>`).join('')}</div>${typeof g3Avail === 'function' && !g3Avail() ? '<p class="note">La 3D n\'est pas disponible sur cet appareil : le jeu utilise la 2D.</p>' : '<p class="note">Si ça saccade, le jeu passe seul en 3D rapide.</p>'}</section>
   <section class="card sec"><h3>Ralentis</h3><div class="seg">${[['all', 'Grosses actions'], ['goals', 'Buts seulement'], ['none', 'Aucun']].map(([k, n]) => `<button data-a="optReplay" data-v="${k}" class="${(OPTS.replay || 'all') === k ? 'on' : ''}">${n}</button>`).join('')}</div><p class="note">Buts, poteaux, arrêts décisifs, grosses occasions.</p></section>
   <section class="card sec"><h3>Mini-jeux d'adresse</h3><div class="seg"><button data-a="optMg" data-v="1" class="${o.mg !== false ? 'on' : ''}">Activés</button><button data-a="optMg" data-v="0" class="${o.mg === false ? 'on' : ''}">Désactivés</button></div><p class="note">Vise et tape au bon moment. Désactivés : simple choix.</p></section>
   <section class="card sec"><h3>Écran d'ouverture</h3><div class="seg"><button data-a="optIntro" data-v="1" class="${OPTS.intro !== false ? 'on' : ''}">Activé</button><button data-a="optIntro" data-v="0" class="${OPTS.intro === false ? 'on' : ''}">Jamais</button><button data-a="introReplay">▶ Revoir</button></div><p class="note">Le retourné qui casse l'écran, avec le son quand tu le revois.</p></section>
+  <section class="card sec"><h3>Grandes soirées en 3D</h3><div class="seg"><button data-a="optFetes" data-v="1" class="${OPTS.fetes !== false ? 'on' : ''}">Activées</button><button data-a="optFetes" data-v="0" class="${OPTS.fetes === false ? 'on' : ''}">Jamais</button></div><div class="seg" style="margin-top:8px"><button data-a="feteDemo" data-v="pres">▶ Présentation</button><button data-a="feteDemo" data-v="titre">▶ Titre</button><button data-a="feteDemo" data-v="bdo">▶ Ballon d'Or</button></div><p class="note">Ta présentation au nouveau club devant ses supporters, le trophée soulevé avec tes coéquipiers, la cérémonie du Ballon d'Or. On touche l'écran pour passer.</p></section>
   <section class="card sec"><h3>Interruptions</h3><div class="seg"><button data-a="optInt" data-v="all" class="${o.interrupt !== 'key' ? 'on' : ''}">Toutes</button><button data-a="optInt" data-v="key" class="${o.interrupt === 'key' ? 'on' : ''}">Essentielles</button></div><p class="note">Essentielles : moins de fenêtres pendant la saison.</p></section>
   <section class="card sec"><h3>Son</h3><div class="seg"><button data-a="optMusic" data-v="1" class="${OPTS.music ? 'on' : ''}">Musique activée</button><button data-a="optMusic" data-v="0" class="${!OPTS.music ? 'on' : ''}">Musique coupée</button></div>${UI.screen === 'game' ? '<button class="btn sm" data-a="open" data-v="music">Ouvrir le lecteur</button>' : ''}</section>
   ${UI.screen === 'game' && S ? `<section class="card sec"><h3>Difficulté</h3><p>${DIFF[S.diff].n} <span class="note">· ${DIFF[S.diff].d}</span></p><p class="note">Fixée à la création de la carrière.</p></section>` : `<button class="btn wide danger" data-a="wipe">Effacer toutes les sauvegardes</button>`}`;
@@ -9081,7 +9328,7 @@ function advance(mode) {
     if (r.live) { UI.adv = null; save(); startLive(); return; }
     A.i++; if (r.log) A.logs.push(r.log);
     UI.anim = prev;
-    const stop = EVQ.length || S.trial || S.over || S.pendingNum || (r.log && r.log.injured) || A.i >= A.n || (A.mode === 'match' && fixturesOn(S.day).length > 0);
+    const stop = EVQ.length || (typeof FQ !== 'undefined' && FQ.q.length) || S.trial || S.over || S.pendingNum || (r.log && r.log.injured) || A.i >= A.n || (A.mode === 'match' && fixturesOn(S.day).length > 0);
     if (stop) { finishAdvance(); return; }
     if (delay) { render(); setTimeout(step, delay); } else step();
   };
@@ -9112,6 +9359,7 @@ function flow() {
   if (S.over) { closeModal(); render(); return; }
   if (S.trial) return trialModal();
   if (S.pendingNum) return numberModal();
+  if (typeof FQ !== 'undefined' && FQ.q.length) { const f = FQ.q.shift(); if (feteOk()) { closeModal(); return fetePlay(f, flow); } return flow(); }
   if (EVQ.length) {
     const e = EVQ.shift();
     openModal({ kicker: e.kind === 'press' ? 'Médias' : e.kind === 'month' ? 'Fin du mois' : dateStr(), title: e.title, html: e.text, cls: e.kind === 'month' ? 'month' : '', btns: e.ch.map((c, i) => ({ t: c.t, cls: i === 0 ? 'pri' : '', fn: () => { const r = c.f(); save(); if (r) openModal({ title: e.title, html: `<p>${esc(r)}</p>`, btns: [{ t: 'Continuer', cls: 'pri', fn: flow }] }); else flow(); } })) });
@@ -9255,6 +9503,10 @@ const ACT = {
   mShuffle: v => { OPTS.shuffle = v === '1'; saveOpts(); render(); },
   optMg: v => { if (UI.screen === 'game' && S) { S.settings.mg = v === '1'; save(); } OPTS.mg = v === '1'; saveOpts(); render(); },
   optIntro: v => { OPTS.intro = v === '1'; saveOpts(); render(); },
+  optFetes: v => { OPTS.fetes = v === '1'; saveOpts(); render(); },
+  feteDemo: v => { if (typeof fetePlay !== 'function' || (typeof feteOk === 'function' && !feteOk() && !(typeof navigator !== 'undefined' && navigator.webdriver))) return toast('La 3D n\'est pas disponible sur cet appareil.');
+    const c = S && S.club && S.club.n ? S.club.n : 'FC Crampons', yr = S ? S.season : 2026, ss = S && typeof seasonLabel === 'function' ? seasonLabel(S.season) : '2026-27';
+    fetePlay(v === 'pres' ? { k: 'pres', club: c, num: S && S.club && S.club.num || 10, until: S && S.club && S.club.until ? S.club.until + 1 : 2030 } : v === 'bdo' ? { k: 'bdo', yr, club: c } : { k: 'titre', name: 'Championnat', club: c, season: ss, list: ['Championnat'] }, null); },
   introReplay: () => { if (typeof introPlay === 'function') introPlay(true); },
   introSkip: () => { if (typeof introEnd === 'function' && INTRO.on && INTRO.r0 && performance.now() - INTRO.r0 > 300) introEnd(); },
   optInt: v => { if (UI.screen === 'game' && S) { S.settings.interrupt = v; save(); } OPTS.interrupt = v; saveOpts(); render(); },
@@ -9290,7 +9542,7 @@ const ACT = {
   req: () => confirmM('Demander un transfert ?', '<p>Le coach et le vestiaire vont mal le prendre, mais davantage de clubs vont se manifester au prochain mercato.</p>', 'Demander', () => { S.transferReq = true; S.coach.rel -= 12; S.mateRel -= 5; S.p.pop -= 3; addNews('Mercato', `${pName()} demande à quitter ${S.club.n}.`); save(); render(); toast('Demande envoyée. Le coach fait la tête.'); }),
   ext: () => { if (R() < .35 + S.coach.rel / 200) { renewalOffer(); save(); render(); toast('Le club te propose une prolongation : voir Transferts.'); } else { S.coach.rel -= 3; save(); render(); toast('Le club ne souhaite pas prolonger pour l\'instant.'); } },
   changeNum: () => { S.pendingNum = true; flow(); },
-  pickNum: v => { S.club.num = +v; S.pendingNum = false; save(); closeModal(); toast('Tu porteras le numéro ' + v + '.'); flow(); },
+  pickNum: v => { S.club.num = +v; S.pendingNum = false; if (S.club.pres === 0 && typeof feteQueue === 'function') { S.club.pres = 1; feteQueue({ k: 'pres', club: S.club.n, num: +v, until: S.club.until + 1 }); } save(); closeModal(); toast('Tu porteras le numéro ' + v + '.'); flow(); },
   amateur: () => { S.club = { kind: 'amateur', id: null, n: amateurName(S.p.nat, S.p.city), wage: 0, until: 0, since: S.season, num: S.club.num }; S.coach = { n: genName(S.p.nat), rel: 60 }; S.plan = defaultPlan('amateur'); buildWeek(); buildMates(); genObjectives(); save(); render(); toast('Retour au club de ta ville.'); },
   retire: () => confirmM('Prendre ta retraite ?', '<p>Ta carrière de joueur s\'arrête ici.</p>', 'Raccrocher les crampons', () => { retire(); save(); render(); }),
   planB: () => confirmM('Arrêter le foot ?', `<p>Tu raccroches les crampons sans être passé pro.${S.school.bac ? ' Ton bac t\'ouvre d\'autres portes.' : ''}</p>`, 'Arrêter', () => { planB(); save(); render(); }),
@@ -9334,7 +9586,7 @@ const ACT = {
   optRec: v => { OPTS.voixRec = v === '1'; saveOpts(); auUnlock(); render(); if (v === '1' && typeof VOIX_INDEX !== 'undefined') { const k = Object.keys(VOIX_INDEX).find(x => x.startsWith('S|')); if (k) { sayStop(); sayPush({ txt: k.slice(2), pri: 2, who: 'S' }); } } },
   optVoice: v => { OPTS.voice = v === '1'; saveOpts(); auUnlock(); if (v === '1') { sayStop(); sayPush({ txt: 'Bonjour à tous ! Ici Lo Sol, au micro.', pri: 2, who: 'S' }); sayPush({ txt: 'Et Nathalie, à ses côtés.', pri: 2, who: 'N' }); } else sayStop(); render(); },
   vTest: v => { auUnlock(); sayTest(v); },
-  aivProv: v => { OPTS.aiv = ['openai', 'eleven'].includes(v) ? v : 'off'; if (OPTS.aiv === 'off') { OPTS.aivS = OPTS.aivN = ''; } else if (OPTS.aivProvWas !== OPTS.aiv) { OPTS.aivS = OPTS.aivN = ''; } OPTS.aivProvWas = OPTS.aiv; AIV.dead = ''; AIV.cache.clear(); saveOpts(); render(); if (OPTS.aiv === 'eleven' && aivKey() && !(OPTS.aivEL || []).length) aivLoadEL().then(render); },
+  aivProv: v => { OPTS.aiv = v === 'eleven' ? v : 'off'; if (OPTS.aiv === 'off') { OPTS.aivS = OPTS.aivN = ''; } else if (OPTS.aivProvWas !== OPTS.aiv) { OPTS.aivS = OPTS.aivN = ''; } OPTS.aivProvWas = OPTS.aiv; AIV.dead = ''; AIV.cache.clear(); saveOpts(); render(); if (OPTS.aiv === 'eleven' && aivKey() && !(OPTS.aivEL || []).length) aivLoadEL().then(render); },
   aivSaveKey: () => { const el = document.querySelector('#aivKeyIn'), v = el ? el.value.trim() : ''; if (!v) return toast('Colle d\'abord ta clé dans le champ.'); aivSetKey(v); toast('Clé enregistrée sur ce téléphone.'); render(); if (OPTS.aiv === 'eleven') aivLoadEL().then(render); },
   aivDelKey: () => { aivSetKey(''); toast('Clé effacée.'); render(); },
   aivLoad: () => { aivLoadEL().then(ok => { if (ok) toast('Voix ElevenLabs chargées.'); render(); }); },

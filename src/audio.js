@@ -66,7 +66,7 @@ function auInit() {
     return true;
   } catch (e) { AU.failed = true; AU.ctx = null; return false; }
 }
-function auUnlock() { if (!auInit()) return; if (!AU.unlocked) { sayPrime(); if (typeof pkdb === 'function') pkdb().then(() => sfxGenLoad()); } AU.unlocked = true; if (AU.ctx.state !== 'running') AU.ctx.resume(); auScene(AU.want || 'menu', true); }
+function auUnlock() { if (!auInit()) return; if (!AU.unlocked) { if (typeof pkdb === 'function') pkdb().then(() => sfxGenLoad()); } AU.unlocked = true; if (AU.ctx.state !== 'running') AU.ctx.resume(); auScene(AU.want || 'menu', true); }
 // ---------- Instruments ----------
 function vca(t, peak, a, d, s, r, dur) { const g = AU.ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + a); g.gain.setTargetAtTime(peak * s, t + a, d / 3); g.gain.setTargetAtTime(0, t + Math.max(a, dur), r / 4); return g; }
 function send(node, rev, dly) { if (rev) { const g = AU.ctx.createGain(); g.gain.value = rev; node.connect(g); g.connect(AU.rev); } if (dly) { const g = AU.ctx.createGain(); g.gain.value = dly; node.connect(g); g.connect(AU.dly); } node.connect(AU.bus); }
@@ -307,7 +307,7 @@ function sayInit() {
   return SAY.ok;
 }
 // essai d'une voix depuis les Options
-function sayTest(who) { if (!aivOn() && !sayInit()) return; try { if (sayInit()) sayPick(); } catch (e) { } sayStop(); if (typeof VOX_TEST !== 'undefined' && VOX_TEST[who]) sayPush({ txt: VOX_TEST[who], pri: 2, who }); else if (who === 'N') sayPush({ txt: 'Bonsoir, ici Nathalie Ferrand. Je vais essayer de le canaliser pendant quatre-vingt-dix minutes.', pri: 2, who: 'N' }); else sayPush({ txt: 'Bonsoir à tous, ici Lo Sol ! Quel plaisir d\'être avec vous ce soir, mes amis !', pri: 2, who: 'S' }); }
+function sayTest(who) { if (!aivOn()) { if (typeof toast === 'function') toast('Règle ta voix ElevenLabs (clé) pour l\'écouter.'); return; } sayStop(); if (typeof VOX_TEST !== 'undefined' && VOX_TEST[who]) sayPush({ txt: VOX_TEST[who], pri: 2, who }); else if (who === 'N') sayPush({ txt: 'Bonsoir, ici Nathalie Ferrand. Je vais essayer de le canaliser pendant quatre-vingt-dix minutes.', pri: 2, who: 'N' }); else sayPush({ txt: 'Bonsoir à tous, ici Lo Sol ! Quel plaisir d\'être avec vous ce soir, mes amis !', pri: 2, who: 'S' }); }
 function sayPrime() { if (!sayInit()) return; try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) { } }
 // texte → prononçable (les mots en capitales seraient épelés)
 function sayNorm(t) {
@@ -322,7 +322,8 @@ const AIV_ELM = [['eleven_flash_v2_5', 'Flash 2.5 (rapide, économique)'], ['ele
 const AIV_TAGS = new Set(['eleven_v3', 'eleven_v3_conversational', 'eleven_v4_turbo']);
 function aivKey() { if (AIV.key == null) { try { AIV.key = localStorage.getItem('cdo_aikey') || ''; } catch (e) { AIV.key = ''; } } return AIV.key; }
 function aivSetKey(k) { AIV.key = String(k || '').trim(); AIV.dead = ''; AIV.cache.clear(); try { if (AIV.key) localStorage.setItem('cdo_aikey', AIV.key); else localStorage.removeItem('cdo_aikey'); } catch (e) { } }
-const aivOn = () => (OPTS.aiv === 'openai' || OPTS.aiv === 'eleven') && !!aivKey() && !AIV.dead && !!AU.ctx;
+const aivOn = () => OPTS.aiv === 'eleven' && !!aivKey() && !AIV.dead && !!AU.ctx; // seulement tes voix ElevenLabs (plus de voix de synthèse génériques)
+const voixAny = () => typeof VOIX_INDEX !== 'undefined' && OPTS.voixRec !== false && Object.keys(VOIX_INDEX).length > 0;
 // voix ElevenLabs créée par le joueur pour Lo Sol : utilisée par défaut (un autre choix dans Options reste prioritaire)
 const AIV_EL_DEF = { S: 'EQHLm8eFXUqKbFzlvnSA', N: '' };
 function aivVoice(who) {
@@ -331,7 +332,7 @@ function aivVoice(who) {
   const id = who === 'N' ? OPTS.aivN : who === 'S' ? OPTS.aivS : (OPTS.aivX || {})[who]; if (id && !AIV_OAI.includes(id) && !AIV.bad.has(id)) return id;
   const def = AIV_EL_DEF[who] || (typeof VOX_EL !== 'undefined' && VOX_EL[who]); if (def && !AIV.bad.has(def)) return def;
   // sinon : une voix de ton compte, homme ou femme selon le personnage, jamais celle d'un commentateur
-  const avoid = who === 'S' ? [] : who === 'N' ? [aivVoice('S')] : [aivVoice('S'), aivVoice('N')], L = (OPTS.aivEL || []).filter(v => !avoid.includes(v.id) && !AIV.bad.has(v.id));
+  const avoid = who === 'S' ? [] : who === 'N' ? [aivVoice('S')] : [aivVoice('S'), aivVoice('N')], L0 = (OPTS.aivEL || []).filter(v => !avoid.includes(v.id) && !AIV.bad.has(v.id)), mine = L0.filter(v => v.c && v.c !== 'premade'), L = mine.length ? mine : L0;
   const g = (typeof VOX_G !== 'undefined' && VOX_G[who]) || 'male';
   const f = L.find(v => (v.g || '') === g) || L[who === 'N' ? 1 : 0] || L[0]; return f ? f.id : (who !== 'S' && who !== 'N' ? aivVoice(g === 'female' ? 'N' : 'S') : '');
 }
@@ -407,7 +408,7 @@ function aivFetch(x) {
   p.catch(() => AIV.cache.delete(ck));
   return p;
 }
-// panne de la voix IA : on repasse aux voix du téléphone et on prévient une fois
+// panne de la voix IA : les commentaires restent écrits (pas de voix de synthèse) et on prévient une fois
 // détail d'une erreur du fournisseur (JSON ElevenLabs/OpenAI → phrase courte), gardé pour l'afficher dans Options
 function aivErr(e) {
   if (!e) return 'erreur inconnue';
@@ -419,23 +420,24 @@ function aivFail(e) {
   AIV.last = aivErr(e) + ' · ' + new Date().toLocaleTimeString('fr-FR');
   const st = e && e.st, msg = st === 401 || st === 403 ? 'Voix IA : clé refusée. Vérifie-la dans Options.' : st === 429 || st === 402 ? 'Voix IA : quota ou crédit épuisé chez le fournisseur.' : st === 0 ? 'Voix IA : choisis les voix ElevenLabs dans Options.' : st ? 'Voix IA indisponible (' + st + ').' : 'Voix IA injoignable (réseau, ou appel bloqué par la page).';
   if (!st || st === 401 || st === 403 || st === 402 || st === 429 || st === 0 || st === 404 || st === 400 || st === 422) AIV.dead = msg;
-  if (typeof toast === 'function' && Date.now() - (AIV.toastT || 0) > 15000) { AIV.toastT = Date.now(); toast(msg + ' Retour aux voix du téléphone.'); }
+  if (typeof toast === 'function' && Date.now() - (AIV.toastT || 0) > 15000) { AIV.toastT = Date.now(); toast(msg + ' Les commentaires restent écrits.'); }
 }
 // la foule baisse un peu quand un commentateur parle (vraie voix)
 function aivDuck(on) { const C = AU.crowd; if (!C || !AU.ctx) return; C.out.gain.setTargetAtTime(on ? .62 : 1, AU.ctx.currentTime, on ? .12 : .6); }
 // liste des voix de ton compte ElevenLabs (pour les menus d'Options)
 async function aivLoadEL() {
   if (!aivKey()) return false;
-  try { const r = await fetch('https://api.elevenlabs.io/v1/voices', { headers: { 'xi-api-key': aivKey() } }); if (!r.ok) { let m = ''; try { m = (await r.text()).slice(0, 300); } catch (er) { } throw Object.assign(new Error(m || ('HTTP ' + r.status)), { st: r.status }); } const j = await r.json(); OPTS.aivEL = (j.voices || []).slice(0, 80).map(v => ({ id: v.voice_id, n: v.name, g: (v.labels && v.labels.gender) || '', a: (v.labels && (v.labels.accent || v.labels.language)) || '' })); saveOpts(); return true; }
+  try { const r = await fetch('https://api.elevenlabs.io/v1/voices', { headers: { 'xi-api-key': aivKey() } }); if (!r.ok) { let m = ''; try { m = (await r.text()).slice(0, 300); } catch (er) { } throw Object.assign(new Error(m || ('HTTP ' + r.status)), { st: r.status }); } const j = await r.json(); OPTS.aivEL = (j.voices || []).slice(0, 80).map(v => ({ id: v.voice_id, n: v.name, c: v.category || '', g: (v.labels && v.labels.gender) || '', a: (v.labels && (v.labels.accent || v.labels.language)) || '' })); saveOpts(); return true; }
   catch (e) { AIV.last = 'Liste des voix : ' + aivErr(e) + ' · ' + new Date().toLocaleTimeString('fr-FR'); if (typeof toast === 'function') toast(e && e.st ? 'ElevenLabs refuse la liste des voix (' + aivErr(e) + ').' : 'Impossible de joindre ElevenLabs (' + aivErr(e) + ').'); return false; }
 }
-const sayOn = () => OPTS.voice !== false && (OPTS.svol ?? .8) > 0 && AU.unlocked && (aivOn() || sayInit());
+// seules les vraies voix humaines parlent : tes répliques enregistrées et ta voix ElevenLabs ; le reste s'affiche en texte (plus jamais la voix robotique du téléphone)
+const sayOn = () => OPTS.voice !== false && (OPTS.svol ?? .8) > 0 && AU.unlocked && !!AU.ctx && (aivOn() || voixAny());
 // it : { txt, pri, who: 'S'|'N', song, dig }
 function sayPush(it) {
   if (!it || !it.txt || !sayOn()) return;
   const ai = aivOn(), now = Date.now(), pri = it.pri || 0, who = it.who || 'S';
   if (ai && OPTS.aivMode === 'eco' && pri < 2 && !it.dig) return; // mode économique : temps forts et histoires seulement
-  const items = it.song && !ai ? String(it.txt).split('/').map(x => x.trim()).filter(Boolean).map((txt, si) => ({ txt, pri, who, song: true, si })) : [{ txt: it.txt, pri, who, dig: !!it.dig, song: !!it.song }];
+  const items = [{ txt: it.txt, pri, who, dig: !!it.dig, song: !!it.song }].filter(x => ai || voixFile(x)); if (!items.length) return;
   const ttl = (pri >= 3 ? 9000 : it.song ? 15000 : it.dig ? 16000 : pri >= 2 ? 7000 : 5000) + (ai ? 2500 : 0);
   items.forEach(x => { x.exp = now + ttl + (x.si || 0) * 4000; });
   const cur = SAY.cur;
@@ -474,28 +476,8 @@ function sayNext() {
     }).catch(e => { if (tok !== SAY.tok) return; clearTimeout(SAY.wd); if (x.rec) { x.rec = false; VOIX.off = (VOIX.off || 0) + 1; } else aivFail(e); x.ap = null; SAY.q.unshift(x); SAY.tok++; SAY.cur = null; sayNext(); });
     return;
   }
-  if (!sayInit()) { SAY.cur = null; return; }
-  if (x.song && !x.si && x.si !== 0) { const parts = String(x.txt).split('/').map(v => v.trim()).filter(Boolean); if (parts.length > 1) { SAY.q.unshift(...parts.map((txt, si) => ({ txt, pri: x.pri, who: x.who, song: true, si, id: x.id, exp: x.exp + si * 4000 }))); SAY.tok++; SAY.cur = null; return sayNext(); } }
-  try {
-    const u = new SpeechSynthesisUtterance(sayNorm(x.txt)), nat = x.who === 'N' || x.who === 'J', v = nat ? (SAY.voice2 || SAY.voice) : SAY.voice;
-    u.lang = v ? v.lang : 'fr-FR'; if (v) u.voice = v;
-    // une voix de qualité se dégrade vite quand on force la hauteur : petites variations seulement
-    const hq = v && sayQual(v) >= 2;
-    if (x.song) { u.rate = .9; u.pitch = (hq ? [1.06, 1.16, 1.02, 1.2] : [1.12, 1.3, 1.05, 1.38])[(x.si || 0) % 4]; }
-    else if (x.who === 'P') { u.rate = .9; u.pitch = .82; }
-    else if (x.who === 'C') { u.rate = 1; u.pitch = .9; }
-    else if (x.who === 'A') { u.rate = 1.08; u.pitch = 1.04; }
-    else if (x.who === 'J') { u.rate = 1.02; u.pitch = SAY.voice2 ? 1.06 : 1.25; }
-    else if (nat) { u.rate = 1; u.pitch = SAY.voice2 ? 1 : 1.18; }
-    else { u.rate = x.pri >= 3 ? 1.1 : x.dig ? .97 : 1.03; u.pitch = x.pri >= 3 ? (hq ? 1.05 : 1.08) : 1; }
-    u.volume = clamp((OPTS.svol ?? .8) * 1.15, 0, 1);
-    const t0 = now, est = (x.txt.split(/\s+/).length * .42 / u.rate + 1.2) * 1000;
-    u.onend = done; u.onerror = done;
-    // chien de garde : certains navigateurs oublient de signaler la fin
-    const watch = () => { if (tok !== SAY.tok) return; let sp = false; try { sp = speechSynthesis.speaking; } catch (e) { } if (sp && Date.now() - t0 < est * 3) { SAY.wd = setTimeout(watch, 700); return; } if (sp) try { speechSynthesis.cancel(); } catch (e) { } done(); };
-    SAY.wd = setTimeout(watch, est + 1500);
-    aivDuck(true); speechSynthesis.speak(u);
-  } catch (e) { SAY.cur = null; }
+  // pas de vraie voix pour cette réplique : elle reste écrite, on passe à la suivante (jamais la voix robotique du téléphone)
+  SAY.cur = null; return sayNext();
 }
 // le réalisateur des commentaires (comm.js) lance une réplique TOUT DE SUITE, en coupant la précédente
 function sayPlay(it) {
@@ -504,7 +486,8 @@ function sayPlay(it) {
   if (AIV.src) { try { AIV.src.stop(); } catch (e) { } AIV.src = null; }
   const x = Object.assign({}, it, { exp: Date.now() + 30000 });
   const vf = voixFile(it); x.rec = !!vf;
-  x.ap = it.buf && (aivOn() || vf) ? Promise.resolve(it.buf) : vf ? voixFetch(it) : null;
+  x.ap = it.buf && (aivOn() || vf) ? Promise.resolve(it.buf) : vf ? voixFetch(it) : aivOn() ? aivFetch(x) : null;
+  if (!x.ap) return; // aucune voix humaine pour cette phrase : texte seulement
   let busy = false; try { busy = SAY.ok && (speechSynthesis.speaking || speechSynthesis.pending); if (busy) speechSynthesis.cancel(); } catch (e) { }
   SAY.q.push(x);
   if (busy && !x.ap) { SAY.cur = { cut: true, pri: 9 }; setTimeout(() => { if (SAY.cur && SAY.cur.cut) sayNext(); }, 70); } else { SAY.cur = null; sayNext(); }
