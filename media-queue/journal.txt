@@ -29,3 +29,7 @@
       media-raw/apercus/uaB07noDP34.jpg : 137 Ko → 47 Ko
       media-raw/apercus/uHx88s_Q65bI.jpg : 130 Ko → 30 Ko
       media-raw/apercus/uZYvr0oEzu10.jpg : 102 Ko → 26 Ko
+2026-10-20T16:18:49.249Z · 3 importé(s), 0 échec(s)
+      media-raw/intro/joueur_src.jpg : 1380 Ko → 1201 Ko
+      media-raw/apercus/uARU18GpF6QQ.jpg : 44 Ko → 15 Ko
+      media-raw/apercus/u5IS7UghgoMA.jpg : 97 Ko → 19 Ko
