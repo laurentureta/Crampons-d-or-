@@ -52,23 +52,41 @@ function g3DcGround(S3, cls, C, rnd) {
   const E = [[66, 50], [72, 57], [80, 66], [95, 80]][cls], zr = -(E[1] + 22);
   // prés autour du stade (couleur selon la saison, neige l'hiver)
   const base = C.snow ? ['#dfe6e8', '#cdd6d9', '#eef3f4'] : { printemps: ['#4d7a33', '#41692b', '#5e8a3c'], ete: ['#4a7232', '#3d6229', '#5a8139'], automne: ['#55703a', '#485f30', '#6b7a3f'], fin_automne: ['#5d653c', '#4e5532', '#6e6e44'], hiver: ['#56614a', '#4a5440', '#646c55'] }[season];
-  const [gc, gx] = g3Canvas(256, 256); gx.fillStyle = base[0]; gx.fillRect(0, 0, 256, 256);
+  const [gc, gx] = g3Canvas(512, 512); gx.scale(2, 2); gx.fillStyle = base[0]; gx.fillRect(0, 0, 256, 256);
   for (let i = 0; i < 2600; i++) { gx.fillStyle = base[1 + (i % 2)]; gx.globalAlpha = .25 + rnd() * .35; const r = 1 + rnd() * 5; gx.beginPath(); gx.arc(rnd() * 256, rnd() * 256, r, 0, 7); gx.fill(); }
-  gx.globalAlpha = .18; for (let i = 0; i < 260; i++) { gx.fillStyle = C.snow ? '#b8c2c6' : '#7a6a4a'; gx.fillRect(rnd() * 256, rnd() * 256, 1 + rnd() * 3, 1 + rnd() * 3); } gx.globalAlpha = 1;
-  const gt = g3Tex(gc, [300, 300]), gg = new THREE.PlaneGeometry(3600, 3600, 72, 72), gn = gg.attributes.position.count, gcol = new Float32Array(gn * 3);
+  gx.globalAlpha = .18; for (let i = 0; i < 260; i++) { gx.fillStyle = C.snow ? '#b8c2c6' : '#7a6a4a'; gx.fillRect(rnd() * 256, rnd() * 256, 1 + rnd() * 3, 1 + rnd() * 3); } gx.globalAlpha = 1; gx.setTransform(1, 0, 0, 1, 0, 0);
+  const gt = g3Tex(gc, [300, 300]);
+  // prés photographiés (Poly Haven) : la photo garde son relief, la saison donne la teinte ; pas sous la neige
+  if (!C.snow) g3TxPaint('pre', gt, im => {
+    const { D, L } = g3TxDetail(im, 512), d = D.data, b0 = g3Col(base[0]), b1 = g3Col(base[2]);
+    for (let i = 0; i < L.length; i++) { const j = i * 4, k = 255 * Math.max(.5, Math.min(1.6, L[i])), m = Math.min(1, Math.max(0, (d[j + 1] - d[j + 2]) / 90)); // grain de la photo, teinte de la saison (touffes vertes plus claires)
+      d[j] = k * (b0.r + (b1.r - b0.r) * m); d[j + 1] = k * (b0.g + (b1.g - b0.g) * m); d[j + 2] = k * (b0.b + (b1.b - b0.b) * m); }
+    gx.putImageData(D, 0, 0); gt.repeat.set(560, 560); });
+  const gg = new THREE.PlaneGeometry(3600, 3600, 72, 72), gn = gg.attributes.position.count, gcol = new Float32Array(gn * 3);
   for (let i = 0; i < gn; i++) { const x = gg.attributes.position.getX(i), y = gg.attributes.position.getY(i), n = .5 + .5 * Math.sin(x * .021 + Math.sin(y * .013) * 2.1) * Math.cos(y * .017 - x * .006), f = .82 + n * .3 + (rnd() - .5) * .08; gcol[i * 3] = f * (C.snow ? 1 : 1.02); gcol[i * 3 + 1] = f; gcol[i * 3 + 2] = f * (C.snow ? 1 : .94); }
   gg.setAttribute('color', new THREE.BufferAttribute(gcol, 3));
   const ground = new THREE.Mesh(gg, new THREE.MeshLambertMaterial({ map: gt, vertexColors: true, color: night ? 0x56606b : 0xffffff })); ground.rotation.x = -Math.PI / 2; ground.position.y = -.04; ground.receiveShadow = false; S3.add(ground);
   // grands stades : parvis en béton autour de l'enceinte
   if (cls >= 2) { // en 4 bandes autour de la pelouse (jamais par-dessus)
-    const X = E[0] + 8, Z = E[1] + 8, gx2 = 62.5, gz2 = 44, pm2 = new THREE.MeshLambertMaterial({ color: night ? 0x3b3f45 : 0x9a9a96, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 });
-    for (const [w2, d2, x2, z2] of [[2 * X, Z - gz2, 0, (Z + gz2) / 2], [2 * X, Z - gz2, 0, -(Z + gz2) / 2], [X - gx2, 2 * gz2, (X + gx2) / 2, 0], [X - gx2, 2 * gz2, -(X + gx2) / 2, 0]]) { const pv = new THREE.Mesh(new THREE.PlaneGeometry(w2, d2), pm2); pv.rotation.x = -Math.PI / 2; pv.position.set(x2, -.03, z2); S3.add(pv); }
+    // dalles de béton photographiées (Poly Haven), une dalle tous les 3 m ; gris uni en attendant la photo
+    const [bc, bx] = g3Canvas(256, 256); bx.fillStyle = '#9a9a96'; bx.fillRect(0, 0, 256, 256); const bt = g3Tex(bc); bt.wrapS = bt.wrapT = THREE.RepeatWrapping;
+    g3TxPaint('beton', bt, im => bx.drawImage(im, 0, 0, 256, 256));
+    const X = E[0] + 8, Z = E[1] + 8, gx2 = 62.5, gz2 = 44, pm2 = new THREE.MeshLambertMaterial({ map: bt, color: night ? 0x62686f : 0xffffff, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 });
+    for (const [w2, d2, x2, z2] of [[2 * X, Z - gz2, 0, (Z + gz2) / 2], [2 * X, Z - gz2, 0, -(Z + gz2) / 2], [X - gx2, 2 * gz2, (X + gx2) / 2, 0], [X - gx2, 2 * gz2, -(X + gx2) / 2, 0]]) { const pg = new THREE.PlaneGeometry(w2, d2), uv = pg.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * w2 / 3, uv.getY(i) * d2 / 3); const pv = new THREE.Mesh(pg, pm2); pv.rotation.x = -Math.PI / 2; pv.position.set(x2, -.03, z2); S3.add(pv); }
   }
   // route goudronnée derrière la tribune principale : bandes blanches, accotements, lampadaires
-  const [rc, rx] = g3Canvas(128, 256); rx.fillStyle = '#3a3c3f'; rx.fillRect(0, 0, 128, 256);
-  for (let i = 0; i < 900; i++) { rx.fillStyle = rnd() < .5 ? '#2f3134' : '#45484b'; rx.fillRect(rnd() * 128, rnd() * 256, 1 + rnd() * 2, 1 + rnd() * 2); }
-  rx.fillStyle = '#d9d9d2'; rx.fillRect(4, 0, 4, 256); rx.fillRect(120, 0, 4, 256); rx.fillRect(62, 0, 4, 150); // rives continues, ligne médiane pointillée
-  const rt = g3Tex(rc); rt.wrapS = rt.wrapT = THREE.RepeatWrapping; rt.repeat.set(1, 1600 / 14);
+  // (enrobé photographié de Poly Haven dès qu'il est là, puis les mêmes marquages par-dessus)
+  const [rc, rx] = g3Canvas(256, 512), rsd = rnd() * 1e4;
+  const paintRoad = im => {
+    let q = rsd; const r2 = () => (q = (q * 9301 + 49297) % 233280) / 233280;
+    rx.setTransform(2, 0, 0, 2, 0, 0); rx.globalAlpha = 1;
+    if (im) { rx.drawImage(im, 0, 0, 128, 128); rx.drawImage(im, 0, 128, 128, 128); rx.globalAlpha = .45; } else { rx.fillStyle = '#3a3c3f'; rx.fillRect(0, 0, 128, 256); }
+    for (let i = 0; i < 900; i++) { rx.fillStyle = r2() < .5 ? '#2f3134' : '#45484b'; rx.fillRect(r2() * 128, r2() * 256, 1 + r2() * 2, 1 + r2() * 2); }
+    rx.globalAlpha = 1; rx.fillStyle = '#d9d9d2'; rx.fillRect(4, 0, 4, 256); rx.fillRect(120, 0, 4, 256); rx.fillRect(62, 0, 4, 150); // rives continues, ligne médiane pointillée
+    rx.setTransform(1, 0, 0, 1, 0, 0);
+  };
+  paintRoad(null);
+  const rt = g3Tex(rc); g3TxPaint('asphalte', rt, paintRoad); rt.wrapS = rt.wrapT = THREE.RepeatWrapping; rt.repeat.set(1, 1600 / 14);
   const road = new THREE.Mesh(new THREE.PlaneGeometry(7.5, 1600), new THREE.MeshLambertMaterial({ map: rt, color: night ? 0x8a929c : 0xffffff, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 })); road.rotation.set(-Math.PI / 2, 0, Math.PI / 2); road.position.set(0, -.02, zr); S3.add(road);
   for (const s of [-1, 1]) { const sh = new THREE.Mesh(new THREE.PlaneGeometry(1600, 1.6), new THREE.MeshLambertMaterial({ color: C.snow ? 0xc9d0d2 : night ? 0x4a4436 : 0x8a7c5e, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 })); sh.rotation.x = -Math.PI / 2; sh.position.set(0, -.025, zr + s * 4.5); S3.add(sh); }
   const lamps = [], step = 32; for (let x = -320; x <= 320; x += step) lamps.push([x + 6, zr - 5.2]);

@@ -16,6 +16,7 @@ Sur iPhone, ouvre le lien dans Safari puis *Partager → Sur l'écran d'accueil*
 | `assets/joueur/` | Le modèle 3D des joueurs (géométrie, textures, squelette) préparé par `tools/joueur3d.py` |
 | `assets/stade/` | Les pièces 3D du stade (mâts d'éclairage, sièges, bancs de touche) préparées par `tools/stade3d.py` |
 | `assets/decor/` | Les arbres et textures des décors autour du stade, préparés par `tools/decor3d.py` |
+| `assets/textures/` | Photos libres (Poly Haven, CC0) : ciel des matchs, grain du gazon, prés, route, dalles — téléchargées et réduites par le robot médias |
 | `assets/icones/` | Icônes de l'app |
 | `lib/` | Three.js (3D) |
 | `tools/build.js` | Fabrique le jeu publié à partir de `src/` et `assets/` |
@@ -29,7 +30,7 @@ Sur iPhone, ouvre le lien dans Safari puis *Partager → Sur l'écran d'accueil*
 ## Les robots (GitHub Actions)
 
 - **Construire le jeu** (`.github/workflows/build.yml`) : à chaque modification de `src/`, `assets/`, `tools/` ou `package.json`, il refabrique les fichiers publiés, vérifie que les menus et les sauvegardes marchent, puis enregistre le résultat. GitHub Pages met le site à jour une minute plus tard.
-- **Importer les sons et les voix** (`.github/workflows/fetch-media.yml`) : quand une liste `media-queue/*.json` est déposée (`[{ "url": "https://…", "out": "assets/sons/kick.mp3" }]`), il télécharge les fichiers (seulement depuis ElevenLabs / Google Cloud Storage, seulement des fichiers audio, seulement vers `assets/` ou `media-raw/`), refabrique le jeu et enregistre. Le compte rendu est dans `media-queue/journal.txt`.
+- **Importer les sons et les voix** (`.github/workflows/fetch-media.yml`) : quand une liste `media-queue/*.json` est déposée (`[{ "url": "https://…", "out": "assets/sons/kick.mp3" }]`), il télécharge les fichiers (seulement depuis ElevenLabs / Google Cloud Storage / Poly Haven, seulement des fichiers audio ou des images, seulement vers `assets/` ou `media-raw/`), refabrique le jeu et enregistre. Pour une image, on peut demander de la réduire avant de la ranger (`"resize": "4096x2048!"`, `"crop": "4096x1024+0+0"`, `"quality": 84`) : l'original, souvent énorme, n'entre jamais dans le dépôt. Le compte rendu est dans `media-queue/journal.txt`.
 
 ## Fabriquer et tester sur un ordinateur
 
@@ -88,6 +89,8 @@ Autour du stade (`src/m3ddeco.js`) : un terrain, une route goudronnée avec ses 
 ```sh
 python3 tools/decor3d.py --chenes oak_trees_pack.glb --foret a_forest_with_a_road.glb
 ```
+
+Ciel et sols photographiés (`src/m3dgfx.js`, `assets/textures/`) : les matchs de jour ont un vrai ciel à cumulus (« Kloofendal 48d Partly Cloudy (Pure Sky) »), les matchs sous la pluie ou la neige un ciel couvert (« Kloofendal Overcast (Pure Sky) ») ; le soleil de la photo est placé là où se trouve la lumière du jeu, et la brume au loin prend la couleur de son horizon. Le gazon reçoit le grain d'une photo d'herbe (« Leafy Grass »), les prés celui d'une photo aérienne (« Aerial Grass Rock ») teintée selon la saison, la route un enrobé (« Clean Asphalt ») et le parvis des grands stades des dalles (« Concrete Pavement »). Toutes viennent de [Poly Haven](https://polyhaven.com), dans le domaine public ([CC0](https://creativecommons.org/publicdomain/zero/1.0/)). Le jeu en retire les grandes taches de lumière de la prise de vue pour que la répétition ne se voie pas au loin ; tant qu'une photo n'est pas arrivée, le dessin d'origine reste.
 
 Les filets de but (`src/m3dnet.js`) sont une toile de nœuds qui ondule : le ballon la creuse, l'onde se propage puis s'amortit, un ballon sur le toit ou dans le petit filet l'enfonce de l'extérieur, et le vent la fait respirer (plus fort sous la pluie). Caméras au choix pendant le match : TV, Large, Tactique, Mon joueur, Derrière le but, Bord du terrain, Drone.
 

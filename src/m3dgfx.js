@@ -5,14 +5,20 @@
 
 // pelouse : bandes de tonte qui s'inversent selon d'où on regarde, et grain du gazon près de la caméra
 function g3GrassShader(m) {
+  const GU = g3GrassU();
   m.onBeforeCompile = s => {
+    Object.assign(s.uniforms, GU);
     s.vertexShader = s.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vGw;').replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvGw = (modelMatrix * vec4(transformed, 1.0)).xyz;');
-    s.fragmentShader = s.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vGw;\nfloat gHash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }')
+    s.fragmentShader = s.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vGw;\nuniform sampler2D gTx; uniform float gK; uniform float gM;\nfloat gHash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }')
       .replace('#include <map_fragment>', `#include <map_fragment>
       { float band = mod(floor((vGw.x + 52.5) / 5.8333), 2.0) * 2.0 - 1.0; vec3 vd = normalize(cameraPosition - vGw); float sd = clamp(vd.x * 2.5, -1.0, 1.0);
         float dist = length(cameraPosition - vGw), near = 1.0 - smoothstep(12.0, 55.0, dist);
         float n = gHash(floor(vGw.xz * 9.0)) * .6 + gHash(floor(vGw.xz * 23.0)) * .4;
-        diffuseColor.rgb *= (1.0 + 0.075 * band * sd) * mix(1.0, 0.9 + 0.2 * n, near); }`);
+        float hd = mix(1.0, 0.9 + 0.2 * n, near), pd = 1.0;
+        if (gK > 0.0) { // gazon photographié : brins de près, plaques plus claires ou plus foncées de loin (mipmaps : pas de scintillement)
+          vec3 lw = vec3(0.299, 0.587, 0.114); float p1 = dot(texture2D(gTx, vGw.xz * 0.42).rgb, lw) / gM, p2 = dot(texture2D(gTx, vGw.zx * 0.061 + 0.37).rgb, lw) / gM;
+          pd = clamp(1.0 + (p1 - 1.0) * 1.35, 0.6, 1.4) * (0.86 + 0.14 * p2); hd = mix(hd, 1.0, gK); }
+        diffuseColor.rgb *= (1.0 + 0.075 * band * sd) * hd * mix(1.0, pd, gK); }`);
   };
   m.envMapIntensity = .45;
 }
@@ -80,8 +86,9 @@ function g3CrowdMesh(people, night) {
   return im;
 }
 // ciel : nuages le jour (plus gris sous la pluie), étoiles et lune la nuit
-function g3SkyExtras(S3, night, wet, snow, rnd) {
-  G3.clouds = null;
+function g3SkyExtras(S3, night, wet, snow, rnd, photo) {
+  G3.clouds = null; G3.cloudMesh = null;
+  if (photo === 'ok') return; // ciel photographié déjà prêt : ses propres nuages suffisent
   if (night) {
     const n = 700, pos = new Float32Array(n * 3), sz = new Float32Array(n);
     for (let i = 0; i < n; i++) { const a = rnd() * Math.PI * 2, e = .12 + Math.pow(rnd(), .7) * 1.35, R = 820; pos[i * 3] = Math.cos(a) * Math.cos(e) * R; pos[i * 3 + 1] = Math.sin(e) * R; pos[i * 3 + 2] = Math.sin(a) * Math.cos(e) * R; sz[i] = .6 + Math.pow(rnd(), 3) * 2.4; }
@@ -105,7 +112,7 @@ function g3SkyExtras(S3, night, wet, snow, rnd) {
   const t = g3Tex(c); t.wrapS = THREE.RepeatWrapping;
   const geo = new THREE.SphereGeometry(860, 48, 10, 0, Math.PI * 2, 0, Math.PI * .47); // v = 0 près de l'horizon, 1 au zénith
   const cl = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, side: THREE.BackSide, fog: false, opacity: dense ? .95 : .9 }));
-  cl.renderOrder = -1; S3.add(cl); G3.clouds = t;
+  cl.renderOrder = -1; cl.userData.op = cl.material.opacity; S3.add(cl); G3.clouds = t; G3.cloudMesh = cl;
 }
 // faisceaux des projecteurs (nuit) : cônes de lumière très légers, du mât vers la pelouse
 function g3Beams(S3) {
@@ -140,3 +147,84 @@ function g3CrowdTex(seatCol, hc, oc, fill, rnd, night) {
   if (night) { x.fillStyle = 'rgba(0,0,10,.18)'; x.fillRect(0, 0, W, H); }
   const t = g3Tex(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
 }
+
+// ---------- textures photo (Poly Haven, CC0 : réduites et rangées dans assets/textures par le robot médias) ----------
+// ciel photographié (cumulus le jour, couvert sous la pluie ou la neige), grain du gazon, prés, route, parvis.
+// Tant qu'une photo n'est pas arrivée, le dessin d'origine reste ; elle le remplace ensuite en douceur.
+const G3TX = { im: {}, cb: {}, st: {}, sky: {}, gU: null };
+const G3_SKY_SUN = { ciel_jour: .6, ciel_gris: .582 }; // où se trouve le soleil dans chaque photo (fraction de tour)
+function g3TxUrl(n) { const T = typeof TEX_3D !== 'undefined' ? TEX_3D : null; return T && T[n] ? 'assets/textures/' + T[n] + (typeof MEDIA_H !== 'undefined' && MEDIA_H.tex ? '?h=' + MEDIA_H.tex : '') : null; }
+// charge une photo une seule fois ; cb tout de suite si elle est déjà là. Rend 'ok', 'wait' ou false (pas de photo)
+function g3TxImg(n, cb) {
+  const im = G3TX.im[n];
+  if (im && im.ok) { if (cb) cb(im); return 'ok'; }
+  if (im === false) return false;
+  const u = g3TxUrl(n); if (!u) { G3TX.im[n] = false; return false; }
+  if (cb) (G3TX.cb[n] = G3TX.cb[n] || []).push(cb);
+  if (im) return 'wait';
+  const I = new Image(); G3TX.im[n] = I; I.decoding = 'async';
+  I.onload = () => { I.ok = true; const L = G3TX.cb[n] || []; G3TX.cb[n] = []; for (const f of L) try { f(I); } catch (e) { console.warn('texture', n, e); } };
+  I.onerror = () => { G3TX.im[n] = false; G3TX.cb[n] = []; };
+  I.src = u; return 'wait';
+}
+// couleur moyenne d'une bande horizontale de la photo (y0..y1 en fraction de hauteur) : horizon du ciel, teinte du gazon
+function g3TxAvg(n, im, y0, y1) {
+  const K = n + y0 + '-' + y1; if (G3TX.st[K]) return G3TX.st[K];
+  let r = .5, g = .5, b = .5;
+  try { const [c, x] = g3Canvas(64, 32); x.drawImage(im, 0, 0, 64, 32); const a = Math.floor(y0 * 32), h = Math.max(1, Math.ceil(y1 * 32) - a), d = x.getImageData(0, a, 64, h).data; let s0 = 0, s1 = 0, s2 = 0; for (let i = 0; i < d.length; i += 4) { s0 += d[i]; s1 += d[i + 1]; s2 += d[i + 2]; } const N = d.length / 4 * 255; r = s0 / N; g = s1 / N; b = s2 / N; } catch (e) { }
+  return G3TX.st[K] = { r, g, b, l: .299 * r + .587 * g + .114 * b, hex: '#' + [r, g, b].map(v => Math.round(v * 255).toString(16).padStart(2, '0')).join('') };
+}
+// photo « sans ses grandes taches » : on garde le grain (rapport à la moyenne locale) et on retire les variations d'éclairage
+// de la prise de vue, qui feraient voir la répétition du motif (bandes au loin) ; le motif reste raccordable (flou en boucle)
+function g3TxDetail(im, S) {
+  const K = im.src + S, mm = G3TX.det || (G3TX.det = {}), hit = mm[K];
+  if (hit) { const [c, x] = g3Canvas(S, S), D = x.createImageData(S, S); D.data.set(hit.d); return { c, x, D, L: hit.L }; } // déjà calculé (match précédent)
+  const [c, x] = g3Canvas(S, S); x.drawImage(im, 0, 0, S, S); const D = x.getImageData(0, 0, S, S), d = D.data;
+  const N = 32, cell = S / N, low = new Float32Array(N * N), bl = new Float32Array(N * N), R = 3, L = new Float32Array(S * S);
+  for (let y = 0; y < S; y++) for (let xx = 0; xx < S; xx++) { const i = (y * S + xx) * 4, l = .299 * d[i] + .587 * d[i + 1] + .114 * d[i + 2]; L[y * S + xx] = l; low[((y / cell) | 0) * N + ((xx / cell) | 0)] += l / (cell * cell); }
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) { let t = 0; for (let v = -R; v <= R; v++) for (let u = -R; u <= R; u++) t += low[((j + v + N) % N) * N + (i + u + N) % N]; bl[j * N + i] = t / ((2 * R + 1) * (2 * R + 1)); }
+  const g = (i, j) => bl[((j + N) % N) * N + (i + N) % N];
+  for (let y = 0; y < S; y++) { const fy = y / cell - .5, j0 = Math.floor(fy), ty = fy - j0; for (let xx = 0; xx < S; xx++) { const fx = xx / cell - .5, i0 = Math.floor(fx), tx = fx - i0, lo = (g(i0, j0) * (1 - tx) + g(i0 + 1, j0) * tx) * (1 - ty) + (g(i0, j0 + 1) * (1 - tx) + g(i0 + 1, j0 + 1) * tx) * ty; L[y * S + xx] /= Math.max(1, lo); } }
+  mm[K] = { d: new Uint8ClampedArray(d), L };
+  return { c, x, D, L };
+}
+// ciel du match : la photo s'applique sur le dôme (uniforms de g3Match) ; brouillard et bas du ciel prennent la couleur de son horizon
+function g3SkyPhoto(U, night, wet, snow) {
+  if (night) return false;
+  const n = wet || snow ? 'ciel_gris' : 'ciel_jour';
+  let sync = true;
+  const r = g3TxImg(n, im => {
+    if (G3.skyU !== U) return; // le match a changé entre-temps
+    let t = G3TX.sky[n];
+    if (!t) { t = new THREE.Texture(im); t.encoding = THREE.LinearEncoding; t.wrapS = THREE.RepeatWrapping; t.wrapT = THREE.ClampToEdgeWrapping; t.generateMipmaps = false; t.minFilter = t.magFilter = THREE.LinearFilter; t.needsUpdate = true; G3TX.sky[n] = t; }
+    const hz = g3TxAvg(n, im, .94, 1);
+    U.tx.value = t; U.b.value.setRGB(hz.r, hz.g, hz.b);
+    const sp = G3.sun.position; U.rot0 = (G3_SKY_SUN[n] || .5) - Math.atan2(sp.z, sp.x) / (Math.PI * 2); U.rot.value = U.rot0;
+    // brouillard (appliqué après la conversion des couleurs dans three r128 : on lui donne la couleur telle qu'affichée)
+    const fg = G3.sc && G3.sc.fog; if (fg) { U.fog0 = fg.color.clone(); U.fog1 = g3Col(hz.hex); if (sync) fg.color.copy(U.fog1); }
+    U.k.value = sync ? 1 : .001; // déjà en mémoire : tout de suite ; sinon fondu (g3SkyTick)
+  });
+  sync = false;
+  return r;
+}
+function g3SkyTick(now, dt) {
+  const U = G3.skyU; if (!U || !U.tx.value) return;
+  if (U.k.value < 1) { U.k.value = Math.min(1, U.k.value + dt / 1.8); const fg = G3.sc && G3.sc.fog; if (fg && U.fog1) fg.color.copy(U.fog0).lerp(U.fog1, U.k.value); }
+  const cm = G3.cloudMesh; if (cm && cm.visible) { cm.material.opacity = cm.userData.op * (1 - U.k.value); if (U.k.value >= 1) cm.visible = false; }
+  U.rot.value = U.rot0 + now * .00003; // les nuages photographiés glissent très lentement
+}
+// grain du gazon photographié (uniforms partagés par toutes les pelouses)
+function g3GrassU() {
+  if (G3TX.gU) return G3TX.gU;
+  const U = G3TX.gU = { gTx: { value: null }, gK: { value: 0 }, gM: { value: .5 } };
+  g3TxImg('herbe', im => {
+    const { c, x, D, L } = g3TxDetail(im, 512), d = D.data; // niveaux de gris centrés sur 0,5 : seul le grain des brins compte
+    for (let i = 0; i < L.length; i++) { const v = Math.max(0, Math.min(255, 128 * L[i])); d[i * 4] = d[i * 4 + 1] = d[i * 4 + 2] = v; }
+    x.putImageData(D, 0, 0); const t = new THREE.CanvasTexture(c); t.encoding = THREE.LinearEncoding; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = G3.r ? Math.min(8, G3.r.capabilities.getMaxAnisotropy()) : 1;
+    U.gTx.value = t; U.gM.value = .5; U.gK.value = 1; });
+  return U;
+}
+// une photo répétée dans un canevas déjà affiché (prés, route, parvis) : on redessine, puis la texture se met à jour
+function g3TxPaint(n, tex, paint) { return g3TxImg(n, im => { try { paint(im); tex.needsUpdate = true; } catch (e) { console.warn('texture', n, e); } }); }
+// au démarrage du moteur : on va déjà chercher le ciel du jour et le gazon
+function g3TxPreload() { g3TxImg('ciel_jour'); g3GrassU(); }

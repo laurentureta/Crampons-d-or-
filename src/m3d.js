@@ -46,6 +46,7 @@ function g3Init() {
     sc.add(sun); sc.add(sun.target); G3.sun = sun;
     const fill = new THREE.DirectionalLight(0xdce8ff, .4); fill.position.set(10, 30, 80); sc.add(fill); G3.fill = fill;
     g3Players(); g3Ball();
+    try { g3TxPreload(); } catch (e) { } // photos du ciel et du gazon (m3dgfx.js)
     return true;
   } catch (e) { G3.fail = true; return false; }
 }
@@ -143,9 +144,11 @@ function g3Match(M) {
   G3.camB = [[74, 16], [76, 17], [53, 17], [60, 24]][cls];
   // ciel et brouillard
   const top = night ? '#03060d' : wet || snow ? '#566070' : '#3f78c4', hor = night ? '#16213a' : wet || snow ? '#9aa3ad' : '#b9d4ee';
-  const skyM = new THREE.ShaderMaterial({ side: THREE.BackSide, depthWrite: false, uniforms: { a: { value: g3Col(top) }, b: { value: g3Col(hor) } }, vertexShader: 'varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }', fragmentShader: 'uniform vec3 a; uniform vec3 b; varying vec3 vP; void main(){ float h = clamp(normalize(vP).y * 2.2, 0.0, 1.0); gl_FragColor = vec4(mix(b, a, h), 1.0); }' });
-  const sky = new THREE.Mesh(new THREE.SphereGeometry(900, 24, 12), skyM); S3.add(sky);
-  g3SkyExtras(S3, night, wet, snow, rnd); // nuages, ou étoiles et lune (m3dgfx.js)
+  // dôme : dégradé peint, remplacé par une photo de ciel (Poly Haven) dès qu'elle est là (g3SkyPhoto, m3dgfx.js)
+  const skyU = G3.skyU = { a: { value: g3Col(top) }, b: { value: g3Col(hor) }, tx: { value: null }, k: { value: 0 }, rot: { value: 0 }, rot0: 0 };
+  const skyM = new THREE.ShaderMaterial({ side: THREE.BackSide, depthWrite: false, uniforms: skyU, vertexShader: 'varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+    fragmentShader: 'uniform vec3 a; uniform vec3 b; uniform sampler2D tx; uniform float k; uniform float rot; varying vec3 vP; void main(){ vec3 d = normalize(vP); vec3 c = mix(b, a, clamp(d.y * 2.2, 0.0, 1.0)); if (k > 0.0) { vec2 uv = vec2(atan(d.z, d.x) * 0.15915494 + rot, asin(clamp(d.y, 0.0, 1.0)) * 0.63661977); c = mix(c, mix(b, texture2D(tx, uv).rgb, smoothstep(-0.01, 0.05, d.y)), k); } gl_FragColor = vec4(c, 1.0); }' });
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(900, 32, 16), skyM); S3.add(sky);
   sc.fog = new THREE.Fog(g3Lin(hor), snow ? 90 : wet ? 140 : 260, snow ? 380 : wet ? 520 : 900);
   // lumières selon l'heure et la météo
   G3.hemi.color.set(night ? 0x9fb3e8 : wet || snow ? 0xc7ced6 : 0xcfe3ff); G3.hemi.groundColor.set(night ? 0x16241a : 0x40613a); G3.hemi.intensity = night ? .42 : wet || snow ? .85 : .6;
@@ -154,6 +157,7 @@ function g3Match(M) {
   G3.sun.castShadow = !low && !night; G3.sun.shadow.mapSize.set(low ? 1024 : 2048, low ? 1024 : 2048); if (G3.sun.shadow.map) { G3.sun.shadow.map.dispose(); G3.sun.shadow.map = null; }
   G3.r.toneMappingExposure = night ? 1.12 : wet || snow ? 1.1 : 1.02;
   G3.night = night;
+  g3SkyExtras(S3, night, wet, snow, rnd, g3SkyPhoto(skyU, night, wet, snow)); // photo du ciel, sinon nuages peints ; la nuit : étoiles et lune (m3dgfx.js)
   // lumière d'appoint côté caméra : les joueurs ne sont plus à contre-jour (visages, numéros, maillots)
   G3.fill.color.set(night ? 0xc8d6ff : 0xdce8ff); G3.fill.intensity = night ? .38 : wet || snow ? .3 : .42;
   // pelouse : bandes tondues, grain, usure
@@ -552,6 +556,7 @@ function g3Draw(M, t, dt, paused) {
   if (G3.adT) G3.adT.offset.x = (now * .04) % 1;
   G3DC.wind.uT.value = now;
   if (G3.clouds) G3.clouds.offset.x = (now * .0012) % 1;
+  g3SkyTick(now, dt);
   if (G3.night && G3.stad && !G3.stad.userData.beams && G3.stad.userData.dressed) g3Beams(G3.stad);
   if (G3.wxU) { G3.wxU.uT.value = now; G3.wx.position.set(G3.cm.p ? G3.cm.p[3] : 0, 0, 0); }
   for (const s of G3.flares || []) s.material.opacity = .6 + .4 * Math.sin(now * 9 + s.position.x);

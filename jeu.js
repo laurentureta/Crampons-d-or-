@@ -1,12 +1,13 @@
-/* Crampons d'Or 11.6.0 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
-var GAME_VERSION = "11.6.0";
+/* Crampons d'Or 11.7.0 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
+var GAME_VERSION = "11.7.0";
 var CRWD_FILES = ["chant_2","chant_3","chant_4","cheer_loop","goal_1","goal_2","goal_3","goal_4","ooh_1","roar_1","roar_2","roar_3","roar_4","surge"];
 var SONS_FILES = ["catch","glass","header","kick","net","post","shot","tackle","whistle1","whistle3"];
-var MEDIA_H = {"foule/chant_2":"3ebb4bce","foule/chant_3":"4f555b3f","foule/chant_4":"e9942adb","foule/cheer_loop":"e5b4a150","foule/goal_1":"a49bc043","foule/goal_2":"db0cbb88","foule/goal_3":"05dbbca2","foule/goal_4":"09720ea4","foule/ooh_1":"155d868a","foule/roar_1":"aff56709","foule/roar_2":"a3f978be","foule/roar_3":"6bed5e29","foule/roar_4":"df5f4aa6","foule/surge":"ce5de2be","sons/catch":"082b1f8c","sons/glass":"149bfce3","sons/header":"ac052ba0","sons/kick":"877b4236","sons/net":"fe0694be","sons/post":"ae984141","sons/shot":"9695a8e3","sons/tackle":"601ffa60","sons/whistle1":"cc2e8cf9","sons/whistle3":"dbccf110","decor":"49ccd40b","stade":"180b7b01","joueur":"cbcc8acf"};
+var MEDIA_H = {"foule/chant_2":"3ebb4bce","foule/chant_3":"4f555b3f","foule/chant_4":"e9942adb","foule/cheer_loop":"e5b4a150","foule/goal_1":"a49bc043","foule/goal_2":"db0cbb88","foule/goal_3":"05dbbca2","foule/goal_4":"09720ea4","foule/ooh_1":"155d868a","foule/roar_1":"aff56709","foule/roar_2":"a3f978be","foule/roar_3":"6bed5e29","foule/roar_4":"df5f4aa6","foule/surge":"ce5de2be","sons/catch":"082b1f8c","sons/glass":"149bfce3","sons/header":"ac052ba0","sons/kick":"877b4236","sons/net":"fe0694be","sons/post":"ae984141","sons/shot":"9695a8e3","sons/tackle":"601ffa60","sons/whistle1":"cc2e8cf9","sons/whistle3":"dbccf110","tex":"f85d947d","decor":"49ccd40b","stade":"180b7b01","joueur":"cbcc8acf"};
 var VOIX_INDEX = {"S|Ah, les matchs du soir… Les projecteurs, l'herbe qui brille comme un miroir, l'odeur des frites. C'est ma madeleine de Proust, ça !":"S/033043fb565a.mp3","S|Chacun ses madeleines, Nathalie.":"S/184ed733a2a2.mp3","S|De la neige ! Regardez-moi ça, on se croirait au Canigou en plein mois de janvier !":"S/3330ac9a394b.mp3","S|Il pleut, mes amis ! Il pleut des cordes, des ficelles, des lacets !":"S/e5474d79c72a.mp3","S|Je le salue aussi ! Les petits matchs, c'est là que naissent les grands joueurs. Ne l'oubliez jamais.":"S/51e8f0b12016.mp3","S|La tête, les jambes, le cœur, les tripes, tout compte ! Ce soir, les familles sont divisées et les voisins ne se parlent plus jusqu'à lundi !":"S/d08542c8b556.mp3","S|Le ballon orange ! Comme une mandarine posée sur un gâteau à la crème. Magnifique.":"S/bcbce0b09960.mp3","S|Le papier, Nathalie ! Le papier ne court pas, le papier ne transpire pas ! C'est le terrain qui va parler !":"S/c5a3ec573ddf.mp3","S|Moi je sens des buts, des larmes, de la sueur et de la poésie ! On verra qui a raison !":"S/8daba191eb47.mp3","S|On va voir du ski nautique ce soir. Sortez les bouées !":"S/380bb6427e7c.mp3","S|Si vous êtes chez vous, montez le son. Si vous êtes au stade, vous n'entendez rien de ce que je dis… bonsoir quand même !":"S/56d80e607aac.mp3","S|Un derby ! Un DERBY ! J'ai des frissons jusque dans les chaussettes !":"S/665153ff867c.mp3"};
 var JOUEUR_3D = {"name":"A footballer 3d model","auteur":"AP 3d models (https://sketchfab.com/jeetu.143p)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/a-footballer-3d-model-afd601d0e0ea471f90b26c0d3b6c1cb7","bin":"joueur.bin","parts":[{"name":"corps","tris":12577,"alpha":false,"arr":{"pos":[0,22554],"nor":[90216,22554],"uv":[180432,15036],"bi":[240576,30072],"bw":[360864,30072],"reg":[481152,7518],"idx":[511224,37731]},"map":"corps.jpg","nmap":"corps_n.jpg"},{"name":"cheveux","tris":3669,"alpha":true,"arr":{"pos":[662148,11472],"nor":[708036,11472],"uv":[753924,7648],"bi":[784516,15296],"bw":[845700,15296],"reg":[906884,3824],"idx":[922180,11007]},"map":"cheveux.png"}],"bind":[[1,0,0,0,0,1,0,0,0,0,1,0,0,0.9561621074541208,0,1],[1,0,0,0,0,1,0,0,0,0,1,0,0,1.1114961124377731,0,1],[1,0,0,0,0,1,0,0,0,0,1,0,0,1.5915074134701013,0,1],[1,0,0,0,0,0.06507265101264002,0.9978805289663624,0,0,-0.9978805289663624,0.06507265101264002,0,0,1.4698137585331512,-0.19810914412195205,1],[1,0,0,0,0,0.06507265101264002,0.9978805289663624,0,0,-0.9978805289663624,0.06507265101264002,0,0,1.451196050022711,-0.483609250963011,1],[1,0,0,0,0,0.06507265101264002,0.9978805289663624,0,0,-0.9978805289663624,0.06507265101264002,0,0,1.436920698147589,-0.7025198909730603,1],[1,0,0,0,0,0.06876318803696509,-0.9976330106662434,0,0,0.9976330106662434,0.06876318803696509,0,0,1.4698137585331512,0.19810914412195205,1],[1,0,0,0,0,0.06876318803696509,-0.9976330106662434,0,0,0.9976330106662434,0.06876318803696509,0,0,1.4501401633868256,0.48353843436816046,1],[1,0,0,0,0,0.06876318803696509,-0.9976330106662434,0,0,0.9976330106662434,0.06876318803696509,0,0,1.4350551977367836,0.7023947749025508,1],[0.9982234212070645,-0.059581887798754285,0,0,0.059318219422530634,0.9938059722422536,0.0939736046992415,0,-0.0055991247712346955,-0.09380665318603713,0.9955746891217306,0,0,0.9017922101197102,-0.09436051729552487,1],[0.9982234212070645,-0.059581887798754285,0,0,0.059318219422530634,0.9938059722422536,0.0939736046992415,0,-0.0055991247712346955,-0.09380665318603713,0.9955746891217306,0,-0.021932103902617326,0.5343459844162471,-0.1291059780061074,1],[0.9982234212070645,-0.059581887798754285,0,0,0.059318219422530634,0.9938059722422536,0.0939736046992415,0,-0.0055991247712346955,-0.09380665318603713,0.9955746891217306,0,-0.046543159907541404,0.122017113472557,-0.16809551057726158,1],[0.9987227153012338,-0.05052660627165251,0,0,0.05030278712397283,0.9942986448282388,-0.09402039406579786,0,0.0047505314324681825,0.09390030325508565,0.9955702715025756,0,0,0.9017922101197102,0.09436051729552487,1],[0.9987227153012338,-0.05052660627165251,0,0,0.05030278712397283,0.9942986448282388,-0.09402039406579786,0,0.0047505314324681825,0.09390030325508565,0.9955702715025756,0,-0.01859877057225307,0.5341638254362409,0.12912327773726662,1],[0.9987227153012338,-0.05052660627165251,0,0,0.05030278712397283,0.9942986448282388,-0.09402039406579786,0,0.0047505314324681825,0.09390030325508565,0.9955702715025756,0,-0.03946933484683819,0.12163054524487249,0.16813222315883952,1]],"rig":{"hp":0.9562,"hipY":-0.0544,"hipW":0.0944,"thigh":0.3697,"shin":0.4149,"torY":0.1553,"shY":0.3583,"shW":0.1981,"ua":0.2861,"fa":0.2194,"neck":0.48,"numX":-0.1502,"numY":0.2222},"lum":[0.469,0.765,0.747,0.842,0.231,0.5]};
 var STADE_3D = {"name":"football stade","auteur":"mohamed ouartassi (https://sketchfab.com/mohamedouartassi)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/football-stade-cda2fcbaefb84fa280a5bf7213c67a71","bin":"stade.bin","pieces":{"pylone":[{"mat":"metal_dark.002","col":[0.3131,0.3131,0.3131],"rough":0,"metal":1,"tris":801,"arr":{"pos":[0,1320],"nor":[5280,1320],"idx":[6600,2403]}},{"mat":"metal_clear","col":[0.0593,0.0593,0.0593],"rough":0.98,"metal":0,"tris":462,"arr":{"pos":[11408,1206],"nor":[16232,1206],"idx":[17440,1386]}},{"mat":"metal_dark","col":[0.0593,0.0593,0.0593],"rough":0.98,"metal":0,"tris":294,"arr":{"pos":[20212,573],"nor":[22504,573],"idx":[23080,882]}},{"mat":"light_cold","col":[0.8,0.8,0.8],"rough":0.8,"metal":0,"tris":172,"arr":{"pos":[24844,378],"nor":[26356,378],"idx":[26736,516]}}],"siege":[{"mat":"PlasticRAL3018","col":[0.6627,0.0235,0.0235],"rough":0.98,"metal":0,"tris":210,"arr":{"pos":[27768,321],"nor":[29052,321],"idx":[29376,630]}}],"banc":[{"mat":"PlasticRAL3018","col":[0.6627,0.0235,0.0235],"rough":0.98,"metal":0,"tris":2100,"arr":{"pos":[30636,3210],"nor":[43476,3210],"idx":[46688,6300]}},{"mat":"MetalPaint_RAL5010_riffl","col":[0.004,0.0158,0.0671],"rough":0.96,"metal":0,"tris":4,"arr":{"pos":[59288,12],"nor":[59336,12],"idx":[59348,12]}},{"mat":"MetalPaint_RAL5010","col":[0.004,0.0158,0.0671],"rough":0.96,"metal":0,"tris":202,"arr":{"pos":[59372,228],"nor":[60284,228],"idx":[60512,606]}}],"siege_b":[{"mat":"PlasticRAL3018","col":[0.6627,0.0235,0.0235],"rough":0.98,"metal":0,"tris":42,"arr":{"pos":[61724,69],"nor":[62000,69],"idx":[62072,126]}}]}};
 var DECOR_3D = {"bin":"decor.bin","tex":{"feuilles_ete":"feuilles_ete.webp","feuilles_printemps":"feuilles_printemps.webp","feuilles_automne":"feuilles_automne.webp","feuilles_fin_automne":"feuilles_fin_automne.webp","feuilles_hiver":"feuilles_hiver.webp","ecorce_chene":"ecorce_chene.jpg","foret":"foret.webp","ecorce_sapin":"ecorce_sapin.jpg","chemin":"chemin.jpg"},"credits":[{"nom":"Oak trees pack (17var, LODs, seasons, gameready)","auteur":"LOLIPOP (https://sketchfab.com/lolipop_1707)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/oak-trees-pack-17var-lods-seasons-gameready-a5e4e64f9f1d4089bdcc6170a9333393"},{"nom":"a forest (3) with a road at night for game","auteur":"dasy444 (https://sketchfab.com/dasy444)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/a-forest-3-with-a-road-at-night-for-game-61f8c7817fe6457fb26e4814cfc48a3f"}],"pieces":{"chene_a":{"unit":"m","parts":[{"tex":"ecorce_chene","alpha":false,"tris":478,"arr":{"pos":[0,1122],"nor":[4488,1122],"uv":[5612,748],"idx":[8604,1434]}},{"tex":"feuilles","alpha":true,"tris":2630,"arr":{"pos":[11472,10680],"nor":[54192,10680],"uv":[64872,7120],"idx":[93352,7890]}}],"size":[13.645,20.29,17.289]},"chene_b":{"unit":"m","parts":[{"tex":"ecorce_chene","alpha":false,"tris":476,"arr":{"pos":[109132,1107],"nor":[113560,1107],"uv":[114668,738],"idx":[117620,1428]}},{"tex":"feuilles","alpha":true,"tris":2717,"arr":{"pos":[120476,11040],"nor":[164636,11040],"uv":[175676,7360],"idx":[205116,8151]}}],"size":[20.532,19.472,15.675]},"chene_c":{"unit":"m","parts":[{"tex":"ecorce_chene","alpha":false,"tris":364,"arr":{"pos":[221420,762],"nor":[224468,762],"uv":[225232,508],"idx":[227264,1092]}},{"tex":"feuilles","alpha":true,"tris":1030,"arr":{"pos":[229448,4179],"nor":[246164,4179],"uv":[250344,2786],"idx":[261488,3090]}}],"size":[8.993,10.238,8.566]},"chene_d":{"unit":"m","parts":[{"tex":"ecorce_chene","alpha":false,"tris":350,"arr":{"pos":[267668,726],"nor":[270572,726],"uv":[271300,484],"idx":[273236,1050]}},{"tex":"feuilles","alpha":true,"tris":1144,"arr":{"pos":[275336,4638],"nor":[293888,4638],"uv":[298528,3092],"idx":[310896,3432]}}],"size":[9.354,12.697,9.229]},"chene_e":{"unit":"m","parts":[{"tex":"ecorce_chene","alpha":false,"tris":137,"arr":{"pos":[317760,273],"nor":[318852,273],"uv":[319128,182],"idx":[319856,411]}},{"tex":"feuilles","alpha":true,"tris":68,"arr":{"pos":[320680,246],"nor":[321664,246],"uv":[321912,164],"idx":[322568,204]}}],"size":[3.321,5.385,3.775]},"sapin":{"unit":"h","parts":[{"tex":"ecorce_sapin","alpha":false,"tris":84,"arr":{"pos":[322976,282],"nor":[324104,282],"uv":[324388,188],"idx":[325140,252]}},{"tex":"foret","alpha":true,"tris":264,"arr":{"pos":[325644,522],"nor":[327732,522],"uv":[328256,348],"idx":[329648,792]}}],"size":[0.379,1,0.379]},"herbe":{"unit":"h","parts":[{"tex":"foret","alpha":true,"tris":24,"arr":{"pos":[331232,48],"nor":[331424,48],"uv":[331472,32],"idx":[331600,72]}}],"size":[0.807,1,0.807]},"buisson":{"unit":"h","parts":[{"tex":"foret","alpha":true,"tris":152,"arr":{"pos":[331744,336],"nor":[333088,336],"uv":[333424,224],"idx":[334320,456]}}],"size":[0.471,1,0.471]},"fougere":{"unit":"h","parts":[{"tex":"foret","alpha":true,"tris":144,"arr":{"pos":[335232,288],"nor":[336384,288],"uv":[336672,192],"idx":[337440,432]}}],"size":[1.269,1,1.168]}}};
+var TEX_3D = {"asphalte":"asphalte.jpg","beton":"beton.jpg","ciel_gris":"ciel_gris.jpg","ciel_jour":"ciel_jour.jpg","herbe":"herbe.jpg","pre":"pre.jpg"};
 (function(){
 // ===== src/data.js =====
 // ===== DONNÉES RÉELLES — saison 2026-27 (après le mercato d'été 2026, état au 11/10/2026) =====
@@ -5916,6 +5917,7 @@ function g3Init() {
     sc.add(sun); sc.add(sun.target); G3.sun = sun;
     const fill = new THREE.DirectionalLight(0xdce8ff, .4); fill.position.set(10, 30, 80); sc.add(fill); G3.fill = fill;
     g3Players(); g3Ball();
+    try { g3TxPreload(); } catch (e) { } // photos du ciel et du gazon (m3dgfx.js)
     return true;
   } catch (e) { G3.fail = true; return false; }
 }
@@ -6013,9 +6015,11 @@ function g3Match(M) {
   G3.camB = [[74, 16], [76, 17], [53, 17], [60, 24]][cls];
   // ciel et brouillard
   const top = night ? '#03060d' : wet || snow ? '#566070' : '#3f78c4', hor = night ? '#16213a' : wet || snow ? '#9aa3ad' : '#b9d4ee';
-  const skyM = new THREE.ShaderMaterial({ side: THREE.BackSide, depthWrite: false, uniforms: { a: { value: g3Col(top) }, b: { value: g3Col(hor) } }, vertexShader: 'varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }', fragmentShader: 'uniform vec3 a; uniform vec3 b; varying vec3 vP; void main(){ float h = clamp(normalize(vP).y * 2.2, 0.0, 1.0); gl_FragColor = vec4(mix(b, a, h), 1.0); }' });
-  const sky = new THREE.Mesh(new THREE.SphereGeometry(900, 24, 12), skyM); S3.add(sky);
-  g3SkyExtras(S3, night, wet, snow, rnd); // nuages, ou étoiles et lune (m3dgfx.js)
+  // dôme : dégradé peint, remplacé par une photo de ciel (Poly Haven) dès qu'elle est là (g3SkyPhoto, m3dgfx.js)
+  const skyU = G3.skyU = { a: { value: g3Col(top) }, b: { value: g3Col(hor) }, tx: { value: null }, k: { value: 0 }, rot: { value: 0 }, rot0: 0 };
+  const skyM = new THREE.ShaderMaterial({ side: THREE.BackSide, depthWrite: false, uniforms: skyU, vertexShader: 'varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+    fragmentShader: 'uniform vec3 a; uniform vec3 b; uniform sampler2D tx; uniform float k; uniform float rot; varying vec3 vP; void main(){ vec3 d = normalize(vP); vec3 c = mix(b, a, clamp(d.y * 2.2, 0.0, 1.0)); if (k > 0.0) { vec2 uv = vec2(atan(d.z, d.x) * 0.15915494 + rot, asin(clamp(d.y, 0.0, 1.0)) * 0.63661977); c = mix(c, mix(b, texture2D(tx, uv).rgb, smoothstep(-0.01, 0.05, d.y)), k); } gl_FragColor = vec4(c, 1.0); }' });
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(900, 32, 16), skyM); S3.add(sky);
   sc.fog = new THREE.Fog(g3Lin(hor), snow ? 90 : wet ? 140 : 260, snow ? 380 : wet ? 520 : 900);
   // lumières selon l'heure et la météo
   G3.hemi.color.set(night ? 0x9fb3e8 : wet || snow ? 0xc7ced6 : 0xcfe3ff); G3.hemi.groundColor.set(night ? 0x16241a : 0x40613a); G3.hemi.intensity = night ? .42 : wet || snow ? .85 : .6;
@@ -6024,6 +6028,7 @@ function g3Match(M) {
   G3.sun.castShadow = !low && !night; G3.sun.shadow.mapSize.set(low ? 1024 : 2048, low ? 1024 : 2048); if (G3.sun.shadow.map) { G3.sun.shadow.map.dispose(); G3.sun.shadow.map = null; }
   G3.r.toneMappingExposure = night ? 1.12 : wet || snow ? 1.1 : 1.02;
   G3.night = night;
+  g3SkyExtras(S3, night, wet, snow, rnd, g3SkyPhoto(skyU, night, wet, snow)); // photo du ciel, sinon nuages peints ; la nuit : étoiles et lune (m3dgfx.js)
   // lumière d'appoint côté caméra : les joueurs ne sont plus à contre-jour (visages, numéros, maillots)
   G3.fill.color.set(night ? 0xc8d6ff : 0xdce8ff); G3.fill.intensity = night ? .38 : wet || snow ? .3 : .42;
   // pelouse : bandes tondues, grain, usure
@@ -6422,6 +6427,7 @@ function g3Draw(M, t, dt, paused) {
   if (G3.adT) G3.adT.offset.x = (now * .04) % 1;
   G3DC.wind.uT.value = now;
   if (G3.clouds) G3.clouds.offset.x = (now * .0012) % 1;
+  g3SkyTick(now, dt);
   if (G3.night && G3.stad && !G3.stad.userData.beams && G3.stad.userData.dressed) g3Beams(G3.stad);
   if (G3.wxU) { G3.wxU.uT.value = now; G3.wx.position.set(G3.cm.p ? G3.cm.p[3] : 0, 0, 0); }
   for (const s of G3.flares || []) s.material.opacity = .6 + .4 * Math.sin(now * 9 + s.position.x);
@@ -6457,14 +6463,20 @@ function g3TacLines(fa, mir, E) {
 
 // pelouse : bandes de tonte qui s'inversent selon d'où on regarde, et grain du gazon près de la caméra
 function g3GrassShader(m) {
+  const GU = g3GrassU();
   m.onBeforeCompile = s => {
+    Object.assign(s.uniforms, GU);
     s.vertexShader = s.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vGw;').replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvGw = (modelMatrix * vec4(transformed, 1.0)).xyz;');
-    s.fragmentShader = s.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vGw;\nfloat gHash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }')
+    s.fragmentShader = s.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vGw;\nuniform sampler2D gTx; uniform float gK; uniform float gM;\nfloat gHash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }')
       .replace('#include <map_fragment>', `#include <map_fragment>
       { float band = mod(floor((vGw.x + 52.5) / 5.8333), 2.0) * 2.0 - 1.0; vec3 vd = normalize(cameraPosition - vGw); float sd = clamp(vd.x * 2.5, -1.0, 1.0);
         float dist = length(cameraPosition - vGw), near = 1.0 - smoothstep(12.0, 55.0, dist);
         float n = gHash(floor(vGw.xz * 9.0)) * .6 + gHash(floor(vGw.xz * 23.0)) * .4;
-        diffuseColor.rgb *= (1.0 + 0.075 * band * sd) * mix(1.0, 0.9 + 0.2 * n, near); }`);
+        float hd = mix(1.0, 0.9 + 0.2 * n, near), pd = 1.0;
+        if (gK > 0.0) { // gazon photographié : brins de près, plaques plus claires ou plus foncées de loin (mipmaps : pas de scintillement)
+          vec3 lw = vec3(0.299, 0.587, 0.114); float p1 = dot(texture2D(gTx, vGw.xz * 0.42).rgb, lw) / gM, p2 = dot(texture2D(gTx, vGw.zx * 0.061 + 0.37).rgb, lw) / gM;
+          pd = clamp(1.0 + (p1 - 1.0) * 1.35, 0.6, 1.4) * (0.86 + 0.14 * p2); hd = mix(hd, 1.0, gK); }
+        diffuseColor.rgb *= (1.0 + 0.075 * band * sd) * hd * mix(1.0, pd, gK); }`);
   };
   m.envMapIntensity = .45;
 }
@@ -6532,8 +6544,9 @@ function g3CrowdMesh(people, night) {
   return im;
 }
 // ciel : nuages le jour (plus gris sous la pluie), étoiles et lune la nuit
-function g3SkyExtras(S3, night, wet, snow, rnd) {
-  G3.clouds = null;
+function g3SkyExtras(S3, night, wet, snow, rnd, photo) {
+  G3.clouds = null; G3.cloudMesh = null;
+  if (photo === 'ok') return; // ciel photographié déjà prêt : ses propres nuages suffisent
   if (night) {
     const n = 700, pos = new Float32Array(n * 3), sz = new Float32Array(n);
     for (let i = 0; i < n; i++) { const a = rnd() * Math.PI * 2, e = .12 + Math.pow(rnd(), .7) * 1.35, R = 820; pos[i * 3] = Math.cos(a) * Math.cos(e) * R; pos[i * 3 + 1] = Math.sin(e) * R; pos[i * 3 + 2] = Math.sin(a) * Math.cos(e) * R; sz[i] = .6 + Math.pow(rnd(), 3) * 2.4; }
@@ -6557,7 +6570,7 @@ function g3SkyExtras(S3, night, wet, snow, rnd) {
   const t = g3Tex(c); t.wrapS = THREE.RepeatWrapping;
   const geo = new THREE.SphereGeometry(860, 48, 10, 0, Math.PI * 2, 0, Math.PI * .47); // v = 0 près de l'horizon, 1 au zénith
   const cl = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, side: THREE.BackSide, fog: false, opacity: dense ? .95 : .9 }));
-  cl.renderOrder = -1; S3.add(cl); G3.clouds = t;
+  cl.renderOrder = -1; cl.userData.op = cl.material.opacity; S3.add(cl); G3.clouds = t; G3.cloudMesh = cl;
 }
 // faisceaux des projecteurs (nuit) : cônes de lumière très légers, du mât vers la pelouse
 function g3Beams(S3) {
@@ -6592,6 +6605,87 @@ function g3CrowdTex(seatCol, hc, oc, fill, rnd, night) {
   if (night) { x.fillStyle = 'rgba(0,0,10,.18)'; x.fillRect(0, 0, W, H); }
   const t = g3Tex(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
 }
+
+// ---------- textures photo (Poly Haven, CC0 : réduites et rangées dans assets/textures par le robot médias) ----------
+// ciel photographié (cumulus le jour, couvert sous la pluie ou la neige), grain du gazon, prés, route, parvis.
+// Tant qu'une photo n'est pas arrivée, le dessin d'origine reste ; elle le remplace ensuite en douceur.
+const G3TX = { im: {}, cb: {}, st: {}, sky: {}, gU: null };
+const G3_SKY_SUN = { ciel_jour: .6, ciel_gris: .582 }; // où se trouve le soleil dans chaque photo (fraction de tour)
+function g3TxUrl(n) { const T = typeof TEX_3D !== 'undefined' ? TEX_3D : null; return T && T[n] ? 'assets/textures/' + T[n] + (typeof MEDIA_H !== 'undefined' && MEDIA_H.tex ? '?h=' + MEDIA_H.tex : '') : null; }
+// charge une photo une seule fois ; cb tout de suite si elle est déjà là. Rend 'ok', 'wait' ou false (pas de photo)
+function g3TxImg(n, cb) {
+  const im = G3TX.im[n];
+  if (im && im.ok) { if (cb) cb(im); return 'ok'; }
+  if (im === false) return false;
+  const u = g3TxUrl(n); if (!u) { G3TX.im[n] = false; return false; }
+  if (cb) (G3TX.cb[n] = G3TX.cb[n] || []).push(cb);
+  if (im) return 'wait';
+  const I = new Image(); G3TX.im[n] = I; I.decoding = 'async';
+  I.onload = () => { I.ok = true; const L = G3TX.cb[n] || []; G3TX.cb[n] = []; for (const f of L) try { f(I); } catch (e) { console.warn('texture', n, e); } };
+  I.onerror = () => { G3TX.im[n] = false; G3TX.cb[n] = []; };
+  I.src = u; return 'wait';
+}
+// couleur moyenne d'une bande horizontale de la photo (y0..y1 en fraction de hauteur) : horizon du ciel, teinte du gazon
+function g3TxAvg(n, im, y0, y1) {
+  const K = n + y0 + '-' + y1; if (G3TX.st[K]) return G3TX.st[K];
+  let r = .5, g = .5, b = .5;
+  try { const [c, x] = g3Canvas(64, 32); x.drawImage(im, 0, 0, 64, 32); const a = Math.floor(y0 * 32), h = Math.max(1, Math.ceil(y1 * 32) - a), d = x.getImageData(0, a, 64, h).data; let s0 = 0, s1 = 0, s2 = 0; for (let i = 0; i < d.length; i += 4) { s0 += d[i]; s1 += d[i + 1]; s2 += d[i + 2]; } const N = d.length / 4 * 255; r = s0 / N; g = s1 / N; b = s2 / N; } catch (e) { }
+  return G3TX.st[K] = { r, g, b, l: .299 * r + .587 * g + .114 * b, hex: '#' + [r, g, b].map(v => Math.round(v * 255).toString(16).padStart(2, '0')).join('') };
+}
+// photo « sans ses grandes taches » : on garde le grain (rapport à la moyenne locale) et on retire les variations d'éclairage
+// de la prise de vue, qui feraient voir la répétition du motif (bandes au loin) ; le motif reste raccordable (flou en boucle)
+function g3TxDetail(im, S) {
+  const K = im.src + S, mm = G3TX.det || (G3TX.det = {}), hit = mm[K];
+  if (hit) { const [c, x] = g3Canvas(S, S), D = x.createImageData(S, S); D.data.set(hit.d); return { c, x, D, L: hit.L }; } // déjà calculé (match précédent)
+  const [c, x] = g3Canvas(S, S); x.drawImage(im, 0, 0, S, S); const D = x.getImageData(0, 0, S, S), d = D.data;
+  const N = 32, cell = S / N, low = new Float32Array(N * N), bl = new Float32Array(N * N), R = 3, L = new Float32Array(S * S);
+  for (let y = 0; y < S; y++) for (let xx = 0; xx < S; xx++) { const i = (y * S + xx) * 4, l = .299 * d[i] + .587 * d[i + 1] + .114 * d[i + 2]; L[y * S + xx] = l; low[((y / cell) | 0) * N + ((xx / cell) | 0)] += l / (cell * cell); }
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) { let t = 0; for (let v = -R; v <= R; v++) for (let u = -R; u <= R; u++) t += low[((j + v + N) % N) * N + (i + u + N) % N]; bl[j * N + i] = t / ((2 * R + 1) * (2 * R + 1)); }
+  const g = (i, j) => bl[((j + N) % N) * N + (i + N) % N];
+  for (let y = 0; y < S; y++) { const fy = y / cell - .5, j0 = Math.floor(fy), ty = fy - j0; for (let xx = 0; xx < S; xx++) { const fx = xx / cell - .5, i0 = Math.floor(fx), tx = fx - i0, lo = (g(i0, j0) * (1 - tx) + g(i0 + 1, j0) * tx) * (1 - ty) + (g(i0, j0 + 1) * (1 - tx) + g(i0 + 1, j0 + 1) * tx) * ty; L[y * S + xx] /= Math.max(1, lo); } }
+  mm[K] = { d: new Uint8ClampedArray(d), L };
+  return { c, x, D, L };
+}
+// ciel du match : la photo s'applique sur le dôme (uniforms de g3Match) ; brouillard et bas du ciel prennent la couleur de son horizon
+function g3SkyPhoto(U, night, wet, snow) {
+  if (night) return false;
+  const n = wet || snow ? 'ciel_gris' : 'ciel_jour';
+  let sync = true;
+  const r = g3TxImg(n, im => {
+    if (G3.skyU !== U) return; // le match a changé entre-temps
+    let t = G3TX.sky[n];
+    if (!t) { t = new THREE.Texture(im); t.encoding = THREE.LinearEncoding; t.wrapS = THREE.RepeatWrapping; t.wrapT = THREE.ClampToEdgeWrapping; t.generateMipmaps = false; t.minFilter = t.magFilter = THREE.LinearFilter; t.needsUpdate = true; G3TX.sky[n] = t; }
+    const hz = g3TxAvg(n, im, .94, 1);
+    U.tx.value = t; U.b.value.setRGB(hz.r, hz.g, hz.b);
+    const sp = G3.sun.position; U.rot0 = (G3_SKY_SUN[n] || .5) - Math.atan2(sp.z, sp.x) / (Math.PI * 2); U.rot.value = U.rot0;
+    // brouillard (appliqué après la conversion des couleurs dans three r128 : on lui donne la couleur telle qu'affichée)
+    const fg = G3.sc && G3.sc.fog; if (fg) { U.fog0 = fg.color.clone(); U.fog1 = g3Col(hz.hex); if (sync) fg.color.copy(U.fog1); }
+    U.k.value = sync ? 1 : .001; // déjà en mémoire : tout de suite ; sinon fondu (g3SkyTick)
+  });
+  sync = false;
+  return r;
+}
+function g3SkyTick(now, dt) {
+  const U = G3.skyU; if (!U || !U.tx.value) return;
+  if (U.k.value < 1) { U.k.value = Math.min(1, U.k.value + dt / 1.8); const fg = G3.sc && G3.sc.fog; if (fg && U.fog1) fg.color.copy(U.fog0).lerp(U.fog1, U.k.value); }
+  const cm = G3.cloudMesh; if (cm && cm.visible) { cm.material.opacity = cm.userData.op * (1 - U.k.value); if (U.k.value >= 1) cm.visible = false; }
+  U.rot.value = U.rot0 + now * .00003; // les nuages photographiés glissent très lentement
+}
+// grain du gazon photographié (uniforms partagés par toutes les pelouses)
+function g3GrassU() {
+  if (G3TX.gU) return G3TX.gU;
+  const U = G3TX.gU = { gTx: { value: null }, gK: { value: 0 }, gM: { value: .5 } };
+  g3TxImg('herbe', im => {
+    const { c, x, D, L } = g3TxDetail(im, 512), d = D.data; // niveaux de gris centrés sur 0,5 : seul le grain des brins compte
+    for (let i = 0; i < L.length; i++) { const v = Math.max(0, Math.min(255, 128 * L[i])); d[i * 4] = d[i * 4 + 1] = d[i * 4 + 2] = v; }
+    x.putImageData(D, 0, 0); const t = new THREE.CanvasTexture(c); t.encoding = THREE.LinearEncoding; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = G3.r ? Math.min(8, G3.r.capabilities.getMaxAnisotropy()) : 1;
+    U.gTx.value = t; U.gM.value = .5; U.gK.value = 1; });
+  return U;
+}
+// une photo répétée dans un canevas déjà affiché (prés, route, parvis) : on redessine, puis la texture se met à jour
+function g3TxPaint(n, tex, paint) { return g3TxImg(n, im => { try { paint(im); tex.needsUpdate = true; } catch (e) { console.warn('texture', n, e); } }); }
+// au démarrage du moteur : on va déjà chercher le ciel du jour et le gazon
+function g3TxPreload() { g3TxImg('ciel_jour'); g3GrassU(); }
 
 // ===== src/m3dsk.js =====
 // ===================== 3D : joueurs « skinnés » (un vrai modèle 3D, un seul dessin pour les 25 joueurs) =====================
@@ -7191,23 +7285,41 @@ function g3DcGround(S3, cls, C, rnd) {
   const E = [[66, 50], [72, 57], [80, 66], [95, 80]][cls], zr = -(E[1] + 22);
   // prés autour du stade (couleur selon la saison, neige l'hiver)
   const base = C.snow ? ['#dfe6e8', '#cdd6d9', '#eef3f4'] : { printemps: ['#4d7a33', '#41692b', '#5e8a3c'], ete: ['#4a7232', '#3d6229', '#5a8139'], automne: ['#55703a', '#485f30', '#6b7a3f'], fin_automne: ['#5d653c', '#4e5532', '#6e6e44'], hiver: ['#56614a', '#4a5440', '#646c55'] }[season];
-  const [gc, gx] = g3Canvas(256, 256); gx.fillStyle = base[0]; gx.fillRect(0, 0, 256, 256);
+  const [gc, gx] = g3Canvas(512, 512); gx.scale(2, 2); gx.fillStyle = base[0]; gx.fillRect(0, 0, 256, 256);
   for (let i = 0; i < 2600; i++) { gx.fillStyle = base[1 + (i % 2)]; gx.globalAlpha = .25 + rnd() * .35; const r = 1 + rnd() * 5; gx.beginPath(); gx.arc(rnd() * 256, rnd() * 256, r, 0, 7); gx.fill(); }
-  gx.globalAlpha = .18; for (let i = 0; i < 260; i++) { gx.fillStyle = C.snow ? '#b8c2c6' : '#7a6a4a'; gx.fillRect(rnd() * 256, rnd() * 256, 1 + rnd() * 3, 1 + rnd() * 3); } gx.globalAlpha = 1;
-  const gt = g3Tex(gc, [300, 300]), gg = new THREE.PlaneGeometry(3600, 3600, 72, 72), gn = gg.attributes.position.count, gcol = new Float32Array(gn * 3);
+  gx.globalAlpha = .18; for (let i = 0; i < 260; i++) { gx.fillStyle = C.snow ? '#b8c2c6' : '#7a6a4a'; gx.fillRect(rnd() * 256, rnd() * 256, 1 + rnd() * 3, 1 + rnd() * 3); } gx.globalAlpha = 1; gx.setTransform(1, 0, 0, 1, 0, 0);
+  const gt = g3Tex(gc, [300, 300]);
+  // prés photographiés (Poly Haven) : la photo garde son relief, la saison donne la teinte ; pas sous la neige
+  if (!C.snow) g3TxPaint('pre', gt, im => {
+    const { D, L } = g3TxDetail(im, 512), d = D.data, b0 = g3Col(base[0]), b1 = g3Col(base[2]);
+    for (let i = 0; i < L.length; i++) { const j = i * 4, k = 255 * Math.max(.5, Math.min(1.6, L[i])), m = Math.min(1, Math.max(0, (d[j + 1] - d[j + 2]) / 90)); // grain de la photo, teinte de la saison (touffes vertes plus claires)
+      d[j] = k * (b0.r + (b1.r - b0.r) * m); d[j + 1] = k * (b0.g + (b1.g - b0.g) * m); d[j + 2] = k * (b0.b + (b1.b - b0.b) * m); }
+    gx.putImageData(D, 0, 0); gt.repeat.set(560, 560); });
+  const gg = new THREE.PlaneGeometry(3600, 3600, 72, 72), gn = gg.attributes.position.count, gcol = new Float32Array(gn * 3);
   for (let i = 0; i < gn; i++) { const x = gg.attributes.position.getX(i), y = gg.attributes.position.getY(i), n = .5 + .5 * Math.sin(x * .021 + Math.sin(y * .013) * 2.1) * Math.cos(y * .017 - x * .006), f = .82 + n * .3 + (rnd() - .5) * .08; gcol[i * 3] = f * (C.snow ? 1 : 1.02); gcol[i * 3 + 1] = f; gcol[i * 3 + 2] = f * (C.snow ? 1 : .94); }
   gg.setAttribute('color', new THREE.BufferAttribute(gcol, 3));
   const ground = new THREE.Mesh(gg, new THREE.MeshLambertMaterial({ map: gt, vertexColors: true, color: night ? 0x56606b : 0xffffff })); ground.rotation.x = -Math.PI / 2; ground.position.y = -.04; ground.receiveShadow = false; S3.add(ground);
   // grands stades : parvis en béton autour de l'enceinte
   if (cls >= 2) { // en 4 bandes autour de la pelouse (jamais par-dessus)
-    const X = E[0] + 8, Z = E[1] + 8, gx2 = 62.5, gz2 = 44, pm2 = new THREE.MeshLambertMaterial({ color: night ? 0x3b3f45 : 0x9a9a96, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 });
-    for (const [w2, d2, x2, z2] of [[2 * X, Z - gz2, 0, (Z + gz2) / 2], [2 * X, Z - gz2, 0, -(Z + gz2) / 2], [X - gx2, 2 * gz2, (X + gx2) / 2, 0], [X - gx2, 2 * gz2, -(X + gx2) / 2, 0]]) { const pv = new THREE.Mesh(new THREE.PlaneGeometry(w2, d2), pm2); pv.rotation.x = -Math.PI / 2; pv.position.set(x2, -.03, z2); S3.add(pv); }
+    // dalles de béton photographiées (Poly Haven), une dalle tous les 3 m ; gris uni en attendant la photo
+    const [bc, bx] = g3Canvas(256, 256); bx.fillStyle = '#9a9a96'; bx.fillRect(0, 0, 256, 256); const bt = g3Tex(bc); bt.wrapS = bt.wrapT = THREE.RepeatWrapping;
+    g3TxPaint('beton', bt, im => bx.drawImage(im, 0, 0, 256, 256));
+    const X = E[0] + 8, Z = E[1] + 8, gx2 = 62.5, gz2 = 44, pm2 = new THREE.MeshLambertMaterial({ map: bt, color: night ? 0x62686f : 0xffffff, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 });
+    for (const [w2, d2, x2, z2] of [[2 * X, Z - gz2, 0, (Z + gz2) / 2], [2 * X, Z - gz2, 0, -(Z + gz2) / 2], [X - gx2, 2 * gz2, (X + gx2) / 2, 0], [X - gx2, 2 * gz2, -(X + gx2) / 2, 0]]) { const pg = new THREE.PlaneGeometry(w2, d2), uv = pg.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * w2 / 3, uv.getY(i) * d2 / 3); const pv = new THREE.Mesh(pg, pm2); pv.rotation.x = -Math.PI / 2; pv.position.set(x2, -.03, z2); S3.add(pv); }
   }
   // route goudronnée derrière la tribune principale : bandes blanches, accotements, lampadaires
-  const [rc, rx] = g3Canvas(128, 256); rx.fillStyle = '#3a3c3f'; rx.fillRect(0, 0, 128, 256);
-  for (let i = 0; i < 900; i++) { rx.fillStyle = rnd() < .5 ? '#2f3134' : '#45484b'; rx.fillRect(rnd() * 128, rnd() * 256, 1 + rnd() * 2, 1 + rnd() * 2); }
-  rx.fillStyle = '#d9d9d2'; rx.fillRect(4, 0, 4, 256); rx.fillRect(120, 0, 4, 256); rx.fillRect(62, 0, 4, 150); // rives continues, ligne médiane pointillée
-  const rt = g3Tex(rc); rt.wrapS = rt.wrapT = THREE.RepeatWrapping; rt.repeat.set(1, 1600 / 14);
+  // (enrobé photographié de Poly Haven dès qu'il est là, puis les mêmes marquages par-dessus)
+  const [rc, rx] = g3Canvas(256, 512), rsd = rnd() * 1e4;
+  const paintRoad = im => {
+    let q = rsd; const r2 = () => (q = (q * 9301 + 49297) % 233280) / 233280;
+    rx.setTransform(2, 0, 0, 2, 0, 0); rx.globalAlpha = 1;
+    if (im) { rx.drawImage(im, 0, 0, 128, 128); rx.drawImage(im, 0, 128, 128, 128); rx.globalAlpha = .45; } else { rx.fillStyle = '#3a3c3f'; rx.fillRect(0, 0, 128, 256); }
+    for (let i = 0; i < 900; i++) { rx.fillStyle = r2() < .5 ? '#2f3134' : '#45484b'; rx.fillRect(r2() * 128, r2() * 256, 1 + r2() * 2, 1 + r2() * 2); }
+    rx.globalAlpha = 1; rx.fillStyle = '#d9d9d2'; rx.fillRect(4, 0, 4, 256); rx.fillRect(120, 0, 4, 256); rx.fillRect(62, 0, 4, 150); // rives continues, ligne médiane pointillée
+    rx.setTransform(1, 0, 0, 1, 0, 0);
+  };
+  paintRoad(null);
+  const rt = g3Tex(rc); g3TxPaint('asphalte', rt, paintRoad); rt.wrapS = rt.wrapT = THREE.RepeatWrapping; rt.repeat.set(1, 1600 / 14);
   const road = new THREE.Mesh(new THREE.PlaneGeometry(7.5, 1600), new THREE.MeshLambertMaterial({ map: rt, color: night ? 0x8a929c : 0xffffff, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 })); road.rotation.set(-Math.PI / 2, 0, Math.PI / 2); road.position.set(0, -.02, zr); S3.add(road);
   for (const s of [-1, 1]) { const sh = new THREE.Mesh(new THREE.PlaneGeometry(1600, 1.6), new THREE.MeshLambertMaterial({ color: C.snow ? 0xc9d0d2 : night ? 0x4a4436 : 0x8a7c5e, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 })); sh.rotation.x = -Math.PI / 2; sh.position.set(0, -.025, zr + s * 4.5); S3.add(sh); }
   const lamps = [], step = 32; for (let x = -320; x <= 320; x += step) lamps.push([x + 6, zr - 5.2]);
@@ -9447,6 +9559,7 @@ function vCredits() {
   return `<section class="card sec"><h3>Ce qui est réel</h3><p class="note">Clubs, entraîneurs, sélectionneurs et effectifs principaux de la saison 2026-27, mis à jour au 11 octobre 2026 (mercato d'été 2026 compris). Coupe du monde 2026 : ${REAL_FACTS.wc2026}. Ballon d'Or 2025 : ${REAL_FACTS.bdo2025}.</p></section>
   <section class="card sec"><h3>Ce qui est simulé</h3><p class="note">Tous les résultats à partir du début de ta carrière, le Ballon d'Or 2026 (cérémonie réelle le ${REAL_FACTS.bdo2026date}), les transferts futurs, les jeunes joueurs générés, les sponsors (marques fictives) et ta vie.</p></section>
   ${typeof JOUEUR_3D !== 'undefined' && JOUEUR_3D ? `<section class="card sec"><h3>Joueurs en 3D</h3><p class="note">Modèle « ${esc(JOUEUR_3D.name)} » par ${esc(String(JOUEUR_3D.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(JOUEUR_3D.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(JOUEUR_3D.source || 'Sketchfab')}. Adapté pour le jeu : allégé, squelette et animations du jeu, couleurs des clubs.</p></section>` : ''}${typeof STADE_3D !== 'undefined' && STADE_3D ? `<section class="card sec"><h3>Stade en 3D</h3><p class="note">Mâts d'éclairage, sièges et bancs de touche tirés du modèle « ${esc(STADE_3D.name)} » par ${esc(String(STADE_3D.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(STADE_3D.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(STADE_3D.source || 'Sketchfab')}. Adapté pour le jeu : pièces allégées et remises à l'échelle, placées autour du terrain.</p></section>` : ''}${typeof DECOR_3D !== 'undefined' && DECOR_3D && DECOR_3D.credits ? `<section class="card sec"><h3>Décors autour du stade</h3>${DECOR_3D.credits.map(c => `<p class="note">« ${esc(c.nom)} » par ${esc(String(c.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(c.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(c.source || 'Sketchfab')}.</p>`).join('')}<p class="note">Adapté pour le jeu : arbres allégés, feuillages selon la saison, plantés autour du stade avec une route et un chemin forestier.</p></section>` : ''}
+  ${typeof TEX_3D !== 'undefined' && TEX_3D && Object.keys(TEX_3D).length ? `<section class="card sec"><h3>Ciel et textures photo</h3><p class="note">Ciel des matchs (beau temps et temps couvert), gazon, prés, route et dalles : photos de Poly Haven (polyhaven.com), dans le domaine public (CC0). Réduites pour le téléphone.</p></section>` : ''}
   <section class="card sec"><h3>Crampons d'Or</h3><p class="note">Un simulateur de carrière pensé pour iPhone. Ajoute-le à l'écran d'accueil depuis Safari pour l'avoir comme une app : il marche aussi hors connexion et se met à jour tout seul.</p><p class="note">Version ${typeof GAME_VERSION !== 'undefined' ? GAME_VERSION : 'dev'}${typeof VOIX_INDEX !== 'undefined' ? ' · ' + Object.keys(VOIX_INDEX).length + ' répliques enregistrées' : ''}</p></section>`;
 }
 
