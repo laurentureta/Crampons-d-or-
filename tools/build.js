@@ -5,7 +5,7 @@
 const fs = require('fs'), path = require('path'), crypto = require('crypto');
 const ROOT = path.join(__dirname, '..'), R = p => path.join(ROOT, p), read = p => fs.readFileSync(R(p), 'utf8');
 // ordre de chargement des modules (ils partagent une même portée)
-const ORDER = ['data.js', 'core.js', 'sim.js', 'life.js', 'extra.js', 'me.js', 'live.js', 'comm.js', 'audio.js', 'media.js', 'art.js', 'mview.js', 'm3d.js', 'm3dsk.js', 'm3dfx.js', 'm3dst.js', 'm3dnet.js', 'm3ddeco.js', 'intro.js', 'fete.js', 'loading.js', 'online.js', 'shop.js', 'ui.js', 'ui2.js', 'ui3.js', 'ui4.js'].filter(f => fs.existsSync(R('src/' + f)));
+const ORDER = ['data.js', 'core.js', 'sim.js', 'life.js', 'extra.js', 'me.js', 'live.js', 'comm.js', 'audio.js', 'media.js', 'art.js', 'mview.js', 'm3d.js', 'm3dgfx.js', 'm3dsk.js', 'm3dfx.js', 'm3dst.js', 'm3dnet.js', 'm3ddeco.js', 'intro.js', 'fete.js', 'loading.js', 'online.js', 'shop.js', 'ui.js', 'ui2.js', 'ui3.js', 'ui4.js'].filter(f => fs.existsSync(R('src/' + f)));
 const pkg = JSON.parse(read('package.json')), VERSION = pkg.version;
 // empreintes : le même contenu donne toujours les mêmes fichiers (ici comme chez le robot) ; un contenu modifié change d'adresse,
 // ce qui force les téléphones à le retélécharger

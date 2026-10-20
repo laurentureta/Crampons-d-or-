@@ -72,8 +72,9 @@ function lvFrame(now) {
   let rebuild = false;
   if (!paused) {
     // garder de l'avance sur l'affichage
-    let g = 0;
-    while (M.stopAt == null && !M.done && E.time < LV.pt + 16 && g++ < 8) liveSim(M, E.time + 4, lvRec);
+    // petits morceaux de 0,3 s de jeu, avec un budget de quelques millisecondes par image : plus d'à-coup quand le moteur calcule la suite
+    const s0 = performance.now(), lead = E.time - LV.pt, budget = lead < 2 ? 60 : lead < 6 ? 7 : 3.5; let g = 0;
+    while (M.stopAt == null && !M.done && E.time < LV.pt + 16 && g++ < 400 && (g === 1 || performance.now() - s0 < budget)) liveSim(M, E.time + .3, lvRec);
     lvScanHl(M);
     if (LV.replay) {
       const R_ = LV.replay; R_.pt += dt * R_.rate; if (R_.pt >= R_.t1) LV.replay = null;
@@ -149,10 +150,10 @@ function lvAt(t) {
 function lvPair(t) {
   const F = LV.frames; if (!F.length) return null;
   let lo = 0, hi = F.length - 1;
-  if (t <= F[0][0] || hi === 0) return [F[0], F[0], 0];
-  if (t >= F[hi][0]) return [F[hi], F[hi], 0];
+  if (t <= F[0][0] || hi === 0) { LV.pi = 0; return [F[0], F[0], 0]; }
+  if (t >= F[hi][0]) { LV.pi = hi; return [F[hi], F[hi], 0]; }
   while (hi - lo > 1) { const m = (lo + hi) >> 1; if (F[m][0] <= t) lo = m; else hi = m; }
-  const a = F[lo], b = F[hi]; return [a, b, clamp((t - a[0]) / Math.max(1e-6, b[0] - a[0]), 0, 1)];
+  LV.pi = lo; const a = F[lo], b = F[hi]; return [a, b, clamp((t - a[0]) / Math.max(1e-6, b[0] - a[0]), 0, 1)];
 }
 
 // ---------- Caméras ----------

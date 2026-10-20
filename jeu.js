@@ -1,5 +1,5 @@
-/* Crampons d'Or 11.5.0 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
-var GAME_VERSION = "11.5.0";
+/* Crampons d'Or 11.6.0 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
+var GAME_VERSION = "11.6.0";
 var CRWD_FILES = ["chant_2","chant_3","chant_4","cheer_loop","goal_1","goal_2","goal_3","goal_4","ooh_1","roar_1","roar_2","roar_3","roar_4","surge"];
 var SONS_FILES = ["catch","glass","header","kick","net","post","shot","tackle","whistle1","whistle3"];
 var MEDIA_H = {"foule/chant_2":"3ebb4bce","foule/chant_3":"4f555b3f","foule/chant_4":"e9942adb","foule/cheer_loop":"e5b4a150","foule/goal_1":"a49bc043","foule/goal_2":"db0cbb88","foule/goal_3":"05dbbca2","foule/goal_4":"09720ea4","foule/ooh_1":"155d868a","foule/roar_1":"aff56709","foule/roar_2":"a3f978be","foule/roar_3":"6bed5e29","foule/roar_4":"df5f4aa6","foule/surge":"ce5de2be","sons/catch":"082b1f8c","sons/glass":"149bfce3","sons/header":"ac052ba0","sons/kick":"877b4236","sons/net":"fe0694be","sons/post":"ae984141","sons/shot":"9695a8e3","sons/tackle":"601ffa60","sons/whistle1":"cc2e8cf9","sons/whistle3":"dbccf110","decor":"49ccd40b","stade":"180b7b01","joueur":"cbcc8acf"};
@@ -5543,8 +5543,9 @@ function lvFrame(now) {
   let rebuild = false;
   if (!paused) {
     // garder de l'avance sur l'affichage
-    let g = 0;
-    while (M.stopAt == null && !M.done && E.time < LV.pt + 16 && g++ < 8) liveSim(M, E.time + 4, lvRec);
+    // petits morceaux de 0,3 s de jeu, avec un budget de quelques millisecondes par image : plus d'à-coup quand le moteur calcule la suite
+    const s0 = performance.now(), lead = E.time - LV.pt, budget = lead < 2 ? 60 : lead < 6 ? 7 : 3.5; let g = 0;
+    while (M.stopAt == null && !M.done && E.time < LV.pt + 16 && g++ < 400 && (g === 1 || performance.now() - s0 < budget)) liveSim(M, E.time + .3, lvRec);
     lvScanHl(M);
     if (LV.replay) {
       const R_ = LV.replay; R_.pt += dt * R_.rate; if (R_.pt >= R_.t1) LV.replay = null;
@@ -5620,10 +5621,10 @@ function lvAt(t) {
 function lvPair(t) {
   const F = LV.frames; if (!F.length) return null;
   let lo = 0, hi = F.length - 1;
-  if (t <= F[0][0] || hi === 0) return [F[0], F[0], 0];
-  if (t >= F[hi][0]) return [F[hi], F[hi], 0];
+  if (t <= F[0][0] || hi === 0) { LV.pi = 0; return [F[0], F[0], 0]; }
+  if (t >= F[hi][0]) { LV.pi = hi; return [F[hi], F[hi], 0]; }
   while (hi - lo > 1) { const m = (lo + hi) >> 1; if (F[m][0] <= t) lo = m; else hi = m; }
-  const a = F[lo], b = F[hi]; return [a, b, clamp((t - a[0]) / Math.max(1e-6, b[0] - a[0]), 0, 1)];
+  LV.pi = lo; const a = F[lo], b = F[hi]; return [a, b, clamp((t - a[0]) / Math.max(1e-6, b[0] - a[0]), 0, 1)];
 }
 
 // ---------- Caméras ----------
@@ -5913,6 +5914,7 @@ function g3Init() {
     const sun = new THREE.DirectionalLight(0xfff0dc, 1.5); sun.position.set(-45, 70, -35); sun.castShadow = true;
     const sh = sun.shadow; sh.mapSize.set(2048, 2048); sh.camera.left = -64; sh.camera.right = 64; sh.camera.top = 44; sh.camera.bottom = -44; sh.camera.near = 10; sh.camera.far = 220; sh.bias = -.0006; sh.normalBias = .03;
     sc.add(sun); sc.add(sun.target); G3.sun = sun;
+    const fill = new THREE.DirectionalLight(0xdce8ff, .4); fill.position.set(10, 30, 80); sc.add(fill); G3.fill = fill;
     g3Players(); g3Ball();
     return true;
   } catch (e) { G3.fail = true; return false; }
@@ -6004,7 +6006,7 @@ function g3Match(M) {
   const sc = G3.sc, C = M.cond || {}, low = g3Low();
   if (G3.stad) { sc.remove(G3.stad); g3Dispose(G3.stad); G3.stad = null; }
   if (G3.wx) { sc.remove(G3.wx); g3Dispose(G3.wx); G3.wx = null; } G3.wxU = null; G3.crowdU = null;
-  const S3 = new THREE.Group(); G3.stad = S3; sc.add(S3);
+  const S3 = new THREE.Group(); G3.stad = S3; sc.add(S3); G3.warm = performance.now() + 3500; G3.fa = null;
   let rs = (C.seed || 7) * 9301 + 49297; const rnd = () => (rs = (rs * 9301 + 49297) % 233280) / 233280;
   const night = !!C.night, wet = !!C.rain, snow = !!C.snow, att = C.att || 15000;
   const cls = att < 900 ? 0 : att < 8000 ? 1 : att < 30000 ? 2 : 3; G3.cls = cls;
@@ -6013,6 +6015,7 @@ function g3Match(M) {
   const top = night ? '#03060d' : wet || snow ? '#566070' : '#3f78c4', hor = night ? '#16213a' : wet || snow ? '#9aa3ad' : '#b9d4ee';
   const skyM = new THREE.ShaderMaterial({ side: THREE.BackSide, depthWrite: false, uniforms: { a: { value: g3Col(top) }, b: { value: g3Col(hor) } }, vertexShader: 'varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }', fragmentShader: 'uniform vec3 a; uniform vec3 b; varying vec3 vP; void main(){ float h = clamp(normalize(vP).y * 2.2, 0.0, 1.0); gl_FragColor = vec4(mix(b, a, h), 1.0); }' });
   const sky = new THREE.Mesh(new THREE.SphereGeometry(900, 24, 12), skyM); S3.add(sky);
+  g3SkyExtras(S3, night, wet, snow, rnd); // nuages, ou étoiles et lune (m3dgfx.js)
   sc.fog = new THREE.Fog(g3Lin(hor), snow ? 90 : wet ? 140 : 260, snow ? 380 : wet ? 520 : 900);
   // lumières selon l'heure et la météo
   G3.hemi.color.set(night ? 0x9fb3e8 : wet || snow ? 0xc7ced6 : 0xcfe3ff); G3.hemi.groundColor.set(night ? 0x16241a : 0x40613a); G3.hemi.intensity = night ? .42 : wet || snow ? .85 : .6;
@@ -6021,6 +6024,8 @@ function g3Match(M) {
   G3.sun.castShadow = !low && !night; G3.sun.shadow.mapSize.set(low ? 1024 : 2048, low ? 1024 : 2048); if (G3.sun.shadow.map) { G3.sun.shadow.map.dispose(); G3.sun.shadow.map = null; }
   G3.r.toneMappingExposure = night ? 1.12 : wet || snow ? 1.1 : 1.02;
   G3.night = night;
+  // lumière d'appoint côté caméra : les joueurs ne sont plus à contre-jour (visages, numéros, maillots)
+  G3.fill.color.set(night ? 0xc8d6ff : 0xdce8ff); G3.fill.intensity = night ? .38 : wet || snow ? .3 : .42;
   // pelouse : bandes tondues, grain, usure
   const TW = low ? 1024 : 2048, TH = TW / 2, [pc, px] = g3Canvas(TW, TH), fx = TW / 125, fy = TH / 88;
   const g1 = snow ? '#d9e0e2' : wet ? '#25692d' : '#2f7a35', g2 = snow ? '#e3e9ea' : wet ? '#2c7836' : '#3a8a40';
@@ -6030,7 +6035,7 @@ function g3Match(M) {
   const FX = LV.fx || { patches: [] };
   for (const [x0, y0, r, al] of FX.patches) { const g = px.createRadialGradient((x0 + 10) * fx, (y0 + 10) * fy, 0, (x0 + 10) * fx, (y0 + 10) * fy, r * fx * 1.3); g.addColorStop(0, `rgba(${snow ? '120,110,95' : '118,92,55'},${al * .75})`); g.addColorStop(1, 'rgba(118,92,55,0)'); px.fillStyle = g; px.fillRect((x0 + 10 - r * 1.4) * fx, (y0 + 10 - r * 1.4) * fy, r * 2.8 * fx, r * 2.8 * fy); }
   if (snow) { px.globalAlpha = .12; for (let i = 0; i < 30; i++) { px.fillStyle = '#93b58b'; px.beginPath(); px.ellipse((10 + rnd() * PL) * fx, (10 + rnd() * PW) * fy, (2 + rnd() * 5) * fx, (1 + rnd() * 3) * fy, rnd() * 3, 0, 7); px.fill(); } px.globalAlpha = 1; }
-  const grassM = new THREE.MeshStandardMaterial({ map: g3Tex(pc), roughness: wet ? .5 : snow ? .8 : .93, metalness: 0 });
+  const grassM = new THREE.MeshStandardMaterial({ map: g3Tex(pc), roughness: wet ? .5 : snow ? .8 : .93, metalness: 0 }); g3GrassShader(grassM);
   const pitch = new THREE.Mesh(new THREE.PlaneGeometry(125, 88), grassM); pitch.rotation.x = -Math.PI / 2; pitch.receiveShadow = true; S3.add(pitch);
   // lignes peintes
   const L = [], seg = (x1, z1, x2, z2, w) => { const dx = x2 - x1, dz = z2 - z1, d = Math.hypot(dx, dz) || 1, nx = -dz / d * w / 2, nz = dx / d * w / 2; L.push(x1 + nx, .015, z1 + nz, x2 + nx, .015, z2 + nz, x2 - nx, .015, z2 - nz, x1 + nx, .015, z1 + nz, x2 - nx, .015, z2 - nz, x1 - nx, .015, z1 - nz); };
@@ -6083,6 +6088,7 @@ function g3Stands(S3, M, cls, rnd, night) {
   // gradins : pente texturée (rangées de sièges)
   const [sc2, sx] = g3Canvas(64, 256); for (let r = 0; r < 32; r++) { sx.fillStyle = r % 2 ? '#' + seatCol.getHexString() : '#' + seatCol.clone().multiplyScalar(.75).getHexString(); sx.fillRect(0, r * 8, 64, 8); sx.fillStyle = 'rgba(0,0,0,.35)'; sx.fillRect(0, r * 8 + 6, 64, 2); }
   const seatT = g3Tex(sc2);
+  const cap0 = { 0: 400, 1: 6000, 2: 30000, 3: 80000 }[cls], crowdT = cls >= 2 ? g3CrowdTex(seatCol, hc, oc, clamp(att / cap0, .05, 1), rnd, night) : null;
   const cap = { 0: 400, 1: 6000, 2: 30000, 3: 80000 }[cls], fill = clamp(att / cap, .05, 1), perM2 = cls === 0 ? .7 : 1;
   const people = []; let budget = clamp(Math.round(att / (cls >= 2 ? 22 : cls === 1 ? 4 : 1)), 30, g3Low() ? 1800 : 3600);
   const totalArea = stands.reduce((a, s) => a + s[3] * s[4], 0), seats = [];
@@ -6092,7 +6098,7 @@ function g3Stands(S3, M, cls, rnd, night) {
     if (cls <= 1) g.add(g3Terraces(len, dep, h0, h1, Math.max(3, Math.round(dep / .85)), night)); // petits stades : de vraies marches (les sièges du modèle 3D s'y posent)
     else {
       const slope = new THREE.PlaneGeometry(len, Math.hypot(dep, h1 - h0)); const a = Math.atan2(h1 - h0, dep); slope.rotateX(-Math.PI / 2 + a); slope.translate(0, (h0 + h1) / 2, -dep / 2);
-      const tex = seatT.clone(); tex.needsUpdate = true; tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(len / 2, Math.max(2, dep / 8));
+      const tex = (crowdT || seatT).clone(); tex.needsUpdate = true; tex.wrapS = tex.wrapT = THREE.RepeatWrapping; if (crowdT) tex.repeat.set(len / 4, Math.hypot(dep, h1 - h0) / 3.4); else tex.repeat.set(len / 2, Math.max(2, dep / 8));
       const sm = new THREE.Mesh(slope, new THREE.MeshLambertMaterial({ map: tex })); sm.receiveShadow = !g3Low(); g.add(sm);
     }
     const front = new THREE.Mesh(new THREE.BoxGeometry(len, h0 + .2, .3), wallM); front.position.set(0, (h0 + .2) / 2, .15); g.add(front);
@@ -6113,21 +6119,8 @@ function g3Stands(S3, M, cls, rnd, night) {
       people.push([wx, ly, wz, ry, col, rnd()]);
     }
   }
-  // spectateurs instanciés, qui se lèvent et sautent selon l'ambiance (shader)
-  if (people.length) {
-    const body = g3Merge([new THREE.BoxGeometry(.42, .62, .28).translate(0, .31, 0), g3Tint(new THREE.BoxGeometry(.2, .22, .2).translate(0, .74, 0), 0xe0b090)]);
-    if (!body.attributes.color) g3Tint(body, 0xffffff);
-    // le torse prend la couleur de l'instance, la tête reste couleur peau
-    const cA = body.attributes.color.array; for (let i = 0; i < body.attributes.position.count; i++) if (body.attributes.position.array[i * 3 + 1] < .63) { cA[i * 3] = cA[i * 3 + 1] = cA[i * 3 + 2] = 1; }
-    const ph = new Float32Array(people.length); body.setAttribute('aPh', new THREE.InstancedBufferAttribute(ph, 1));
-    const mat = new THREE.MeshLambertMaterial({ vertexColors: true });
-    G3.crowdU = { uT: { value: 0 }, uE: { value: 0 } };
-    mat.onBeforeCompile = s => { s.uniforms.uT = G3.crowdU.uT; s.uniforms.uE = G3.crowdU.uE; s.vertexShader = s.vertexShader.replace('#include <common>', '#include <common>\nattribute float aPh; uniform float uT; uniform float uE;').replace('#include <begin_vertex>', '#include <begin_vertex>\ntransformed.y += max(0.0, sin(uT * (6.0 + aPh * 3.0) + aPh * 40.0)) * uE * 0.32 + sin(uT * 0.9 + aPh * 17.0) * 0.015;'); };
-    const im = new THREE.InstancedMesh(body, mat, people.length); im.frustumCulled = false;
-    const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), v = new THREE.Vector3(), one = new THREE.Vector3(1, 1, 1);
-    people.forEach(([x, y, z, ry, col, r], i) => { q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), ry + Math.PI + (r - .5) * .4); const s = .9 + r * .25; one.set(s, s, s); m4.compose(v.set(x, y, z), q, one); im.setMatrixAt(i, m4); im.setColorAt(i, col); ph[i] = r; });
-    S3.add(im);
-  }
+  // spectateurs dessinés (silhouettes qui s'assoient, applaudissent, se lèvent selon l'ambiance) — m3dgfx.js
+  if (people.length) S3.add(g3CrowdMesh(people, night));
   // pylônes d'éclairage (ou poteaux pour les petits terrains) — remplacés par les mâts du modèle 3D dès qu'il est chargé
   let mastG = null;
   if (cls <= 2) {
@@ -6183,6 +6176,17 @@ const G3RIG_DEF = { hp: .97, hipY: -.07, hipW: .1, thigh: .45, shin: .45, torY: 
 let G3RIG = Object.assign({}, G3RIG_DEF);
 const G3JS = new Map(), G3_JK = ['hp', 'lean', 'roll', 'twist', 'nod', 'look', 'hipL', 'hipR', 'kneeL', 'kneeR', 'shL', 'shR', 'abL', 'abR', 'elL', 'elR', 'ab2'];
 const G3_CELS = ['plane', 'classic', 'ear', 'heart', 'knee', 'dance'];
+// instant du contact dans l'animation de chaque geste (s) : frappe, reprise de volée, tête, tacle glissé, tacle, contrôle, contre, touche
+const G3_CONTACT = { 1: .26, 11: .33, 2: .36, 3: .2, 4: .25, 12: .12, 17: .2, 10: .45 };
+// spline de Catmull-Rom entre les images b et c (a, d : voisines) ; on garde l'angle vif quand la vitesse change d'un coup (frappe, rebond, mi-temps)
+function g3Sp(A, B, C, D, i, t) {
+  const p0 = A[i], p1 = B[i], p2 = C[i], p3 = D[i], d01 = p1 - p0, d12 = p2 - p1, d23 = p3 - p2, K = .12;
+  let m1 = (d01 + d12) * .5, m2 = (d12 + d23) * .5;
+  if (A === B || Math.abs(d01 - d12) > K || Math.abs((B[0] - A[0]) - (C[0] - B[0])) > .02) m1 = d12;
+  if (C === D || Math.abs(d23 - d12) > K || Math.abs((D[0] - C[0]) - (C[0] - B[0])) > .02) m2 = d12;
+  const t2 = t * t, t3 = t2 * t;
+  return (2 * t3 - 3 * t2 + 1) * p1 + (t3 - 2 * t2 + t) * m1 + (3 * t2 - 2 * t3) * p2 + (t3 - t2) * m2;
+}
 function g3Pose(P, n, s) {
   const run = clamp(s.v / 7, 0, 1), walk = clamp(s.v / 1.6, 0, 1), ph = s.ph, sn = Math.sin(ph), cs = Math.cos(ph), tm = s.tm || 0;
   const H0 = G3RIG.hp, KN = G3RIG.thigh - G3RIG.hipY + .03; let hp = H0, lean = .04 + .2 * run, roll = 0, pitch = 0, twist = 0, nod = 0, look = s.look || 0, yawAdd = 0;
@@ -6279,7 +6283,7 @@ function g3Kits(M, ros) {
 
 // ---------- Image ----------
 function g3Size(w, h) {
-  const low = g3Low(), dpr = Math.min(low ? 1.25 : 2, window.devicePixelRatio || 1), q = w + 'x' + h + '@' + dpr;
+  const low = g3Low(), base = Math.min(low ? 1.25 : 2, window.devicePixelRatio || 1), dpr = Math.max(Math.min(1, base), Math.round(base * (G3.dprK || 1) * 20) / 20), q = w + 'x' + h + '@' + dpr;
   if (q !== G3.q) { G3.q = q; G3.r.setPixelRatio(dpr); G3.r.setSize(w, h, false); G3.cv.style.width = w + 'px'; G3.cv.style.height = h + 'px'; G3.cam.aspect = w / h; G3.cam.updateProjectionMatrix(); }
   G3.w = w; G3.h = h;
 }
@@ -6317,6 +6321,13 @@ function g3Camera(M, t, dt, bx, bz, by, paused, celeb) {
   // largeur visible (pour la mini-carte)
   LV.cam.x = P[3] + 52.5; LV.cam.z = clamp(2 * Math.tan(P[6] * Math.PI / 360) * Math.hypot(P[2], P[1]) * (G3.w / G3.h), 20, 105);
 }
+// traînée du ballon : un ruban qui s'efface vers l'arrière, toujours tourné vers la caméra
+function g3Trail() {
+  const [c, x] = g3Canvas(128, 16), g = x.createLinearGradient(0, 0, 128, 0); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(.85, 'rgba(255,255,255,.75)'); g.addColorStop(1, 'rgba(255,255,255,.95)');
+  x.fillStyle = g; x.fillRect(0, 0, 128, 16); const v = x.createLinearGradient(0, 0, 0, 16); v.addColorStop(0, 'rgba(0,0,0,1)'); v.addColorStop(.5, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,1)'); x.globalCompositeOperation = 'destination-out'; x.fillStyle = v; x.fillRect(0, 0, 128, 16);
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: g3Tex(c), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, toneMapped: false }));
+  m.matrixAutoUpdate = false; m.frustumCulled = false; m.renderOrder = 4; G3.sc.add(m); return m;
+}
 // projection écran d'un point du terrain (repère moteur, déjà mis en miroir)
 function g3Proj(x, y, z) { const v = _m.pv || (_m.pv = new THREE.Vector3()); v.set(x - 52.5, z || 0, y - 34).project(G3.cam); return [(v.x + 1) / 2 * G3.w, (1 - v.y) / 2 * G3.h, v.z < 1]; }
 function g3Draw(M, t, dt, paused) {
@@ -6326,6 +6337,8 @@ function g3Draw(M, t, dt, paused) {
   if (G3.M !== M || G3.lowWas !== g3Low()) { G3.lowWas = g3Low(); g3Match(M); }
   const pr = lvPair(t); if (!pr) return false;
   const [fa, fb, a] = pr, L = i => fa[i] + (fb[i] - fa[i]) * a, mir = fa[2] === 2, E = M.E, P = G3.P;
+  // positions lissées : spline passant par les images du moteur (toutes les 0,1 s), sauf aux vrais changements brusques (frappe, rebond)
+  const Fr = LV.frames, pi = LV.pi || 0, f0 = Fr[pi - 1] || fa, f3 = Fr[pi + 2] || fb, Sp = i => g3Sp(f0, fa, fb, f3, i, a);
   const X = x => (mir ? PL - x : x) - 52.5, Z = y => (mir ? PW - y : y) - 34, YAW = f => mir ? f + Math.PI : f;
   g3SkAttach(P); g3StDress(G3.stad); g3DcDress(G3.stad);
   const ros = LV.ros[fa[8]] || LV.ros[Object.keys(LV.ros).pop()] || meRoster(E); g3Kits(M, ros);
@@ -6335,31 +6348,38 @@ function g3Draw(M, t, dt, paused) {
   if (!G3.idle) G3.idle = new Float32Array(25);
   const tm = performance.now() / 1000, myCel = typeof shopEq === 'function' ? shopEq('celeb') : 'classic';
   g3BallSkin();
-  const bx = X(L(3)), bz = Z(L(4)), by = L(5), own = fa[6] >= 0 ? [fa[6], fa[7]] : null, hold = fa[10] > .5;
+  const bx = X(Sp(3)), bz = Z(Sp(4)), by = Math.max(0, Sp(5)), own = fa[6] >= 0 ? [fa[6], fa[7]] : null, hold = fa[10] > .5;
   const fdt = Math.max(.05, fb[0] - fa[0]);
   let celeb = null, meIdx = -1; G3.me = null;
   for (let kk = 0; kk < 2; kk++) for (let i = 0; i < 11; i++) {
     const n = kk * 11 + i, o = MF_H + n * MF_S;
     if (fa[o + 2] < .5 && fb[o + 2] < .5) { g3Hide(P, n); continue; }
-    const x = X(L(o)), z = Z(L(o + 1)), vx = (fb[o] - fa[o]) / fdt, vy = (fb[o + 1] - fa[o + 1]) / fdt, v = Math.hypot(vx, vy);
-    let fA = fa[o + 3], fB = fb[o + 3], d = Math.atan2(Math.sin(fB - fA), Math.cos(fB - fA)); const yaw = YAW(fA + d * a);
+    const x = X(Sp(o)), z = Z(Sp(o + 1)), vx = (fb[o] - fa[o]) / fdt, vy = (fb[o + 1] - fa[o + 1]) / fdt, v0 = Math.hypot(vx, vy);
+    // vitesse et orientation lissées (les jambes et le corps ne « sautent » plus d'une image du moteur à l'autre)
+    if (!G3.vS) { G3.vS = new Float32Array(25); G3.yS = new Float32Array(25); }
+    let fA = fa[o + 3], fB = fb[o + 3], d = Math.atan2(Math.sin(fB - fA), Math.cos(fB - fA)); const yT = YAW(fA + d * a);
+    if (snap) { G3.vS[n] = v0; G3.yS[n] = yT; } else { const kv = 1 - Math.exp(-gdt * 9), ky = 1 - Math.exp(-gdt * 16), dy = Math.atan2(Math.sin(yT - G3.yS[n]), Math.cos(yT - G3.yS[n])); G3.vS[n] += (v0 - G3.vS[n]) * kv; G3.yS[n] += dy * ky; }
+    const v = G3.vS[n], yaw = G3.yS[n];
     G3.ph[n] = (G3.ph[n] + gdt * Math.PI * 2 * v / (1.5 + .24 * v)) % (Math.PI * 200);
-    const r = (ros[kk] && ros[kk][i]) || {}, act = fa[o + 4], at = t - fa[o + 5];
+    // gestes : une frappe qui arrive dans les images déjà calculées commence avant, pour que le pied touche le ballon pile au bon moment
+    let act = fa[o + 4], actT = fa[o + 5], aa = fa[o + 6], at = t - actT + (G3_CONTACT[act] || 0);
+    for (let j = pi + 1, j1 = Math.min(Fr.length, pi + 6); j < j1; j++) { const g = Fr[j], nT = g[o + 5]; if (nT > actT + 1e-3) { const na = g[o + 4], c2 = G3_CONTACT[na] || 0; if (nT - t <= c2) { act = na; actT = nT; aa = g[o + 6]; at = t - nT + c2; } break; } }
+    const r = (ros[kk] && ros[kk][i]) || {};
     G3.idle[n] = v < .4 ? G3.idle[n] + gdt : 0;
     const rel = Math.atan2(bz - z, bx - x) - yaw, dB = Math.hypot(bz - z, bx - x), look = clamp(-Math.atan2(Math.sin(rel), Math.cos(rel)), -1.1, 1.1) * (dB < 40 ? 1 : .5);
-    const st = { x, z, yaw, v, ph: G3.ph[n] + n, act, at, aa: fa[o + 6], gk: !!r.gk, alert: r.gk && Math.abs(bx - (kk === 0 ? (mir ? 52.5 : -52.5) : (mir ? -52.5 : 52.5))) < 30, hold: hold && own && own[0] === kk && own[1] === i, busy: 1.6,
+    const st = { x, z, yaw, v, ph: G3.ph[n] + n, act, at, aa, gk: !!r.gk, alert: r.gk && Math.abs(bx - (kk === 0 ? (mir ? 52.5 : -52.5) : (mir ? -52.5 : 52.5))) < 30, hold: hold && own && own[0] === kk && own[1] === i, busy: 1.6,
       look, turn: d / fdt, idle: G3.idle[n], tm, cel: r.me ? myCel : null, gdt, snap };
     // ton but : le spectacle choisi dans la Boutique
-    if (r.me && act === 8 && at >= 0 && at < .6 && G3.fxAt !== fa[o + 5] && typeof shopEq === 'function') { G3.fxAt = fa[o + 5]; g3FxGoal(G3.sc, G3.cam, shopEq('fx'), x, z, E.T[kk] ? [E.T[kk].col, E.T[kk].col2] : null); }
+    if (r.me && act === 8 && at >= 0 && at < .6 && G3.fxAt !== actT && typeof shopEq === 'function') { G3.fxAt = actT; g3FxGoal(G3.sc, G3.cam, shopEq('fx'), x, z, E.T[kk] ? [E.T[kk].col, E.T[kk].col2] : null); }
     // le plongeon : sens dans le repère de l'écran
-    if (act === 5) st.aa = (mir ? -1 : 1) * fa[o + 6] * (Math.cos(yaw) >= 0 ? 1 : -1);
+    if (act === 5) st.aa = (mir ? -1 : 1) * aa * (Math.cos(yaw) >= 0 ? 1 : -1);
     g3Pose(P, n, st);
     if (act === 8 && at >= 0 && at < 10) celeb = [x, z];
     if (r.me) { meIdx = n; G3.me = { x, z, dir: (kk === 0) !== mir ? 1 : -1 }; } // sens d'attaque de ton équipe (caméra « Mon joueur »)
   }
   // arbitres
   if (fa.length >= MF_N) {
-    const rx = X(L(MF_R)), rz = Z(L(MF_R + 1)), rv = Math.hypot(fb[MF_R] - fa[MF_R], fb[MF_R + 1] - fa[MF_R + 1]) / fdt;
+    const rx = X(Sp(MF_R)), rz = Z(Sp(MF_R + 1)), rv = Math.hypot(fb[MF_R] - fa[MF_R], fb[MF_R + 1] - fa[MF_R + 1]) / fdt;
     G3.ph[22] = (G3.ph[22] + gdt * Math.PI * 2 * rv / (1.5 + .24 * rv)) % 600;
     g3Pose(P, 22, { x: rx, z: rz, yaw: YAW(fa[MF_R + 2]), v: rv, ph: G3.ph[22], act: fa[MF_R + 3], at: t - fa[MF_R + 4], tm, gdt, snap });
     if (!G3.lin) G3.lin = [null, null];
@@ -6388,7 +6408,12 @@ function g3Draw(M, t, dt, paused) {
   { const b = G3.ball, vx = (fb[3] - fa[3]) / fdt * (mir ? -1 : 1), vz = (fb[4] - fa[4]) / fdt * (mir ? -1 : 1), sp = Math.hypot(vx, vz);
     const camD = G3.cam.position.distanceTo(b.position), sc2 = clamp(camD / 34, 1, 2.3); b.scale.setScalar(sc2);
     b.position.set(bx, by + .11 * sc2, bz);
-    if (sp > .2 && gdt > 0) { const ax = _m.av || (_m.av = new THREE.Vector3()); ax.set(vz, 0, -vx).normalize(); const qq = _m.bq || (_m.bq = new THREE.Quaternion()); qq.setFromAxisAngle(ax, sp * gdt / .11); b.quaternion.premultiply(qq); } }
+    if (sp > .2 && gdt > 0) { const ax = _m.av || (_m.av = new THREE.Vector3()); ax.set(vz, 0, -vx).normalize(); const qq = _m.bq || (_m.bq = new THREE.Quaternion()); qq.setFromAxisAngle(ax, sp * gdt / .11); b.quaternion.premultiply(qq); }
+    // traînée derrière les frappes fortes (le ballon file vraiment)
+    { const vy3 = (fb[5] - fa[5]) / fdt, sp3 = Math.hypot(vx, vz, vy3), T = G3.trail || (G3.trail = g3Trail()), k = clamp((sp3 - 15) / 12, 0, 1) * (LV.replay ? 1 : .85);
+      T.visible = k > .02 && !snap; if (T.visible) { const L = Math.min(5, sp3 * .075) * sc2, d = _m.td || (_m.td = new THREE.Vector3()), c = _m.tc || (_m.tc = new THREE.Vector3()), n = _m.tn || (_m.tn = new THREE.Vector3()), y = _m.ty || (_m.ty = new THREE.Vector3());
+        d.set(vx, vy3, vz).normalize(); c.copy(b.position).addScaledVector(d, -L / 2); n.copy(G3.cam.position).sub(c).normalize(); y.crossVectors(n, d).normalize(); n.crossVectors(d, y);
+        T.matrix.makeBasis(d, y, n); T.matrix.scale(_m.ts || (_m.ts = new THREE.Vector3(1, 1, 1)).set(L, .2 * sc2, 1)); T.matrix.setPosition(c); T.material.opacity = .55 * k; } } }
   // filets : la toile épouse le ballon et ondule (temps de jeu : ralenti au ralenti, figée en pause)
   { const rb = .11 * G3.ball.scale.x; g3NetUpdate(snap ? 0 : gdt, bx, by + rb, bz, rb); }
   // ambiance du public, panneaux, météo, écran géant
@@ -6396,6 +6421,8 @@ function g3Draw(M, t, dt, paused) {
   if (G3.crowdU) { G3.crowdU.uT.value = now; const hot = lvHlSpeed(t) ? .55 : 0, gl = celeb ? 1 : 0; G3.crowdExc = (G3.crowdExc || 0) + ((Math.max(hot, gl, .08)) - (G3.crowdExc || 0)) * Math.min(1, dt * 2); G3.crowdU.uE.value = G3.crowdExc; }
   if (G3.adT) G3.adT.offset.x = (now * .04) % 1;
   G3DC.wind.uT.value = now;
+  if (G3.clouds) G3.clouds.offset.x = (now * .0012) % 1;
+  if (G3.night && G3.stad && !G3.stad.userData.beams && G3.stad.userData.dressed) g3Beams(G3.stad);
   if (G3.wxU) { G3.wxU.uT.value = now; G3.wx.position.set(G3.cm.p ? G3.cm.p[3] : 0, 0, 0); }
   for (const s of G3.flares || []) s.material.opacity = .6 + .4 * Math.sin(now * 9 + s.position.x);
   if (G3.sb) { const key = M.hg + '-' + M.ag + '-' + M.min; if (key !== G3.sbKey) { G3.sbKey = key; const { c, x } = G3.sb, h0 = M.side === 'h'; x.fillStyle = '#05070b'; x.fillRect(0, 0, 512, 160); x.fillStyle = '#ffd166'; x.font = '900 30px Arial'; x.textAlign = 'center'; x.fillText(M.min + "'", 256, 40); x.fillStyle = '#fff'; x.font = '800 30px Arial'; const hn = String(h0 ? M.my : M.op).slice(0, 12).toUpperCase(), an = String(h0 ? M.op : M.my).slice(0, 12).toUpperCase(); x.fillText(hn, 128, 100); x.fillText(an, 384, 100); x.font = '900 56px Arial'; x.fillText(M.hg + ' - ' + M.ag, 256, 112); G3.sb.t.needsUpdate = true; } }
@@ -6406,7 +6433,12 @@ function g3Draw(M, t, dt, paused) {
   try { G3.r.render(G3.sc, G3.cam); } catch (e) { G3.fail = true; return false; }
   const T2 = performance.now(); G3.cpu = (G3.cpu || 0) * .95 + (T1 - T0) * .05; G3.gpu = (G3.gpu || 0) * .95 + (T2 - T1) * .05;
   // ça rame ? on passe en mode rapide
-  if (!g3Low() && dt > 0) { G3.ft.push(dt); if (G3.ft.length > 120) { const avg = G3.ft.reduce((x, y) => x + y, 0) / G3.ft.length; G3.ft = []; if (avg > .034) G3.lowAuto = true; } }
+  if (!g3Low() && dt > 0) { G3.ft.push(dt); if (G3.ft.length > 120) { const avg = G3.ft.reduce((x, y) => x + y, 0) / G3.ft.length; G3.ft = []; if (avg > .034 && (G3.dprK || 1) <= .62) G3.lowAuto = true; } }
+  // résolution adaptative : un peu moins de pixels plutôt que des saccades (et on remonte quand ça va mieux)
+  // (on ignore le démarrage du match — compilation des matériaux — et les à-coups isolés)
+  if (dt > 0 && dt < .06 && performance.now() > (G3.warm || 0)) { G3.fa = G3.fa == null ? dt : G3.fa * .94 + dt * .06; const nw = performance.now(); if (G3.dprK == null) { G3.dprK = 1; G3.dprT = nw; }
+    if (nw - G3.dprT > 1500 && G3.fa > .0205 && G3.dprK > .62) { G3.dprK = Math.max(.6, G3.dprK - .13); G3.dprT = nw; }
+    else if (nw - G3.dprT > 6000 && G3.fa < .0175 && G3.dprK < 1) { G3.dprK = Math.min(1, G3.dprK + .1); G3.dprT = nw; } }
   return true;
 }
 function g3TacLines(fa, mir, E) {
@@ -6415,6 +6447,150 @@ function g3TacLines(fa, mir, E) {
   G3.tac.visible = on; if (!on || fa.length < MF_N) return;
   const ck = E.T[0].col + E.T[1].col; if (G3.tacCk !== ck) { G3.tacCk = ck; for (let k = 0; k < 2; k++) for (let j = 0; j < 3; j++) G3.tac.lines[k * 3 + j].material.color.copy(g3Lin(E.T[k].col)).multiplyScalar(1.25); }
   for (let k = 0; k < 2; k++) for (let j = 0; j < 3; j++) { const x = fa[MF_T + k * 6 + j]; G3.tac.lines[k * 3 + j].position.x = (mir ? PL - x : x) - 52.5; }
+}
+
+// ===== src/m3dgfx.js =====
+// ---------- Embellissements des matchs en 3D ----------
+// Lumière d'appoint côté caméra (visages et maillots éclairés), pelouse vivante (bandes de tonte qui changent
+// selon l'angle, grain du gazon de près), public dessiné (silhouettes qui s'assoient, applaudissent, se lèvent),
+// ciel (nuages le jour, étoiles et lune la nuit), faisceaux des projecteurs la nuit.
+
+// pelouse : bandes de tonte qui s'inversent selon d'où on regarde, et grain du gazon près de la caméra
+function g3GrassShader(m) {
+  m.onBeforeCompile = s => {
+    s.vertexShader = s.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vGw;').replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvGw = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+    s.fragmentShader = s.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vGw;\nfloat gHash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }')
+      .replace('#include <map_fragment>', `#include <map_fragment>
+      { float band = mod(floor((vGw.x + 52.5) / 5.8333), 2.0) * 2.0 - 1.0; vec3 vd = normalize(cameraPosition - vGw); float sd = clamp(vd.x * 2.5, -1.0, 1.0);
+        float dist = length(cameraPosition - vGw), near = 1.0 - smoothstep(12.0, 55.0, dist);
+        float n = gHash(floor(vGw.xz * 9.0)) * .6 + gHash(floor(vGw.xz * 23.0)) * .4;
+        diffuseColor.rgb *= (1.0 + 0.075 * band * sd) * mix(1.0, 0.9 + 0.2 * n, near); }`);
+  };
+  m.envMapIntensity = .45;
+}
+// ---------- public dessiné : silhouettes (assis, debout qui applaudit, bras levés, écharpe), tournées vers la caméra ----------
+function g3CrowdAtlas() {
+  if (G3.crowdAtlas) return G3.crowdAtlas;
+  const W = 128, [c, x] = g3Canvas(W * 4, W * 2);
+  const skins = ['#e9c2a0', '#8a5a3c'], hairs = ['#2a1d14', '#120c08'];
+  for (let row = 0; row < 2; row++) for (let pose = 0; pose < 4; pose++) {
+    const ox = pose * W, oy = row * W, cx = ox + W / 2, sk = skins[row], hr = hairs[row];
+    const seated = pose === 0, top = oy + (seated ? 30 : 12), shY = top + 26, hipY = top + 70;
+    x.save(); x.lineCap = 'round'; x.lineJoin = 'round';
+    // jambes (pantalon foncé) — assis : on ne voit que le haut des cuisses
+    x.fillStyle = 'rgba(38,42,52,1)'; if (seated) x.fillRect(cx - 17, hipY - 2, 34, 14); else { x.fillRect(cx - 16, hipY - 4, 14, W - (hipY - oy) - 2); x.fillRect(cx + 2, hipY - 4, 14, W - (hipY - oy) - 2); }
+    // bras (manches = maillot, mains = peau)
+    const arm = (sx, sy, ex, ey, hx, hy) => { x.strokeStyle = 'rgba(236,236,236,0.78)'; x.lineWidth = 11; x.beginPath(); x.moveTo(sx, sy); x.lineTo(ex, ey); x.lineTo(hx, hy); x.stroke(); x.fillStyle = sk; x.beginPath(); x.arc(hx, hy, 5.5, 0, 7); x.fill(); };
+    if (pose === 0) { arm(cx - 19, shY + 4, cx - 23, shY + 26, cx - 16, shY + 42); arm(cx + 19, shY + 4, cx + 23, shY + 26, cx + 16, shY + 42); }
+    else if (pose === 1) { arm(cx - 19, shY + 4, cx - 22, shY + 24, cx - 3, shY + 22); arm(cx + 19, shY + 4, cx + 22, shY + 24, cx + 3, shY + 20); }
+    else if (pose === 2) { arm(cx - 19, shY + 2, cx - 30, shY - 18, cx - 36, shY - 40); arm(cx + 19, shY + 2, cx + 30, shY - 18, cx + 36, shY - 40); }
+    else { arm(cx - 19, shY + 4, cx - 22, shY + 26, cx - 15, shY + 42); arm(cx + 19, shY + 2, cx + 26, shY - 20, cx + 24, shY - 44);
+      x.strokeStyle = 'rgba(236,236,236,0.78)'; x.lineWidth = 7; x.beginPath(); x.moveTo(cx + 24, shY - 44); x.quadraticCurveTo(cx + 44, shY - 38, cx + 40, shY - 14); x.stroke(); } // écharpe
+    // torse (maillot, teinté par la couleur de chaque spectateur)
+    x.fillStyle = 'rgba(236,236,236,0.78)'; x.beginPath(); x.moveTo(cx - 20, shY); x.quadraticCurveTo(cx, shY - 6, cx + 20, shY); x.lineTo(cx + 17, hipY); x.lineTo(cx - 17, hipY); x.closePath(); x.fill();
+    // ombre douce sous les bras et le col
+    x.fillStyle = 'rgba(150,150,150,0.78)'; x.fillRect(cx - 6, shY, 12, 5);
+    // tête, cheveux
+    x.fillStyle = sk; x.beginPath(); x.ellipse(cx, top + 12, 11, 13, 0, 0, 7); x.fill(); x.fillRect(cx - 4, top + 22, 8, 6);
+    x.fillStyle = hr; x.beginPath(); x.ellipse(cx, top + 5, 11.5, 8, 0, Math.PI, 0); x.fill(); if (row === 0) { x.beginPath(); x.ellipse(cx, top + 4, 12, 6, 0, 0, 7); x.fill(); }
+    x.restore();
+  }
+  const t = new THREE.CanvasTexture(c); t.encoding = THREE.LinearEncoding; t.premultiplyAlpha = false; t.anisotropy = 2; G3.crowdAtlas = t; return t;
+}
+// people : [x, y, z, ry, couleur, r] ; renvoie l'InstancedMesh (uniforms partagés dans G3.crowdU)
+function g3CrowdMesh(people, night) {
+  const g = new THREE.PlaneGeometry(1, 1).translate(0, .5, 0), n = people.length, ph = new Float32Array(n);
+  g.setAttribute('aPh', new THREE.InstancedBufferAttribute(ph, 1));
+  G3.crowdU = { uT: { value: 0 }, uE: { value: 0 } };
+  const mat = new THREE.ShaderMaterial({
+    uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, { map: { value: g3CrowdAtlas() }, uLight: { value: night ? .78 : 1 } }]), fog: true, transparent: false,
+    vertexShader: `attribute float aPh; uniform float uT; uniform float uE; varying vec2 vUv; varying vec3 vCol; varying float vFd;
+      void main(){
+        vec3 base = instanceMatrix[3].xyz; float sc = length(instanceMatrix[0].xyz);
+        float pose = 0.0, r2 = fract(aPh * 7.31), r3 = fract(aPh * 13.7);
+        if (uE > 0.62 && aPh < uE * 1.1 - 0.15) pose = r2 < 0.55 ? 2.0 : 3.0; else if (uE > 0.25 && aPh < uE + 0.2) pose = 1.0; else if (r3 < 0.06) pose = 1.0;
+        if (pose == 1.0 && sin(uT * (2.0 + r2) + aPh * 30.0) > 0.7) pose = r3 < 0.5 ? 1.0 : 0.0;
+        float jump = pose >= 2.0 ? max(0.0, sin(uT * (6.0 + aPh * 3.0) + aPh * 40.0)) * uE * 0.3 : 0.0;
+        vec3 camR = vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]); camR.y = 0.0; camR = normalize(camR);
+        vec3 wp = base + camR * position.x * sc + vec3(0.0, position.y * sc + jump - 0.1, 0.0);
+        vec4 mv = viewMatrix * vec4(wp, 1.0); gl_Position = projectionMatrix * mv; vFd = -mv.z;
+        vUv = vec2((uv.x + pose) * 0.25, (uv.y + (r3 < 0.62 ? 1.0 : 0.0)) * 0.5);
+        #ifdef USE_INSTANCING_COLOR
+        vCol = pow(instanceColor, vec3(1.0 / 2.2));
+        #else
+        vCol = vec3(1.0);
+        #endif
+      }`,
+    fragmentShader: `uniform sampler2D map; uniform float uLight; uniform vec3 fogColor; uniform float fogNear; uniform float fogFar; varying vec2 vUv; varying vec3 vCol; varying float vFd;
+      void main(){ vec4 t = texture2D(map, vUv); if (t.a < 0.5) discard; float shirt = t.a < 0.9 ? 1.0 : 0.0; vec3 c = t.rgb * mix(vec3(1.0), vCol, shirt) * uLight;
+        c = mix(c, pow(fogColor, vec3(1.0 / 2.2)), smoothstep(fogNear, fogFar, vFd)); gl_FragColor = vec4(c, 1.0); }`,
+  });
+  mat.toneMapped = false; mat.uniforms.uT = G3.crowdU.uT; mat.uniforms.uE = G3.crowdU.uE;
+  const im = new THREE.InstancedMesh(g, mat, n); im.frustumCulled = false;
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), v = new THREE.Vector3(), one = new THREE.Vector3();
+  people.forEach(([x, y, z, ry, col, r], i) => { const s = .92 + r * .2; one.set(s, s, s); m4.compose(v.set(x, y, z), q, one); im.setMatrixAt(i, m4); im.setColorAt(i, col); ph[i] = r; });
+  return im;
+}
+// ciel : nuages le jour (plus gris sous la pluie), étoiles et lune la nuit
+function g3SkyExtras(S3, night, wet, snow, rnd) {
+  G3.clouds = null;
+  if (night) {
+    const n = 700, pos = new Float32Array(n * 3), sz = new Float32Array(n);
+    for (let i = 0; i < n; i++) { const a = rnd() * Math.PI * 2, e = .12 + Math.pow(rnd(), .7) * 1.35, R = 820; pos[i * 3] = Math.cos(a) * Math.cos(e) * R; pos[i * 3 + 1] = Math.sin(e) * R; pos[i * 3 + 2] = Math.sin(a) * Math.cos(e) * R; sz[i] = .6 + Math.pow(rnd(), 3) * 2.4; }
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('sz', new THREE.BufferAttribute(sz, 1));
+    const m = new THREE.ShaderMaterial({ transparent: true, depthWrite: false,
+      vertexShader: 'attribute float sz; varying float vA; void main(){ vA = 0.4 + 0.6 * fract(sz * 7.13); vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_PointSize = sz * 1.6; gl_Position = projectionMatrix * mv; }',
+      fragmentShader: 'varying float vA; void main(){ vec2 d = gl_PointCoord - 0.5; float a = smoothstep(0.5, 0.0, length(d)); gl_FragColor = vec4(0.92, 0.95, 1.0, a * vA); }' });
+    m.fog = false; const st = new THREE.Points(g, m); st.frustumCulled = false; S3.add(st);
+    const moon = g3Glow(S3, -380, 300, -560, 120, '#dfe8ff'); moon.material.opacity = .55;
+    const disc = new THREE.Mesh(new THREE.CircleGeometry(14, 32), new THREE.MeshBasicMaterial({ color: 0xf2f4ff, fog: false, toneMapped: false })); disc.position.set(-380, 300, -560); disc.lookAt(0, 0, 0); S3.add(disc);
+    return;
+  }
+  // nuages : dôme à moitié transparent, texture peinte (amas de bulles blanches au ventre gris), qui dérive lentement
+  const W = 1024, H = 256, [c, x] = g3Canvas(W, H), dense = wet || snow;
+  const blob = (bx, by, r, a, grey) => { const gr = x.createRadialGradient(bx, by - r * .2, 0, bx, by, r); gr.addColorStop(0, `rgba(${grey ? '205,210,216' : '255,255,255'},${a})`); gr.addColorStop(.6, `rgba(${grey ? '170,176,184' : '236,240,246'},${a * .55})`); gr.addColorStop(1, 'rgba(220,226,232,0)'); x.fillStyle = gr; x.beginPath(); x.arc(bx, by, r, 0, 7); x.fill(); };
+  const clusters = dense ? 120 : 46;
+  for (let k = 0; k < clusters; k++) {
+    const vy = Math.pow(rnd(), dense ? 1 : 1.8), cy = H - 10 - vy * (H * .8), scale = .35 + (1 - vy) * .65, cx = rnd() * W, n = 6 + Math.floor(rnd() * 10);
+    for (let i = 0; i < n; i++) blob((cx + (rnd() - .5) * 90 * scale + W) % W, cy + (rnd() - .5) * 18 * scale, (14 + rnd() * 26) * scale, (dense ? .55 : .7) * (.6 + rnd() * .4), dense || rnd() < .3);
+  }
+  const t = g3Tex(c); t.wrapS = THREE.RepeatWrapping;
+  const geo = new THREE.SphereGeometry(860, 48, 10, 0, Math.PI * 2, 0, Math.PI * .47); // v = 0 près de l'horizon, 1 au zénith
+  const cl = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, side: THREE.BackSide, fog: false, opacity: dense ? .95 : .9 }));
+  cl.renderOrder = -1; S3.add(cl); G3.clouds = t;
+}
+// faisceaux des projecteurs (nuit) : cônes de lumière très légers, du mât vers la pelouse
+function g3Beams(S3) {
+  if (!G3.night || !G3.lamps || S3.userData.beams) return; S3.userData.beams = true;
+  const [c, x] = g3Canvas(4, 128), gr = x.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, 'rgba(255,248,226,.9)'); gr.addColorStop(.25, 'rgba(255,244,214,.35)'); gr.addColorStop(1, 'rgba(255,240,200,0)'); x.fillStyle = gr; x.fillRect(0, 0, 4, 128);
+  const t = g3Tex(c), mat = new THREE.MeshBasicMaterial({ map: t, transparent: true, opacity: .05, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false, toneMapped: false });
+  for (const [lx, ly, lz] of G3.lamps.slice(0, 4)) {
+    const tx = lx * .35, tz = lz * .3, L = Math.hypot(lx - tx, ly, lz - tz), g = new THREE.CylinderGeometry(.6, 13, L, 24, 1, true);
+    const m = new THREE.Mesh(g, mat); m.position.set((lx + tx) / 2, ly / 2, (lz + tz) / 2);
+    m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(lx - tx, ly, lz - tz).normalize()); m.renderOrder = 3; S3.add(m);
+  }
+}
+
+// grandes tribunes : texture « public » (une rangée de sièges tous les 85 cm, des spectateurs selon le remplissage)
+// vue de loin, elle donne la foule dense et bariolée des retransmissions ; les silhouettes animées s'ajoutent par-dessus
+function g3CrowdTex(seatCol, hc, oc, fill, rnd, night) {
+  const W = 256, H = 256, [c, x] = g3Canvas(W, H), rows = 4, per = 6, rh = H / rows, cw = W / per;
+  const hex = col => '#' + col.clone().convertLinearToSRGB().getHexString(), seat = hex(seatCol), seatD = hex(seatCol.clone().multiplyScalar(.7));
+  const skin = ['#f0c8a8', '#d9a47c', '#a86e4c', '#6e4630'];
+  for (let r = 0; r < rows; r++) {
+    x.fillStyle = r % 2 ? seat : seatD; x.fillRect(0, r * rh, W, rh); x.fillStyle = 'rgba(0,0,0,.35)'; x.fillRect(0, r * rh + rh - 6, W, 6);
+    for (let k = 0; k < per; k++) {
+      if (rnd() > fill * 1.08) continue;
+      const u = rnd(), col = u < .5 ? hc : u < .6 ? oc : new THREE.Color().setHSL(rnd(), .25 + rnd() * .4, .25 + rnd() * .45);
+      const cx = k * cw + cw / 2 + (rnd() - .5) * 10, by = r * rh + rh - 8;
+      x.fillStyle = hex(col); x.beginPath(); x.ellipse(cx, by - 14, 13, 17, 0, 0, 7); x.fill();
+      x.fillStyle = skin[Math.floor(rnd() * skin.length)]; x.beginPath(); x.arc(cx, by - 36, 7.5, 0, 7); x.fill();
+      x.fillStyle = rnd() < .5 ? '#1c140e' : '#4a3020'; x.beginPath(); x.arc(cx, by - 39, 7.5, Math.PI, 0); x.fill();
+      if (rnd() < .18) { x.strokeStyle = hex(col); x.lineWidth = 6; x.beginPath(); x.moveTo(cx + 8, by - 24); x.lineTo(cx + 14, by - 50); x.stroke(); } // un bras levé
+    }
+  }
+  if (night) { x.fillStyle = 'rgba(0,0,10,.18)'; x.fillRect(0, 0, W, H); }
+  const t = g3Tex(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
 }
 
 // ===== src/m3dsk.js =====
