@@ -165,6 +165,54 @@ function g3PvKit() {
   for (const k of Object.keys(P)) if (P[k].instanceColor) P[k].instanceColor.needsUpdate = true;
   if (P.sk) g3SkColors(P.sk, 0, { shirt, shorts, socks: shirt, skin, hair, boots });
 }
+// ---------- jongles ----------
+// Programme : pied droit, pied gauche… une cuisse toutes les 6 touches. Le ballon suit une parabole (g = 9,81) d'un point de
+// contact au suivant ; chaque point de contact est mesuré sur le vrai pied (ou la vraie cuisse) du modèle au moment du toucher,
+// et réutilisé la fois suivante : le ballon retombe pile sur le cou-de-pied.
+const JG_G = 9.81, JG_YAW = -.5;
+function g3PvJgPlan(i) { const th = i % 6 === 5, side = th ? 1 : i % 2; return { side, thigh: th, T: th ? .82 : (i % 6 === 4 ? .7 : .6) }; }
+function g3PvJuggle(V, t, dt, tm) {
+  let J = V.jg; const cy = Math.cos(JG_YAW), sy = Math.sin(JG_YAW);
+  if (!J || V.snap || t < J.t0) {
+    // départ : le ballon lâché des mains tombe sur le pied droit
+    J = V.jg = { t0: t, i: 0, cache: {}, tc: t + .55, tp: t, from: [cy * .25, 1.05, sy * .25], plan: g3PvJgPlan(0), spin: 0 };
+    // mesure à l'avance des trois points de contact (pied gauche, pied droit, cuisse droite), pose figée hors écran
+    if (V.P) for (const pl of [{ side: 0, thigh: false }, { side: 1, thigh: false }, { side: 1, thigh: true }]) {
+      g3Pose(V.P, 0, { x: 0, z: 0, yaw: JG_YAW, v: 0, ph: 0, act: 19, at: .5, aa: 0, jug: { side: pl.side, k: 1, thigh: pl.thigh }, tm, gdt: 0, snap: true, key: 'pvm', idle: 0 });
+      J.cache[(pl.thigh ? 't' : 'f') + pl.side] = g3PvJgMeasure(V.P, pl);
+    }
+    J.to = J.cache['f' + J.plan.side] || g3PvJgEst(J.plan); J.T = J.tc - J.tp;
+  }
+  // levée de la jambe : monte ~0,3 s avant le contact, culmine juste après (le pied frappe en montant), redescend
+  const pl = J.plan, u = t - J.tc, rise = pl.thigh ? .34 : .3, k = u < 0 ? Math.max(0, 1 - Math.pow(-u / rise, 2)) : Math.max(0, 1 - Math.pow(u / .24, 2));
+  const kk = u < 0 ? k * k * (3 - 2 * k) : k;
+  return { x: 0, z: 0, yaw: JG_YAW, v: 0, ph: 0, act: 19, at: .5, aa: 0, jug: { side: pl.side, k: kk, thigh: pl.thigh }, tm, gdt: dt, snap: V.snap, key: 'pv', idle: 0 };
+}
+// point de contact estimé (avant la première mesure)
+function g3PvJgEst(pl) { const cy = Math.cos(JG_YAW), sy = Math.sin(JG_YAW), lat = pl.side ? .12 : -.12, f = pl.thigh ? .22 : .3, y = pl.thigh ? .7 : .34; return [cy * f - sy * lat, y, sy * f + cy * lat]; }
+// point de contact réel : cou-de-pied (devant la cheville) ou dessus de la cuisse, + rayon du ballon
+function g3PvJgMeasure(P, pl) {
+  const m = _m.jm || (_m.jm = new THREE.Matrix4()), cy = Math.cos(JG_YAW), sy = Math.sin(JG_YAW);
+  if (pl.thigh) { P.shin.getMatrixAt(pl.side, m); const e = m.elements; return [e[12] - cy * .12, e[13] + .17, e[14] - sy * .12]; } // genou → milieu de la cuisse
+  P.boot.getMatrixAt(pl.side, m); const e = m.elements; return [e[12] + cy * .1, e[13] + .1, e[14] + sy * .1];
+}
+function g3PvJuggleBall(V, P, t, dt) {
+  const J = V.jg; if (!J) return;
+  // contact : on mesure le pied, on corrige la fin de la trajectoire si besoin, on lance la suivante
+  if (t >= J.tc) {
+    const key = (J.plan.thigh ? 't' : 'f') + J.plan.side, hit = g3PvJgMeasure(P, J.plan); J.cache[key] = hit;
+    J.from = hit; J.tp = J.tc; J.i++; J.plan = g3PvJgPlan(J.i); J.T = J.plan.T; J.tc = J.tp + J.T;
+    J.to = J.cache[(J.plan.thigh ? 't' : 'f') + J.plan.side] || g3PvJgEst(J.plan);
+    J.spin = J.plan.thigh ? 4 : 9;
+    if (typeof sfxG === 'function' && V.cv && V.cv.isConnected && document.visibilityState === 'visible' && J.i > 1) { try { sfxG('kick', .12); } catch (e) { } }
+  }
+  // parabole de « from » à « to » en T secondes
+  const tau = clamp(t - J.tp, 0, J.T), T = J.T, f = J.from, g2 = J.to, w = tau / T;
+  const y = f[1] + (g2[1] - f[1]) * w + JG_G * tau * (T - tau) / 2;
+  V.ball.position.set(f[0] + (g2[0] - f[0]) * w, y, f[2] + (g2[2] - f[2]) * w);
+  // effet rétro (le ballon tourne vers le joueur), axe = côté du joueur
+  const ax = _m.jax || (_m.jax = new THREE.Vector3()), q = _m.jq || (_m.jq = new THREE.Quaternion()); ax.set(-Math.sin(JG_YAW), 0, Math.cos(JG_YAW)); q.setFromAxisAngle(ax, -J.spin * dt); V.ball.quaternion.premultiply(q);
+}
 function g3PvFrame(now) {
   const V = G3PV; if (!V.r || !V.cv || !V.cv.isConnected) { g3PreviewStop(); return; }
   V.raf = requestAnimationFrame(g3PvFrame);
@@ -185,13 +233,10 @@ function g3PvFrame(now) {
     st = { x: V.x, z: 0, yaw, v, ph: V.ph, act: 8, at: tt - .2, aa: 0, tm, cel: shopEq('celeb'), gdt: dt, snap: V.snap, key: 'pv' };
     if (V.tab === 'fx' && !V.fxDone && tt > 1.1) { V.fxDone = true; g3FxGoal(V.sc, V.cam, shopEq('fx') === 'none' ? 'confetti' : shopEq('fx'), V.x, 0, typeof kitColors === 'function' && typeof S !== 'undefined' && S && S.club ? (k => [k.col, k.col2])(kitColors(S.club.n)) : null); }
   } else {
-    // jongles : le ballon rebondit d'un pied à l'autre
-    const per = .62, k = Math.floor(t / per), p = (t % per) / per, foot = k % 2 ? 1 : -1;
-    st = { x: 0, z: 0, yaw: -.5, v: 0, ph: 0, act: 12, at: (t % per) - per + .2, aa: 0, tm, gdt: dt, snap: V.snap, key: 'pv', idle: 0 };
-    const fx = Math.cos(-.5) * .32, fz = Math.sin(-.5) * .32;
-    V.ball.position.set(fx + foot * Math.sin(.5) * .1, .32 + Math.sin(p * Math.PI) * .75, fz + foot * Math.cos(.5) * .1);
-    V.ball.rotation.x += dt * 5; V.ball.rotation.z += dt * 3;
+    // jongles : vrai ballon (gravité), touché par le pied qui monte à sa rencontre — droit, gauche… et la cuisse de temps en temps
+    st = g3PvJuggle(V, t, dt, tm);
   }
+  if (!cel) g3PvJuggleBall(V, P, t, dt);
   V.snap = false; V.ball.visible = !cel;
   // la caméra tourne doucement autour de lui
   const ang = cel ? .62 : .35 + Math.sin(tm * .25) * .45, R0 = cel ? 6.2 : 5, cx = cel ? V.x * .35 : 0;

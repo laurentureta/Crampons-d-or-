@@ -1,8 +1,8 @@
-/* Crampons d'Or 12.1.0 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
-var GAME_VERSION = "12.1.0";
+/* Crampons d'Or 12.2.0 — fichier GÉNÉRÉ par tools/build.js à partir de src/ : ne pas le modifier à la main */
+var GAME_VERSION = "12.2.0";
 var CRWD_FILES = ["chant_2","chant_3","chant_4","cheer_loop","goal_1","goal_2","goal_3","goal_4","ooh_1","roar_1","roar_2","roar_3","roar_4","surge"];
 var SONS_FILES = ["catch","glass","header","kick","net","post","shot","tackle","whistle1","whistle3"];
-var MEDIA_H = {"foule/chant_2":"3ebb4bce","foule/chant_3":"4f555b3f","foule/chant_4":"e9942adb","foule/cheer_loop":"e5b4a150","foule/goal_1":"a49bc043","foule/goal_2":"db0cbb88","foule/goal_3":"05dbbca2","foule/goal_4":"09720ea4","foule/ooh_1":"155d868a","foule/roar_1":"aff56709","foule/roar_2":"a3f978be","foule/roar_3":"6bed5e29","foule/roar_4":"df5f4aa6","foule/surge":"ce5de2be","sons/catch":"082b1f8c","sons/glass":"149bfce3","sons/header":"ac052ba0","sons/kick":"877b4236","sons/net":"fe0694be","sons/post":"ae984141","sons/shot":"9695a8e3","sons/tackle":"601ffa60","sons/whistle1":"cc2e8cf9","sons/whistle3":"dbccf110","tex":"f85d947d","anim":"1bc92a6a","intro":"eda0a29f","decor":"49ccd40b","stade":"180b7b01","joueur":"cbcc8acf"};
+var MEDIA_H = {"foule/chant_2":"3ebb4bce","foule/chant_3":"4f555b3f","foule/chant_4":"e9942adb","foule/cheer_loop":"e5b4a150","foule/goal_1":"a49bc043","foule/goal_2":"db0cbb88","foule/goal_3":"05dbbca2","foule/goal_4":"09720ea4","foule/ooh_1":"155d868a","foule/roar_1":"aff56709","foule/roar_2":"a3f978be","foule/roar_3":"6bed5e29","foule/roar_4":"df5f4aa6","foule/surge":"ce5de2be","sons/catch":"082b1f8c","sons/glass":"149bfce3","sons/header":"ac052ba0","sons/kick":"877b4236","sons/net":"fe0694be","sons/post":"ae984141","sons/shot":"9695a8e3","sons/tackle":"601ffa60","sons/whistle1":"cc2e8cf9","sons/whistle3":"dbccf110","tex":"f85d947d","anim":"1bc92a6a","intro":"eda0a29f","troph":"c16edbd2","decor":"49ccd40b","stade":"180b7b01","joueur":"cbcc8acf"};
 var VOIX_INDEX = {"S|Ah, les matchs du soir… Les projecteurs, l'herbe qui brille comme un miroir, l'odeur des frites. C'est ma madeleine de Proust, ça !":"S/033043fb565a.mp3","S|Chacun ses madeleines, Nathalie.":"S/184ed733a2a2.mp3","S|De la neige ! Regardez-moi ça, on se croirait au Canigou en plein mois de janvier !":"S/3330ac9a394b.mp3","S|Il pleut, mes amis ! Il pleut des cordes, des ficelles, des lacets !":"S/e5474d79c72a.mp3","S|Je le salue aussi ! Les petits matchs, c'est là que naissent les grands joueurs. Ne l'oubliez jamais.":"S/51e8f0b12016.mp3","S|La tête, les jambes, le cœur, les tripes, tout compte ! Ce soir, les familles sont divisées et les voisins ne se parlent plus jusqu'à lundi !":"S/d08542c8b556.mp3","S|Le ballon orange ! Comme une mandarine posée sur un gâteau à la crème. Magnifique.":"S/bcbce0b09960.mp3","S|Le papier, Nathalie ! Le papier ne court pas, le papier ne transpire pas ! C'est le terrain qui va parler !":"S/c5a3ec573ddf.mp3","S|Moi je sens des buts, des larmes, de la sueur et de la poésie ! On verra qui a raison !":"S/8daba191eb47.mp3","S|On va voir du ski nautique ce soir. Sortez les bouées !":"S/380bb6427e7c.mp3","S|Si vous êtes chez vous, montez le son. Si vous êtes au stade, vous n'entendez rien de ce que je dis… bonsoir quand même !":"S/56d80e607aac.mp3","S|Un derby ! Un DERBY ! J'ai des frissons jusque dans les chaussettes !":"S/665153ff867c.mp3"};
 var JOUEUR_3D = {"name":"A footballer 3d model","auteur":"AP 3d models (https://sketchfab.com/jeetu.143p)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/a-footballer-3d-model-afd601d0e0ea471f90b26c0d3b6c1cb7","bin":"joueur.bin","parts":[{"name":"corps","tris":12577,"alpha":false,"arr":{"pos":[0,22554],"nor":[90216,22554],"uv":[180432,15036],"bi":[240576,30072],"bw":[360864,30072],"reg":[481152,7518],"idx":[511224,37731]},"map":"corps.jpg","nmap":"corps_n.jpg"},{"name":"cheveux","tris":3669,"alpha":true,"arr":{"pos":[662148,11472],"nor":[708036,11472],"uv":[753924,7648],"bi":[784516,15296],"bw":[845700,15296],"reg":[906884,3824],"idx":[922180,11007]},"map":"cheveux.png"}],"bind":[[1,0,0,0,0,1,0,0,0,0,1,0,0,0.9561621074541208,0,1],[1,0,0,0,0,1,0,0,0,0,1,0,0,1.1114961124377731,0,1],[1,0,0,0,0,1,0,0,0,0,1,0,0,1.5915074134701013,0,1],[1,0,0,0,0,0.06507265101264002,0.9978805289663624,0,0,-0.9978805289663624,0.06507265101264002,0,0,1.4698137585331512,-0.19810914412195205,1],[1,0,0,0,0,0.06507265101264002,0.9978805289663624,0,0,-0.9978805289663624,0.06507265101264002,0,0,1.451196050022711,-0.483609250963011,1],[1,0,0,0,0,0.06507265101264002,0.9978805289663624,0,0,-0.9978805289663624,0.06507265101264002,0,0,1.436920698147589,-0.7025198909730603,1],[1,0,0,0,0,0.06876318803696509,-0.9976330106662434,0,0,0.9976330106662434,0.06876318803696509,0,0,1.4698137585331512,0.19810914412195205,1],[1,0,0,0,0,0.06876318803696509,-0.9976330106662434,0,0,0.9976330106662434,0.06876318803696509,0,0,1.4501401633868256,0.48353843436816046,1],[1,0,0,0,0,0.06876318803696509,-0.9976330106662434,0,0,0.9976330106662434,0.06876318803696509,0,0,1.4350551977367836,0.7023947749025508,1],[0.9982234212070645,-0.059581887798754285,0,0,0.059318219422530634,0.9938059722422536,0.0939736046992415,0,-0.0055991247712346955,-0.09380665318603713,0.9955746891217306,0,0,0.9017922101197102,-0.09436051729552487,1],[0.9982234212070645,-0.059581887798754285,0,0,0.059318219422530634,0.9938059722422536,0.0939736046992415,0,-0.0055991247712346955,-0.09380665318603713,0.9955746891217306,0,-0.021932103902617326,0.5343459844162471,-0.1291059780061074,1],[0.9982234212070645,-0.059581887798754285,0,0,0.059318219422530634,0.9938059722422536,0.0939736046992415,0,-0.0055991247712346955,-0.09380665318603713,0.9955746891217306,0,-0.046543159907541404,0.122017113472557,-0.16809551057726158,1],[0.9987227153012338,-0.05052660627165251,0,0,0.05030278712397283,0.9942986448282388,-0.09402039406579786,0,0.0047505314324681825,0.09390030325508565,0.9955702715025756,0,0,0.9017922101197102,0.09436051729552487,1],[0.9987227153012338,-0.05052660627165251,0,0,0.05030278712397283,0.9942986448282388,-0.09402039406579786,0,0.0047505314324681825,0.09390030325508565,0.9955702715025756,0,-0.01859877057225307,0.5341638254362409,0.12912327773726662,1],[0.9987227153012338,-0.05052660627165251,0,0,0.05030278712397283,0.9942986448282388,-0.09402039406579786,0,0.0047505314324681825,0.09390030325508565,0.9955702715025756,0,-0.03946933484683819,0.12163054524487249,0.16813222315883952,1]],"rig":{"hp":0.9562,"hipY":-0.0544,"hipW":0.0944,"thigh":0.3697,"shin":0.4149,"torY":0.1553,"shY":0.3583,"shW":0.1981,"ua":0.2861,"fa":0.2194,"neck":0.48,"numX":-0.1502,"numY":0.2222},"lum":[0.469,0.765,0.747,0.842,0.231,0.5]};
 var STADE_3D = {"name":"football stade","auteur":"mohamed ouartassi (https://sketchfab.com/mohamedouartassi)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/football-stade-cda2fcbaefb84fa280a5bf7213c67a71","bin":"stade.bin","pieces":{"pylone":[{"mat":"metal_dark.002","col":[0.3131,0.3131,0.3131],"rough":0,"metal":1,"tris":801,"arr":{"pos":[0,1320],"nor":[5280,1320],"idx":[6600,2403]}},{"mat":"metal_clear","col":[0.0593,0.0593,0.0593],"rough":0.98,"metal":0,"tris":462,"arr":{"pos":[11408,1206],"nor":[16232,1206],"idx":[17440,1386]}},{"mat":"metal_dark","col":[0.0593,0.0593,0.0593],"rough":0.98,"metal":0,"tris":294,"arr":{"pos":[20212,573],"nor":[22504,573],"idx":[23080,882]}},{"mat":"light_cold","col":[0.8,0.8,0.8],"rough":0.8,"metal":0,"tris":172,"arr":{"pos":[24844,378],"nor":[26356,378],"idx":[26736,516]}}],"siege":[{"mat":"PlasticRAL3018","col":[0.6627,0.0235,0.0235],"rough":0.98,"metal":0,"tris":210,"arr":{"pos":[27768,321],"nor":[29052,321],"idx":[29376,630]}}],"banc":[{"mat":"PlasticRAL3018","col":[0.6627,0.0235,0.0235],"rough":0.98,"metal":0,"tris":2100,"arr":{"pos":[30636,3210],"nor":[43476,3210],"idx":[46688,6300]}},{"mat":"MetalPaint_RAL5010_riffl","col":[0.004,0.0158,0.0671],"rough":0.96,"metal":0,"tris":4,"arr":{"pos":[59288,12],"nor":[59336,12],"idx":[59348,12]}},{"mat":"MetalPaint_RAL5010","col":[0.004,0.0158,0.0671],"rough":0.96,"metal":0,"tris":202,"arr":{"pos":[59372,228],"nor":[60284,228],"idx":[60512,606]}}],"siege_b":[{"mat":"PlasticRAL3018","col":[0.6627,0.0235,0.0235],"rough":0.98,"metal":0,"tris":42,"arr":{"pos":[61724,69],"nor":[62000,69],"idx":[62072,126]}}]}};
@@ -10,6 +10,7 @@ var DECOR_3D = {"bin":"decor.bin","tex":{"feuilles_ete":"feuilles_ete.webp","feu
 var TEX_3D = {"asphalte":"asphalte.jpg","beton":"beton.jpg","ciel_gris":"ciel_gris.jpg","ciel_jour":"ciel_jour.jpg","herbe":"herbe.jpg","pre":"pre.jpg"};
 var INTRO_PH = {"stade":{"f":"stade.jpg","w":1200,"h":1600,"fx":0.5,"hz":0.595,"st":[0.46,0.58]},"joueur":{"f":"joueur.webp","w":927,"h":1228,"cx":0.5,"cy":0.5,"ball":[0.3909,0.0627,0.0762],"foot":[0.5045,0.1496],"px":0.5333,"py":0.611},"ballon":{"f":"ballon.png","w":320},"credits":["Joueur : photo de Chaim Weingarten (Unsplash, licence Unsplash)","Stade : Parc des Princes, photo de Chris Kursikowski (Unsplash, licence Unsplash)"]};
 var ANIM_3D = {"fps":30,"bones":["bassin","buste","tete","brasG","avbrasG","mainG","brasD","avbrasD","mainD","cuisseG","jambeG","piedG","cuisseD","jambeD","piedD"],"clips":[{"n":"idle","src":"CMU 77_02","fr":181,"dur":6,"loop":1,"o":0},{"n":"marche","src":"CMU 35_01","fr":35,"dur":1.125,"loop":1,"v":1.31,"p0":0.844,"o":11041},{"n":"footing","src":"CMU 35_17","fr":23,"dur":0.725,"loop":1,"v":3.28,"p0":0.759,"o":13176},{"n":"course","src":"CMU 09_02","fr":23,"dur":0.742,"loop":1,"v":3.67,"p0":0.506,"o":14579},{"n":"course2","src":"CMU 127_06","fr":20,"dur":0.625,"loop":1,"v":3.69,"p0":0.587,"o":15982},{"n":"sprint","src":"CMU 143_01","fr":22,"dur":0.708,"loop":1,"v":7.24,"p0":0.341,"o":17202},{"n":"frappe","src":"CMU 10_05","fr":34,"dur":1.1,"c":0.55,"o":18544},{"n":"frappe_g","src":"CMU 10_05","fr":34,"dur":1.1,"c":0.55,"o":20618},{"n":"frappe2","src":"CMU 11_01","fr":34,"dur":1.1,"c":0.55,"o":22692},{"n":"frappe2_g","src":"CMU 11_01","fr":34,"dur":1.1,"c":0.55,"o":24766},{"n":"passe","src":"CMU 10_03","fr":28,"dur":0.9,"c":0.45,"o":26840},{"n":"passe_g","src":"CMU 10_03","fr":28,"dur":0.9,"c":0.45,"o":28548},{"n":"saut","src":"CMU 16_01","fr":35,"dur":1.15,"c":0.6,"o":30256},{"n":"joie","src":"CMU 142_09","fr":91,"dur":3,"tr":1,"o":32391},{"n":"salto","src":"CMU 87_03","fr":40,"dur":1.3,"c":0.63,"tr":1,"o":38215},{"n":"roue","src":"CMU 49_06","fr":64,"dur":2.1,"tr":1,"o":40775},{"n":"vrille","src":"CMU 88_06","fr":34,"dur":1.1,"c":0.42,"tr":1,"o":44871},{"n":"danse","src":"CMU 05_06","fr":97,"dur":3.2,"tr":1,"o":47047}],"credit":"Capture de mouvement : base CMU (mocap.cs.cmu.edu), conversion BVH de Bruce Hahne ; utilisation libre."};
+var TROPHEES_3D = {"bin":"trophees.bin","items":{"ballon_dor":{"name":"BALLON D'OR","auteur":"tahahosseini (https://sketchfab.com/tahahosseini)","licence":"CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)","source":"https://sketchfab.com/3d-models/ballon-dor-31aa899c67a74d1aad94e7ec62b39dac","qs":0.000018311105685598315,"oy":0.5,"parts":[{"mat":"gold","col":[0.554,0.2679,0.0501],"rough":0.066,"metal":1,"arr":{"pos":[0,24954],"nor":[49908,24954],"idx":[74864,47520]}},{"mat":"gold.text","col":[0.7991,0.3864,0.0723],"rough":0.1,"metal":1,"arr":{"pos":[169904,318],"nor":[170540,318],"idx":[170860,540]}},{"mat":"SILVER","col":[0.5271,0.5271,0.5271],"rough":0.4,"metal":1,"arr":{"pos":[171940,73467],"nor":[318876,73467],"idx":[392344,147090]}}]}}};
 (function(){
 // ===== src/data.js =====
 // ===== DONNÉES RÉELLES — saison 2026-27 (après le mercato d'été 2026, état au 11/10/2026) =====
@@ -6580,6 +6581,10 @@ function g3Pose(P, n, s) {
     else if (a === 9) { const dur = s.busy || 1.6; if (t < dur + .6) { const down = ease(t / .4), up = ease((t - dur) / .6), w = down * (1 - up); pitch = -1.45 * w; hp = H0 - .8 * w; shL = shR = 1.6 * w; elL = elR = .3; abL = abR = .5 * w; kneeL = kneeR = .3 * w; } }
     else if (a === 10) { const p = t / .9; if (p < 1) { const w = bell(p, 0, 1); shL = shR = 2.9 - 1.2 * ease((p - .45) / .3); elL = elR = 1.6 * (1 - ease((p - .45) / .3)); abL = abR = .2; lean = -.25 * w + .25 * ease((p - .45) / .3); } }
     else if (a === 12) { const p = t / .35; if (p < 1) { const w = bell(p, 0, 1); if (side > 0) { hipR = .5 * w; kneeR = .7 * w; } else { hipL = .5 * w; kneeL = .7 * w; } abL = abR = .5 * w; nod = .25 * w; } }
+    // jongles (aperçu de la Boutique) : la jambe se lève au rythme du ballon (s.jug = côté, levée 0→1, cuisse ou pied)
+    else if (a === 19 && s.jug) { const J_ = s.jug, k = J_.k, th = J_.thigh, hh = th ? 1.45 * k : 1.08 * k, kk = th ? 1.65 * k : .14 + .74 * k;
+      if (J_.side) { hipR = hh; kneeR = kk; hipL = .04; kneeL = .14; } else { hipL = hh; kneeL = kk; hipR = .04; kneeR = .14; }
+      abL = abR = .42 + .08 * k; shL = shR = .12; elL = elR = .55; nod = .42; lean = -.04 - .04 * k; hp = H0 - .025; roll = (J_.side ? -1 : 1) * .05 * k; look = 0; }
     else if (a === 14) { if (t < 6) { shL = shR = 2.5; abL = abR = .9; elL = elR = 2.3; nod = .35; lean = .1; look = 0; } }
     else if (a === 15) { if (t < 2.2) { shR = 3; abR = .1; elR = 0; } }
   }
@@ -6685,6 +6690,55 @@ function g3Trail() {
 }
 // projection écran d'un point du terrain (repère moteur, déjà mis en miroir)
 function g3Proj(x, y, z) { const v = _m.pv || (_m.pv = new THREE.Vector3()); v.set(x - 52.5, z || 0, y - 34).project(G3.cam); return [(v.x + 1) / 2 * G3.w, (1 - v.y) / 2 * G3.h, v.z < 1]; }
+// ---------- conduite de balle (affichage) ----------
+// Le moteur garde le ballon « collé » devant le porteur (10 images/s). À l'écran, il devient un vrai ballon :
+// le pied le pousse (le pied le plus proche, au moment où il passe dessus), il roule et ralentit sur l'herbe,
+// le joueur le rattrape et le touche à nouveau ; touches courtes à l'arrêt, longues en sprint. À la passe, à la frappe
+// ou à la perte du ballon, l'image rejoint en douceur la trajectoire du moteur.
+const G3DR = { n: -1, x: 0, z: 0, vx: 0, vz: 0, w: 0, last: -9, ex: 0, ez: 0, foot: 0, init: false };
+function g3Drib(P, own, o, ebx, ebz, gdt, snap, t) {
+  const D = G3DR;
+  if (snap || !D.init) { D.init = true; D.x = ebx; D.z = ebz; D.vx = D.vz = 0; D.w = own && o ? 1 : 0; D.n = own && o ? o.n : -1; D.last = t; return [ebx, ebz]; }
+  if (gdt <= 0) { const w = D.w; return [ebx + (D.x - ebx) * w, ebz + (D.z - ebz) * w]; }
+  if (own && o) {
+    if (D.n !== o.n) { // nouveau porteur : on part de la position affichée actuelle
+      D.n = o.n; if (D.w < .05) { D.x = ebx; D.z = ebz; D.vx = (ebx - D.ex) / Math.max(gdt, 1e-3) * 0; D.vz = 0; } D.last = t - .2;
+    }
+    const cy = Math.cos(o.yaw), sy = Math.sin(o.yaw), v = o.v, pvx = cy * v, pvz = sy * v;
+    // le ballon roule et ralentit
+    D.x += D.vx * gdt; D.z += D.vz * gdt; const fr = Math.exp(-gdt * (v > 1 ? 1.35 : 4)); D.vx *= fr; D.vz *= fr;
+    // position relative au joueur : devant (rf) et sur le côté (rl)
+    let dx = D.x - o.x, dz = D.z - o.z; const rf = dx * cy + dz * sy, rl = -dx * sy + dz * cy;
+    const lead = .36 + Math.min(1, v / 7.5) * .95, kick = o.kick;
+    if (kick) { // geste de passe/frappe imminent : le ballon glisse (vitesse constante) vers l'endroit d'où le moteur le fera partir
+      const rem = Math.max(.1, -kick), ddx = ebx - D.x, ddz = ebz - D.z; let nvx = ddx / rem + pvx * .3, nvz = ddz / rem + pvz * .3; const ns = Math.hypot(nvx, nvz), cap = v + 3.5;
+      if (ns > cap) { nvx *= cap / ns; nvz *= cap / ns; } const k = 1 - Math.exp(-gdt * 10); D.vx += (nvx - D.vx) * k; D.vz += (nvz - D.vz) * k;
+    } else if (v < .6) { // à l'arrêt : le ballon sous la semelle, juste devant
+      const tx = o.x + cy * .36, tz = o.z + sy * .36, k = 1 - Math.exp(-gdt * 6); D.x += (tx - D.x) * k; D.z += (tz - D.z) * k; D.vx = (tx - D.x) * 2; D.vz = (tz - D.z) * 2;
+    } else {
+      // touche : le pied le plus proche passe sur le ballon (ou le ballon revient trop près du corps)
+      let fx = 0, fz = 0, fd = 9, side = 0; const m = _m.fm || (_m.fm = new THREE.Matrix4());
+      for (const sd of [0, 1]) { P.boot.getMatrixAt(o.n * 2 + sd, m); const e = m.elements, d = Math.hypot(e[12] - D.x, e[14] - D.z); if (d < fd) { fd = d; fx = e[12]; fz = e[14]; side = sd; } }
+      const since = t - D.last;
+      if ((fd < .3 && rf < lead + .05 && since > .22) || rf < .2 || (since > 1.4 && rf < lead)) {
+        // vitesse donnée : un peu plus vite que le joueur (pour filer devant), corrige l'écart sur le côté
+        const push = v * 1.05 + (lead - rf) * 2.6 + .5, lat = -rl * 3.2;
+        D.vx = cy * push - sy * lat; D.vz = sy * push + cy * lat; D.last = t; D.foot = side;
+      }
+      // garde-fou : jamais loin du porteur (virages serrés, à-coups du moteur) — un rappel en douceur, sur la vitesse
+      dx = D.x - o.x; dz = D.z - o.z; const dd = Math.hypot(dx, dz), mx = lead + .7;
+      if (dd > mx) { const tx = o.x + cy * lead, tz = o.z + sy * lead, k = Math.min(1, gdt * 6); D.vx += ((tx - D.x) * 3 + pvx - D.vx) * k; D.vz += ((tz - D.z) * 3 + pvz - D.vz) * k; }
+    }
+    D.w = Math.min(1, D.w + gdt / .18);
+  } else {
+    // plus de porteur : l'image rejoint la trajectoire du moteur (en ~0,15 s), sans saut
+    D.w = Math.max(0, D.w - gdt / .2); D.n = -1;
+    if (D.w > 0) { D.x += D.vx * gdt; D.z += D.vz * gdt; }
+  }
+  D.ex = ebx; D.ez = ebz;
+  const w = D.w * D.w * (3 - 2 * D.w);
+  return [ebx + (D.x - ebx) * w, ebz + (D.z - ebz) * w];
+}
 function g3Draw(M, t, dt, paused) {
   if (!g3Init()) return false;
   const T0 = performance.now();
@@ -6705,7 +6759,7 @@ function g3Draw(M, t, dt, paused) {
   g3BallSkin();
   const bx = X(Sp(3)), bz = Z(Sp(4)), by = Math.max(0, Sp(5)), own = fa[6] >= 0 ? [fa[6], fa[7]] : null, hold = fa[10] > .5;
   const fdt = Math.max(.05, fb[0] - fa[0]);
-  let celeb = null, meIdx = -1; G3.me = null;
+  let celeb = null, meIdx = -1, drib = null; G3.me = null;
   for (let kk = 0; kk < 2; kk++) for (let i = 0; i < 11; i++) {
     const n = kk * 11 + i, o = MF_H + n * MF_S;
     if (fa[o + 2] < .5 && fb[o + 2] < .5) { g3Hide(P, n); continue; }
@@ -6729,6 +6783,7 @@ function g3Draw(M, t, dt, paused) {
     // le plongeon : sens dans le repère de l'écran
     if (act === 5) st.aa = (mir ? -1 : 1) * aa * (Math.cos(yaw) >= 0 ? 1 : -1);
     g3Pose(P, n, st);
+    if (own && own[0] === kk && own[1] === i && !hold) drib = { n, x, z, yaw, v, kick: (act === 1 || act === 11) && at > -.6 && at < .15 ? Math.min(-.001, at) : 0 };
     if (act === 8 && at >= 0 && at < 10) celeb = [x, z];
     if (r.me) { meIdx = n; G3.me = { x, z, dir: (kk === 0) !== mir ? 1 : -1 }; } // sens d'attaque de ton équipe (caméra « Mon joueur »)
   }
@@ -6748,21 +6803,27 @@ function g3Draw(M, t, dt, paused) {
   }
   for (const k of ['torso', 'shorts', 'head', 'hair', 'num', 'uarm', 'ubare', 'farm', 'hand', 'thigh', 'shin', 'boot']) P[k].instanceMatrix.needsUpdate = true;
   if (P.sk) g3SkFlush(P.sk);
+  // conduite de balle : position affichée du ballon (poussé par le pied du porteur)
+  const [dbx, dbz] = by < .3 && !(typeof window !== 'undefined' && window.__noDrib) ? g3Drib(P, own, drib, bx, bz, gdt, snap, t) : (G3DR.w = 0, G3DR.n = -1, [bx, bz]);
   // ombres « projecteurs » (nuit) ou ombre douce sous les joueurs (mode rapide)
   { const bl = P.blob, m4 = _m.m4 || (_m.m4 = new THREE.Matrix4()); let c = 0; const lamps = G3.night ? G3.lamps : null, useBlob = G3.night || !G3.sun.castShadow;
     if (useBlob) { const q = _m.q2 || (_m.q2 = new THREE.Quaternion()), v3 = _m.v3 || (_m.v3 = new THREE.Vector3()), sc3 = _m.s3 || (_m.s3 = new THREE.Vector3());
       for (let n = 0; n < 25; n++) { P.torso.getMatrixAt(n, G3M.l || (G3M.l = new THREE.Matrix4())); const e = G3M.l.elements; if (e[0] === 0 && e[1] === 0 && e[2] === 0) continue; const x = e[12], z = e[14];
         if (lamps) for (const [lx2, , lz2] of lamps.slice(0, 4)) { const dx = x - lx2, dz = z - lz2, d = Math.hypot(dx, dz) || 1, ang = Math.atan2(dz, dx); q.setFromAxisAngle(v3.set(0, 1, 0), -ang); m4.compose(v3.set(x + dx / d * .9, .02, z + dz / d * .9), q, sc3.set(2.2, 1, .7)); bl.setMatrixAt(c++, m4); }
         else { m4.compose(v3.set(x + .25, .02, z + .15), q.identity(), sc3.set(1.1, 1, .8)); bl.setMatrixAt(c++, m4); } }
-      if (lamps) { m4.compose(v3.set(bx, .02, bz), q.identity(), sc3.set(.5, 1, .5)); bl.setMatrixAt(c++, m4); } }
+      if (lamps) { m4.compose(v3.set(dbx, .02, dbz), q.identity(), sc3.set(.5, 1, .5)); bl.setMatrixAt(c++, m4); } }
     bl.count = c; bl.instanceMatrix.needsUpdate = true; bl.material.opacity = lamps ? .22 : .45; }
   // anneau de ton joueur
   if (meIdx >= 0) { P.torso.getMatrixAt(meIdx, G3M.l || (G3M.l = new THREE.Matrix4())); const e = G3M.l.elements; P.ring.visible = !(e[0] === 0 && e[1] === 0); P.ring.position.set(e[12], .03, e[14]); g3Halo(P.ring, tm); } else P.ring.visible = false;
   g3FxUpdate(G3.sc, G3.cam, dt, G3.h * G3.r.getPixelRatio());
   // ballon : rotation selon la vitesse, plus gros de loin pour rester lisible
-  { const b = G3.ball, vx = (fb[3] - fa[3]) / fdt * (mir ? -1 : 1), vz = (fb[4] - fa[4]) / fdt * (mir ? -1 : 1), sp = Math.hypot(vx, vz);
+  // conduite de balle : position affichée (le ballon poussé par le pied), vitesse tirée du mouvement réellement affiché
+  { const b = G3.ball, pbx = G3.pbx ?? dbx, pbz = G3.pbz ?? dbz; G3.pbx = dbx; G3.pbz = dbz;
+    let vx = (fb[3] - fa[3]) / fdt * (mir ? -1 : 1), vz = (fb[4] - fa[4]) / fdt * (mir ? -1 : 1);
+    if (G3DR.w > 0 && gdt > 0 && !snap) { vx = (dbx - pbx) / gdt; vz = (dbz - pbz) / gdt; }
+    const sp = Math.hypot(vx, vz);
     const camD = G3.cam.position.distanceTo(b.position), sc2 = clamp(camD / 34, 1, 2.3); b.scale.setScalar(sc2);
-    b.position.set(bx, by + .11 * sc2, bz);
+    b.position.set(dbx, by + .11 * sc2, dbz);
     if (sp > .2 && gdt > 0) { const ax = _m.av || (_m.av = new THREE.Vector3()); ax.set(vz, 0, -vx).normalize(); const qq = _m.bq || (_m.bq = new THREE.Quaternion()); qq.setFromAxisAngle(ax, sp * gdt / .11); b.quaternion.premultiply(qq); }
     // traînée derrière les frappes fortes (le ballon file vraiment)
     { const vy3 = (fb[5] - fa[5]) / fdt, sp3 = Math.hypot(vx, vz, vy3), T = G3.trail || (G3.trail = g3Trail()), k = clamp((sp3 - 15) / 12, 0, 1) * (LV.replay ? 1 : .85);
@@ -6770,7 +6831,7 @@ function g3Draw(M, t, dt, paused) {
         d.set(vx, vy3, vz).normalize(); c.copy(b.position).addScaledVector(d, -L / 2); n.copy(G3.cam.position).sub(c).normalize(); y.crossVectors(n, d).normalize(); n.crossVectors(d, y);
         T.matrix.makeBasis(d, y, n); T.matrix.scale(_m.ts || (_m.ts = new THREE.Vector3(1, 1, 1)).set(L, .2 * sc2, 1)); T.matrix.setPosition(c); T.material.opacity = .55 * k; } } }
   // filets : la toile épouse le ballon et ondule (temps de jeu : ralenti au ralenti, figée en pause)
-  { const rb = .11 * G3.ball.scale.x; g3NetUpdate(snap ? 0 : gdt, bx, by + rb, bz, rb); }
+  { const rb = .11 * G3.ball.scale.x; g3NetUpdate(snap ? 0 : gdt, dbx, by + rb, dbz, rb); }
   // ambiance du public, panneaux, météo, écran géant
   const now = performance.now() / 1000;
   if (G3.crowdU) { G3.crowdU.uT.value = now; const hot = lvHlSpeed(t) ? .55 : 0, gl = celeb ? 1 : 0; G3.crowdExc = (G3.crowdExc || 0) + ((Math.max(hot, gl, .08)) - (G3.crowdExc || 0)) * Math.min(1, dt * 2); G3.crowdU.uE.value = G3.crowdExc; }
@@ -6782,7 +6843,7 @@ function g3Draw(M, t, dt, paused) {
   if (G3.wxU) { G3.wxU.uT.value = now; G3.wx.position.set(G3.cm.p ? G3.cm.p[3] : 0, 0, 0); }
   for (const s of G3.flares || []) s.material.opacity = .6 + .4 * Math.sin(now * 9 + s.position.x);
   if (G3.sb) { const key = M.hg + '-' + M.ag + '-' + M.min; if (key !== G3.sbKey) { G3.sbKey = key; const { c, x } = G3.sb, h0 = M.side === 'h'; x.fillStyle = '#05070b'; x.fillRect(0, 0, 512, 160); x.fillStyle = '#ffd166'; x.font = '900 30px Arial'; x.textAlign = 'center'; x.fillText(M.min + "'", 256, 40); x.fillStyle = '#fff'; x.font = '800 30px Arial'; const hn = String(h0 ? M.my : M.op).slice(0, 12).toUpperCase(), an = String(h0 ? M.op : M.my).slice(0, 12).toUpperCase(); x.fillText(hn, 128, 100); x.fillText(an, 384, 100); x.font = '900 56px Arial'; x.fillText(M.hg + ' - ' + M.ag, 256, 112); G3.sb.t.needsUpdate = true; } }
-  g3Camera(M, t, dt, bx, bz, by, paused, celeb && fa[9] > .5 ? celeb : null);
+  g3Camera(M, t, dt, dbx, dbz, by, paused, celeb && fa[9] > .5 ? celeb : null);
   // vue tactique : lignes des deux équipes au sol
   g3TacLines(fa, mir, E);
   const T1 = performance.now();
@@ -7401,6 +7462,54 @@ function g3PvKit() {
   for (const k of Object.keys(P)) if (P[k].instanceColor) P[k].instanceColor.needsUpdate = true;
   if (P.sk) g3SkColors(P.sk, 0, { shirt, shorts, socks: shirt, skin, hair, boots });
 }
+// ---------- jongles ----------
+// Programme : pied droit, pied gauche… une cuisse toutes les 6 touches. Le ballon suit une parabole (g = 9,81) d'un point de
+// contact au suivant ; chaque point de contact est mesuré sur le vrai pied (ou la vraie cuisse) du modèle au moment du toucher,
+// et réutilisé la fois suivante : le ballon retombe pile sur le cou-de-pied.
+const JG_G = 9.81, JG_YAW = -.5;
+function g3PvJgPlan(i) { const th = i % 6 === 5, side = th ? 1 : i % 2; return { side, thigh: th, T: th ? .82 : (i % 6 === 4 ? .7 : .6) }; }
+function g3PvJuggle(V, t, dt, tm) {
+  let J = V.jg; const cy = Math.cos(JG_YAW), sy = Math.sin(JG_YAW);
+  if (!J || V.snap || t < J.t0) {
+    // départ : le ballon lâché des mains tombe sur le pied droit
+    J = V.jg = { t0: t, i: 0, cache: {}, tc: t + .55, tp: t, from: [cy * .25, 1.05, sy * .25], plan: g3PvJgPlan(0), spin: 0 };
+    // mesure à l'avance des trois points de contact (pied gauche, pied droit, cuisse droite), pose figée hors écran
+    if (V.P) for (const pl of [{ side: 0, thigh: false }, { side: 1, thigh: false }, { side: 1, thigh: true }]) {
+      g3Pose(V.P, 0, { x: 0, z: 0, yaw: JG_YAW, v: 0, ph: 0, act: 19, at: .5, aa: 0, jug: { side: pl.side, k: 1, thigh: pl.thigh }, tm, gdt: 0, snap: true, key: 'pvm', idle: 0 });
+      J.cache[(pl.thigh ? 't' : 'f') + pl.side] = g3PvJgMeasure(V.P, pl);
+    }
+    J.to = J.cache['f' + J.plan.side] || g3PvJgEst(J.plan); J.T = J.tc - J.tp;
+  }
+  // levée de la jambe : monte ~0,3 s avant le contact, culmine juste après (le pied frappe en montant), redescend
+  const pl = J.plan, u = t - J.tc, rise = pl.thigh ? .34 : .3, k = u < 0 ? Math.max(0, 1 - Math.pow(-u / rise, 2)) : Math.max(0, 1 - Math.pow(u / .24, 2));
+  const kk = u < 0 ? k * k * (3 - 2 * k) : k;
+  return { x: 0, z: 0, yaw: JG_YAW, v: 0, ph: 0, act: 19, at: .5, aa: 0, jug: { side: pl.side, k: kk, thigh: pl.thigh }, tm, gdt: dt, snap: V.snap, key: 'pv', idle: 0 };
+}
+// point de contact estimé (avant la première mesure)
+function g3PvJgEst(pl) { const cy = Math.cos(JG_YAW), sy = Math.sin(JG_YAW), lat = pl.side ? .12 : -.12, f = pl.thigh ? .22 : .3, y = pl.thigh ? .7 : .34; return [cy * f - sy * lat, y, sy * f + cy * lat]; }
+// point de contact réel : cou-de-pied (devant la cheville) ou dessus de la cuisse, + rayon du ballon
+function g3PvJgMeasure(P, pl) {
+  const m = _m.jm || (_m.jm = new THREE.Matrix4()), cy = Math.cos(JG_YAW), sy = Math.sin(JG_YAW);
+  if (pl.thigh) { P.shin.getMatrixAt(pl.side, m); const e = m.elements; return [e[12] - cy * .12, e[13] + .17, e[14] - sy * .12]; } // genou → milieu de la cuisse
+  P.boot.getMatrixAt(pl.side, m); const e = m.elements; return [e[12] + cy * .1, e[13] + .1, e[14] + sy * .1];
+}
+function g3PvJuggleBall(V, P, t, dt) {
+  const J = V.jg; if (!J) return;
+  // contact : on mesure le pied, on corrige la fin de la trajectoire si besoin, on lance la suivante
+  if (t >= J.tc) {
+    const key = (J.plan.thigh ? 't' : 'f') + J.plan.side, hit = g3PvJgMeasure(P, J.plan); J.cache[key] = hit;
+    J.from = hit; J.tp = J.tc; J.i++; J.plan = g3PvJgPlan(J.i); J.T = J.plan.T; J.tc = J.tp + J.T;
+    J.to = J.cache[(J.plan.thigh ? 't' : 'f') + J.plan.side] || g3PvJgEst(J.plan);
+    J.spin = J.plan.thigh ? 4 : 9;
+    if (typeof sfxG === 'function' && V.cv && V.cv.isConnected && document.visibilityState === 'visible' && J.i > 1) { try { sfxG('kick', .12); } catch (e) { } }
+  }
+  // parabole de « from » à « to » en T secondes
+  const tau = clamp(t - J.tp, 0, J.T), T = J.T, f = J.from, g2 = J.to, w = tau / T;
+  const y = f[1] + (g2[1] - f[1]) * w + JG_G * tau * (T - tau) / 2;
+  V.ball.position.set(f[0] + (g2[0] - f[0]) * w, y, f[2] + (g2[2] - f[2]) * w);
+  // effet rétro (le ballon tourne vers le joueur), axe = côté du joueur
+  const ax = _m.jax || (_m.jax = new THREE.Vector3()), q = _m.jq || (_m.jq = new THREE.Quaternion()); ax.set(-Math.sin(JG_YAW), 0, Math.cos(JG_YAW)); q.setFromAxisAngle(ax, -J.spin * dt); V.ball.quaternion.premultiply(q);
+}
 function g3PvFrame(now) {
   const V = G3PV; if (!V.r || !V.cv || !V.cv.isConnected) { g3PreviewStop(); return; }
   V.raf = requestAnimationFrame(g3PvFrame);
@@ -7421,13 +7530,10 @@ function g3PvFrame(now) {
     st = { x: V.x, z: 0, yaw, v, ph: V.ph, act: 8, at: tt - .2, aa: 0, tm, cel: shopEq('celeb'), gdt: dt, snap: V.snap, key: 'pv' };
     if (V.tab === 'fx' && !V.fxDone && tt > 1.1) { V.fxDone = true; g3FxGoal(V.sc, V.cam, shopEq('fx') === 'none' ? 'confetti' : shopEq('fx'), V.x, 0, typeof kitColors === 'function' && typeof S !== 'undefined' && S && S.club ? (k => [k.col, k.col2])(kitColors(S.club.n)) : null); }
   } else {
-    // jongles : le ballon rebondit d'un pied à l'autre
-    const per = .62, k = Math.floor(t / per), p = (t % per) / per, foot = k % 2 ? 1 : -1;
-    st = { x: 0, z: 0, yaw: -.5, v: 0, ph: 0, act: 12, at: (t % per) - per + .2, aa: 0, tm, gdt: dt, snap: V.snap, key: 'pv', idle: 0 };
-    const fx = Math.cos(-.5) * .32, fz = Math.sin(-.5) * .32;
-    V.ball.position.set(fx + foot * Math.sin(.5) * .1, .32 + Math.sin(p * Math.PI) * .75, fz + foot * Math.cos(.5) * .1);
-    V.ball.rotation.x += dt * 5; V.ball.rotation.z += dt * 3;
+    // jongles : vrai ballon (gravité), touché par le pied qui monte à sa rencontre — droit, gauche… et la cuisse de temps en temps
+    st = g3PvJuggle(V, t, dt, tm);
   }
+  if (!cel) g3PvJuggleBall(V, P, t, dt);
   V.snap = false; V.ball.visible = !cel;
   // la caméra tourne doucement autour de lui
   const ang = cel ? .62 : .35 + Math.sin(tm * .25) * .45, R0 = cel ? 6.2 : 5, cx = cel ? V.x * .35 : 0;
@@ -8249,6 +8355,53 @@ function feteCup(name) {
   return g;
 }
 // Ballon d'Or : ballon doré sur un petit socle
+// ---------- trophées en vrai modèle 3D (assets/trophees, préparés par tools/trophee3d.py) ----------
+// Ballon d'Or : modèle « BALLON D'OR » de tahahosseini (Sketchfab, CC-BY 4.0). Le trophée dessiné en code sert en attendant.
+const TROPH = { model: null, loading: null, fail: false };
+function trophLoad() {
+  if (TROPH.model || TROPH.loading || TROPH.fail) return TROPH.loading;
+  if (typeof TROPHEES_3D === 'undefined' || !TROPHEES_3D || !TROPHEES_3D.items || typeof fetch !== 'function') { TROPH.fail = true; return null; }
+  const J = TROPHEES_3D, q = typeof MEDIA_H !== 'undefined' && MEDIA_H.troph ? '?h=' + MEDIA_H.troph : '';
+  TROPH.loading = fetch('assets/trophees/' + J.bin + q).then(r => { if (!r.ok) throw new Error('trophées'); return r.arrayBuffer(); }).then(buf => {
+    const out = {};
+    for (const [k, it] of Object.entries(J.items)) {
+      const parts = it.parts.map(p => {
+        const A = p.arr, P = new Int16Array(buf, A.pos[0], A.pos[1]), F32 = new Float32Array(P.length);
+        for (let i = 0; i < P.length; i++) F32[i] = P[i] * it.qs + (i % 3 === 1 ? it.oy : 0);
+        const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(F32, 3));
+        g.setAttribute('normal', new THREE.BufferAttribute(new Int8Array(buf, A.nor[0], A.nor[1]), 3, true));
+        g.setIndex(new THREE.BufferAttribute(new Uint16Array(buf, A.idx[0], A.idx[1]), 1)); g.computeBoundingBox(); g.computeBoundingSphere();
+        return { mat: p.mat, col: p.col, rough: p.rough, metal: p.metal, geo: g };
+      });
+      // hauteur du centre de la boule dorée (le plus gros morceau doré) : c'est là que les mains la tiennent
+      const gold = parts.filter(p => /gold/i.test(p.mat)).sort((a, b) => b.geo.boundingSphere.radius - a.geo.boundingSphere.radius)[0];
+      out[k] = { parts, ballY: gold ? gold.geo.boundingSphere.center.y : .66, ballR: gold ? gold.geo.boundingSphere.radius : .3 };
+    }
+    TROPH.model = out; return out;
+  }).catch(() => { TROPH.fail = true; return null; });
+  return TROPH.loading;
+}
+// reflets dorés : petite carte d'environnement (salle sombre, projecteurs chauds), préfiltrée pour les matériaux métalliques
+function trophEnv(r) {
+  const [c, x] = g3Canvas(256, 128), gr = x.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, '#2a2018'); gr.addColorStop(.45, '#5a4632'); gr.addColorStop(.55, '#140f0a'); gr.addColorStop(1, '#050403');
+  x.fillStyle = gr; x.fillRect(0, 0, 256, 128);
+  for (const [px, py, rr, a] of [[40, 30, 26, .95], [128, 18, 34, 1], [205, 34, 22, .85], [90, 70, 14, .5], [170, 64, 16, .55]]) { const g2 = x.createRadialGradient(px, py, 0, px, py, rr); g2.addColorStop(0, `rgba(255,246,220,${a})`); g2.addColorStop(1, 'rgba(255,230,180,0)'); x.fillStyle = g2; x.fillRect(px - rr, py - rr, rr * 2, rr * 2); }
+  const tex = new THREE.CanvasTexture(c); tex.mapping = THREE.EquirectangularReflectionMapping; tex.encoding = THREE.sRGBEncoding;
+  try { const pm = new THREE.PMREMGenerator(r), rt = pm.fromEquirectangular(tex); pm.dispose(); tex.dispose(); return rt.texture; } catch (e) { return tex; }
+}
+// le trophée k, haut de h mètres, base à y = 0
+function trophMesh(k, h, env) {
+  const M = TROPH.model && TROPH.model[k]; if (!M) return null;
+  const g = new THREE.Group(); g.scale.setScalar(h);
+  for (const p of M.parts) {
+    const text = /text/i.test(p.mat), silver = /silver/i.test(p.mat);
+    const m = new THREE.MeshStandardMaterial({ color: new THREE.Color(p.col[0], p.col[1], p.col[2]).multiplyScalar(text ? 1.15 : 1.25), metalness: p.metal == null ? 1 : p.metal, roughness: clamp(p.rough, silver ? .3 : .14, .8), envMap: env || null, envMapIntensity: silver ? 1 : 1.5, side: THREE.DoubleSide });
+    if (!env) m.emissive = new THREE.Color(silver ? 0x111111 : 0x3a2606);
+    g.add(new THREE.Mesh(p.geo, m));
+  }
+  g.userData.ballY = M.ballY * h; g.userData.ballR = M.ballR * h;
+  return g;
+}
 function feteBallonOr() {
   const g = new THREE.Group();
   const b = new THREE.Mesh(new THREE.SphereGeometry(.11, 32, 22), new THREE.MeshStandardMaterial({ map: g3Tex(g3BallPaint('gold')), metalness: .7, roughness: .25, emissive: 0x2a1c04 })); b.position.y = .145; g.add(b);
@@ -8329,6 +8482,8 @@ function fetePlay(f, done) {
       const back = new THREE.DirectionalLight(0xffb84a, .9); back.position.set(0, 6, -8); sc.add(back);
       const g = new THREE.Group(); g.position.y = .45; sc.add(g); F.stageY = .45;
       F.P = feteRig(g, 1); F.kits = [kitMe]; F.prop = feteBallonOr(); g.add(F.prop); F.prop.visible = false;
+      const swap = () => { if (!F.on || F.f !== f) return; const m = trophMesh('ballon_dor', .5, trophEnv(r)); if (!m) return; F.prop.clear(); F.prop.add(m); F.prop.userData.ballY = m.userData.ballY; F.prop.userData.real = true; };
+      if (TROPH.model) swap(); else { const pr = trophLoad(); if (pr) pr.then(swap); }
       F.conf = feteConfetti(sc, [new THREE.Color(0xffd23d), new THREE.Color(0xfff2c0)], low ? 260 : 600);
     } else {
       feteStade(sc, cols, f.k === 'pres' || f.night !== false, U);
@@ -8375,7 +8530,7 @@ function feteFrame(now) {
   if (f.k === 'pres') {
     const on = t > 1.5; F.prop.visible = on;
     if (on) { const dx = hr.x - hl.x, dz = hr.z - hl.z, d = Math.max(.35, Math.hypot(dx, dz, hr.y - hl.y)); F.prop.position.set(mid.x, mid.y - .02, mid.z + .04); let a = -Math.atan2(dz, dx), tilt = Math.atan2(hr.y - hl.y, Math.hypot(dx, dz)) * .6; if (Math.sin(a) * (cam.position.x - mid.x) + Math.cos(a) * (cam.position.z - mid.z) < 0) { a += Math.PI; tilt = -tilt; } F.prop.rotation.set(0, a, tilt); F.prop.scale.set(d + .28, 1, 1); }
-  } else if (f.k === 'bdo') { F.prop.visible = t > 1.7; F.prop.position.set(mid.x, mid.y - .14, mid.z + .06); F.prop.rotation.y = t * .6; }
+  } else if (f.k === 'bdo') { F.prop.visible = t > 1.7; F.prop.position.set(mid.x, mid.y - (F.prop.userData.real ? F.prop.userData.ballY - .08 : .14), mid.z + .06); F.prop.rotation.y = t * .6; }
   else { F.prop.position.set(mid.x, mid.y - .12, mid.z + .02); F.prop.rotation.set(0, Math.sin(t * .7) * .3, 0); }
   // effets : feux d'artifice et confettis aux grands moments
   const fx = (key, at, type, x, z) => { if (t > at && !F.fx[key]) { F.fx[key] = 1; g3FxGoal(F.sc, cam, type, x, z, f.k === 'bdo' ? ['#ffd23d', '#fff2c0'] : (k => [k.col, k.col2 || '#ffffff'])(typeof kitColors === 'function' ? kitColors(f.club || '') : { col: '#ffd23d' })); } };
@@ -8389,7 +8544,12 @@ function feteFrame(now) {
   const E = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
   if (f.k === 'pres') { const k = E(t / 4.2), ang = Math.PI * 1.5 * (1 - k) + Math.PI * .5 + .35 * k + Math.sin(t * .15) * .05, R = 7.5 - 3.4 * k; cam.position.set(Math.cos(ang) * R, 1.9 - .45 * k, Math.sin(ang) * R); cam.lookAt(0, 1.35, 0); cam.fov = 40; }
   else if (f.k === 'titre') { const k = E(t / 6), ang = Math.PI * .5 + Math.sin(t * .22) * .5, R = 6.2 - 1.2 * k; cam.position.set(Math.cos(ang) * R, .55 + 1.4 * k, Math.sin(ang) * R); cam.lookAt(0, 1.7 - .4 * k, 0); cam.fov = 42; }
-  else { const k = E(t / 5.5); cam.position.set(Math.sin(t * .12) * 1.2 * (1 - k * .6), 3.1 - 1.3 * k, 13.5 - 8.2 * k); cam.lookAt(0, 1.55 + Y * .5, 0); cam.fov = 36; }
+  else {
+    const k = E(t / 5.5), z = F.prop.userData.real ? E((t - 6) / 2.2) : 0, tp = F.prop.position, ty = tp.y + Y + (F.prop.userData.ballY || .14);
+    // plan large qui avance… puis gros plan sur le Ballon d'Or qui tourne entre ses mains
+    const cx = Math.sin(t * .12) * 1.2 * (1 - k * .6), cy = 3.1 - 1.3 * k, cz = 13.5 - 8.2 * k, lx = 0, ly = 1.55 + Y * .5, lz = 0;
+    cam.position.set(cx + (tp.x + .45 - cx) * z, cy + (ty + .05 - cy) * z, cz + (tp.z + 2.1 - cz) * z); cam.lookAt(lx + (tp.x - lx) * z, ly + (ty - .32 - ly) * z, lz + (tp.z - lz) * z); cam.fov = 36 - 2 * z;
+  }
   cam.updateProjectionMatrix();
   if (t > 1.1 && !F.txt) { F.txt = 1; F.el.classList.add('txt'); }
   if (t > 1.6 && !F.flash && f.k !== 'pres') { F.flash = 1; F.el.classList.add('flash'); }
@@ -10312,6 +10472,7 @@ function vCredits() {
   return `<section class="card sec"><h3>Ce qui est réel</h3><p class="note">Clubs, entraîneurs, sélectionneurs et effectifs principaux de la saison 2026-27, mis à jour au 11 octobre 2026 (mercato d'été 2026 compris). Coupe du monde 2026 : ${REAL_FACTS.wc2026}. Ballon d'Or 2025 : ${REAL_FACTS.bdo2025}.</p></section>
   <section class="card sec"><h3>Ce qui est simulé</h3><p class="note">Tous les résultats à partir du début de ta carrière, le Ballon d'Or 2026 (cérémonie réelle le ${REAL_FACTS.bdo2026date}), les transferts futurs, les jeunes joueurs générés, les sponsors (marques fictives) et ta vie.</p></section>
   ${typeof JOUEUR_3D !== 'undefined' && JOUEUR_3D ? `<section class="card sec"><h3>Joueurs en 3D</h3><p class="note">Modèle « ${esc(JOUEUR_3D.name)} » par ${esc(String(JOUEUR_3D.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(JOUEUR_3D.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(JOUEUR_3D.source || 'Sketchfab')}. Adapté pour le jeu : allégé, squelette et animations du jeu, couleurs des clubs.</p></section>` : ''}${typeof STADE_3D !== 'undefined' && STADE_3D ? `<section class="card sec"><h3>Stade en 3D</h3><p class="note">Mâts d'éclairage, sièges et bancs de touche tirés du modèle « ${esc(STADE_3D.name)} » par ${esc(String(STADE_3D.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(STADE_3D.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(STADE_3D.source || 'Sketchfab')}. Adapté pour le jeu : pièces allégées et remises à l'échelle, placées autour du terrain.</p></section>` : ''}${typeof DECOR_3D !== 'undefined' && DECOR_3D && DECOR_3D.credits ? `<section class="card sec"><h3>Décors autour du stade</h3>${DECOR_3D.credits.map(c => `<p class="note">« ${esc(c.nom)} » par ${esc(String(c.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(c.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(c.source || 'Sketchfab')}.</p>`).join('')}<p class="note">Adapté pour le jeu : arbres allégés, feuillages selon la saison, plantés autour du stade avec une route et un chemin forestier.</p></section>` : ''}
+  ${typeof TROPHEES_3D !== 'undefined' && TROPHEES_3D && TROPHEES_3D.items && TROPHEES_3D.items.ballon_dor ? (T3 => `<section class="card sec"><h3>Ballon d'Or en 3D</h3><p class="note">Modèle « ${esc(T3.name)} » par ${esc(String(T3.auteur || '').replace(/\s*\(https?:[^)]*\)/, ''))}, sous licence ${esc(String(T3.licence || '').replace(/\s*\(https?:[^)]*\)/, ''))} (creativecommons.org/licenses/by/4.0). Source : ${esc(T3.source || 'Sketchfab')}. Adapté pour le jeu : allégé, reflets dorés.</p></section>`)(TROPHEES_3D.items.ballon_dor) : ''}
   ${typeof TEX_3D !== 'undefined' && TEX_3D && Object.keys(TEX_3D).length ? `<section class="card sec"><h3>Ciel et textures photo</h3><p class="note">Ciel des matchs (beau temps et temps couvert), gazon, prés, route et dalles : photos de Poly Haven (polyhaven.com), dans le domaine public (CC0). Réduites pour le téléphone.</p></section>` : ''}
   ${typeof ANIM_3D !== 'undefined' && ANIM_3D ? `<section class="card sec"><h3>Mouvements des joueurs</h3><p class="note">Course, sprint, marche, frappes, têtes et célébrations (salto, roue, vrille, danse) : vraie capture de mouvement de la base de Carnegie Mellon University (mocap.cs.cmu.edu), conversion BVH de Bruce Hahne, libre d'utilisation. Adaptée au squelette des joueurs du jeu.</p></section>` : ''}
   ${typeof INTRO_PH !== 'undefined' && INTRO_PH && INTRO_PH.credits ? `<section class="card sec"><h3>Écran d'ouverture</h3><p class="note">${INTRO_PH.credits.map(esc).join('<br>')}. Photos libres (unsplash.com/license) ; le joueur est détouré et posé devant le stade.</p></section>` : ''}

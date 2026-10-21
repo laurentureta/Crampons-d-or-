@@ -94,6 +94,16 @@ Ciel et sols photographiés (`src/m3dgfx.js`, `assets/textures/`) : les matchs d
 
 Les filets de but (`src/m3dnet.js`) sont une toile de nœuds qui ondule : le ballon la creuse, l'onde se propage puis s'amortit, un ballon sur le toit ou dans le petit filet l'enfonce de l'extérieur, et le vent la fait respirer (plus fort sous la pluie). Caméras au choix pendant le match : TV, Large, Tactique, Mon joueur, Derrière le but, Bord du terrain, Drone.
 
+## Conduite de balle et jongles
+
+Le moteur calcule 10 images par seconde et garde le ballon devant le porteur ; à l'écran (`g3Drib`, `src/m3d.js`), le ballon devient un vrai ballon : le pied le plus proche le pousse quand il passe dessus, il roule et ralentit sur l'herbe, le joueur le rattrape et le touche à nouveau (touches courtes à l'arrêt ou en marchant, longues en sprint, ballon ramené sous la semelle quand il s'arrête). Avant une passe ou une frappe, le ballon glisse vers le point d'où le moteur le fera partir ; à la perte du ballon, l'image rejoint la trajectoire du moteur en douceur.
+
+Dans la Boutique (`src/m3dfx.js`), les jongles suivent la gravité : pied droit, pied gauche, une cuisse toutes les six touches. La jambe se lève à la rencontre du ballon, et chaque point de contact est mesuré sur le vrai pied (ou la vraie cuisse) du modèle, pour que le ballon retombe pile sur le cou-de-pied.
+
+## Trophées en 3D
+
+Le Ballon d'Or remis pendant la cérémonie est le modèle « BALLON D'OR » de **tahahosseini** ([Sketchfab](https://sketchfab.com/3d-models/ballon-dor-31aa899c67a74d1aad94e7ec62b39dac)), sous licence [CC-BY 4.0](http://creativecommons.org/licenses/by/4.0/). `tools/trophee3d.py` le pose à plat, le ramène à une hauteur de 1 et le compresse (`assets/trophees/`, ~670 Ko) à partir de l'original gardé dans `media-raw/trophees/`. Le jeu lui donne des reflets dorés (petite carte d'environnement) et le place entre les mains du joueur, puis la caméra finit en gros plan.
+
 ## Mouvements capturés
 
 Les joueurs 3D bougent avec de la **vraie capture de mouvement** : course, footing, marche, sprint, attente, frappes (pied droit et, en miroir, pied gauche), passe, saut de la tête et célébrations (joie, salto, roue, vrille, danse). Source : la base de capture de mouvement de **Carnegie Mellon University** ([mocap.cs.cmu.edu](http://mocap.cs.cmu.edu)), dans la conversion BVH de Bruce Hahne ([copie GitHub](https://github.com/una-dinosauria/cmu-mocap)), libre d'utilisation y compris dans un jeu. `tools/mocap.py` (avec `tools/bvh.py`) ramène chaque mouvement sur les 15 os du joueur 3D — seules les orientations des os sont gardées, les longueurs restent celles du modèle — extrait une foulée qui boucle pour chaque allure, aligne l'instant de la frappe sur celui du moteur, et écrit `assets/anim/` (anim.json + anim.bin, ~100 Ko). Dans le jeu (`src/m3dmc.js`), l'allure choisit et mélange les foulées (la phase suit la course du joueur), et les gestes capturés remplacent les gestes dessinés ; tacles, plongeons, gardien, touche et contrôles restent dessinés à la main.

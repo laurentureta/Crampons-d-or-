@@ -379,6 +379,10 @@ function g3Pose(P, n, s) {
     else if (a === 9) { const dur = s.busy || 1.6; if (t < dur + .6) { const down = ease(t / .4), up = ease((t - dur) / .6), w = down * (1 - up); pitch = -1.45 * w; hp = H0 - .8 * w; shL = shR = 1.6 * w; elL = elR = .3; abL = abR = .5 * w; kneeL = kneeR = .3 * w; } }
     else if (a === 10) { const p = t / .9; if (p < 1) { const w = bell(p, 0, 1); shL = shR = 2.9 - 1.2 * ease((p - .45) / .3); elL = elR = 1.6 * (1 - ease((p - .45) / .3)); abL = abR = .2; lean = -.25 * w + .25 * ease((p - .45) / .3); } }
     else if (a === 12) { const p = t / .35; if (p < 1) { const w = bell(p, 0, 1); if (side > 0) { hipR = .5 * w; kneeR = .7 * w; } else { hipL = .5 * w; kneeL = .7 * w; } abL = abR = .5 * w; nod = .25 * w; } }
+    // jongles (aperçu de la Boutique) : la jambe se lève au rythme du ballon (s.jug = côté, levée 0→1, cuisse ou pied)
+    else if (a === 19 && s.jug) { const J_ = s.jug, k = J_.k, th = J_.thigh, hh = th ? 1.45 * k : 1.08 * k, kk = th ? 1.65 * k : .14 + .74 * k;
+      if (J_.side) { hipR = hh; kneeR = kk; hipL = .04; kneeL = .14; } else { hipL = hh; kneeL = kk; hipR = .04; kneeR = .14; }
+      abL = abR = .42 + .08 * k; shL = shR = .12; elL = elR = .55; nod = .42; lean = -.04 - .04 * k; hp = H0 - .025; roll = (J_.side ? -1 : 1) * .05 * k; look = 0; }
     else if (a === 14) { if (t < 6) { shL = shR = 2.5; abL = abR = .9; elL = elR = 2.3; nod = .35; lean = .1; look = 0; } }
     else if (a === 15) { if (t < 2.2) { shR = 3; abR = .1; elR = 0; } }
   }
@@ -484,6 +488,55 @@ function g3Trail() {
 }
 // projection écran d'un point du terrain (repère moteur, déjà mis en miroir)
 function g3Proj(x, y, z) { const v = _m.pv || (_m.pv = new THREE.Vector3()); v.set(x - 52.5, z || 0, y - 34).project(G3.cam); return [(v.x + 1) / 2 * G3.w, (1 - v.y) / 2 * G3.h, v.z < 1]; }
+// ---------- conduite de balle (affichage) ----------
+// Le moteur garde le ballon « collé » devant le porteur (10 images/s). À l'écran, il devient un vrai ballon :
+// le pied le pousse (le pied le plus proche, au moment où il passe dessus), il roule et ralentit sur l'herbe,
+// le joueur le rattrape et le touche à nouveau ; touches courtes à l'arrêt, longues en sprint. À la passe, à la frappe
+// ou à la perte du ballon, l'image rejoint en douceur la trajectoire du moteur.
+const G3DR = { n: -1, x: 0, z: 0, vx: 0, vz: 0, w: 0, last: -9, ex: 0, ez: 0, foot: 0, init: false };
+function g3Drib(P, own, o, ebx, ebz, gdt, snap, t) {
+  const D = G3DR;
+  if (snap || !D.init) { D.init = true; D.x = ebx; D.z = ebz; D.vx = D.vz = 0; D.w = own && o ? 1 : 0; D.n = own && o ? o.n : -1; D.last = t; return [ebx, ebz]; }
+  if (gdt <= 0) { const w = D.w; return [ebx + (D.x - ebx) * w, ebz + (D.z - ebz) * w]; }
+  if (own && o) {
+    if (D.n !== o.n) { // nouveau porteur : on part de la position affichée actuelle
+      D.n = o.n; if (D.w < .05) { D.x = ebx; D.z = ebz; D.vx = (ebx - D.ex) / Math.max(gdt, 1e-3) * 0; D.vz = 0; } D.last = t - .2;
+    }
+    const cy = Math.cos(o.yaw), sy = Math.sin(o.yaw), v = o.v, pvx = cy * v, pvz = sy * v;
+    // le ballon roule et ralentit
+    D.x += D.vx * gdt; D.z += D.vz * gdt; const fr = Math.exp(-gdt * (v > 1 ? 1.35 : 4)); D.vx *= fr; D.vz *= fr;
+    // position relative au joueur : devant (rf) et sur le côté (rl)
+    let dx = D.x - o.x, dz = D.z - o.z; const rf = dx * cy + dz * sy, rl = -dx * sy + dz * cy;
+    const lead = .36 + Math.min(1, v / 7.5) * .95, kick = o.kick;
+    if (kick) { // geste de passe/frappe imminent : le ballon glisse (vitesse constante) vers l'endroit d'où le moteur le fera partir
+      const rem = Math.max(.1, -kick), ddx = ebx - D.x, ddz = ebz - D.z; let nvx = ddx / rem + pvx * .3, nvz = ddz / rem + pvz * .3; const ns = Math.hypot(nvx, nvz), cap = v + 3.5;
+      if (ns > cap) { nvx *= cap / ns; nvz *= cap / ns; } const k = 1 - Math.exp(-gdt * 10); D.vx += (nvx - D.vx) * k; D.vz += (nvz - D.vz) * k;
+    } else if (v < .6) { // à l'arrêt : le ballon sous la semelle, juste devant
+      const tx = o.x + cy * .36, tz = o.z + sy * .36, k = 1 - Math.exp(-gdt * 6); D.x += (tx - D.x) * k; D.z += (tz - D.z) * k; D.vx = (tx - D.x) * 2; D.vz = (tz - D.z) * 2;
+    } else {
+      // touche : le pied le plus proche passe sur le ballon (ou le ballon revient trop près du corps)
+      let fx = 0, fz = 0, fd = 9, side = 0; const m = _m.fm || (_m.fm = new THREE.Matrix4());
+      for (const sd of [0, 1]) { P.boot.getMatrixAt(o.n * 2 + sd, m); const e = m.elements, d = Math.hypot(e[12] - D.x, e[14] - D.z); if (d < fd) { fd = d; fx = e[12]; fz = e[14]; side = sd; } }
+      const since = t - D.last;
+      if ((fd < .3 && rf < lead + .05 && since > .22) || rf < .2 || (since > 1.4 && rf < lead)) {
+        // vitesse donnée : un peu plus vite que le joueur (pour filer devant), corrige l'écart sur le côté
+        const push = v * 1.05 + (lead - rf) * 2.6 + .5, lat = -rl * 3.2;
+        D.vx = cy * push - sy * lat; D.vz = sy * push + cy * lat; D.last = t; D.foot = side;
+      }
+      // garde-fou : jamais loin du porteur (virages serrés, à-coups du moteur) — un rappel en douceur, sur la vitesse
+      dx = D.x - o.x; dz = D.z - o.z; const dd = Math.hypot(dx, dz), mx = lead + .7;
+      if (dd > mx) { const tx = o.x + cy * lead, tz = o.z + sy * lead, k = Math.min(1, gdt * 6); D.vx += ((tx - D.x) * 3 + pvx - D.vx) * k; D.vz += ((tz - D.z) * 3 + pvz - D.vz) * k; }
+    }
+    D.w = Math.min(1, D.w + gdt / .18);
+  } else {
+    // plus de porteur : l'image rejoint la trajectoire du moteur (en ~0,15 s), sans saut
+    D.w = Math.max(0, D.w - gdt / .2); D.n = -1;
+    if (D.w > 0) { D.x += D.vx * gdt; D.z += D.vz * gdt; }
+  }
+  D.ex = ebx; D.ez = ebz;
+  const w = D.w * D.w * (3 - 2 * D.w);
+  return [ebx + (D.x - ebx) * w, ebz + (D.z - ebz) * w];
+}
 function g3Draw(M, t, dt, paused) {
   if (!g3Init()) return false;
   const T0 = performance.now();
@@ -504,7 +557,7 @@ function g3Draw(M, t, dt, paused) {
   g3BallSkin();
   const bx = X(Sp(3)), bz = Z(Sp(4)), by = Math.max(0, Sp(5)), own = fa[6] >= 0 ? [fa[6], fa[7]] : null, hold = fa[10] > .5;
   const fdt = Math.max(.05, fb[0] - fa[0]);
-  let celeb = null, meIdx = -1; G3.me = null;
+  let celeb = null, meIdx = -1, drib = null; G3.me = null;
   for (let kk = 0; kk < 2; kk++) for (let i = 0; i < 11; i++) {
     const n = kk * 11 + i, o = MF_H + n * MF_S;
     if (fa[o + 2] < .5 && fb[o + 2] < .5) { g3Hide(P, n); continue; }
@@ -528,6 +581,7 @@ function g3Draw(M, t, dt, paused) {
     // le plongeon : sens dans le repère de l'écran
     if (act === 5) st.aa = (mir ? -1 : 1) * aa * (Math.cos(yaw) >= 0 ? 1 : -1);
     g3Pose(P, n, st);
+    if (own && own[0] === kk && own[1] === i && !hold) drib = { n, x, z, yaw, v, kick: (act === 1 || act === 11) && at > -.6 && at < .15 ? Math.min(-.001, at) : 0 };
     if (act === 8 && at >= 0 && at < 10) celeb = [x, z];
     if (r.me) { meIdx = n; G3.me = { x, z, dir: (kk === 0) !== mir ? 1 : -1 }; } // sens d'attaque de ton équipe (caméra « Mon joueur »)
   }
@@ -547,21 +601,27 @@ function g3Draw(M, t, dt, paused) {
   }
   for (const k of ['torso', 'shorts', 'head', 'hair', 'num', 'uarm', 'ubare', 'farm', 'hand', 'thigh', 'shin', 'boot']) P[k].instanceMatrix.needsUpdate = true;
   if (P.sk) g3SkFlush(P.sk);
+  // conduite de balle : position affichée du ballon (poussé par le pied du porteur)
+  const [dbx, dbz] = by < .3 && !(typeof window !== 'undefined' && window.__noDrib) ? g3Drib(P, own, drib, bx, bz, gdt, snap, t) : (G3DR.w = 0, G3DR.n = -1, [bx, bz]);
   // ombres « projecteurs » (nuit) ou ombre douce sous les joueurs (mode rapide)
   { const bl = P.blob, m4 = _m.m4 || (_m.m4 = new THREE.Matrix4()); let c = 0; const lamps = G3.night ? G3.lamps : null, useBlob = G3.night || !G3.sun.castShadow;
     if (useBlob) { const q = _m.q2 || (_m.q2 = new THREE.Quaternion()), v3 = _m.v3 || (_m.v3 = new THREE.Vector3()), sc3 = _m.s3 || (_m.s3 = new THREE.Vector3());
       for (let n = 0; n < 25; n++) { P.torso.getMatrixAt(n, G3M.l || (G3M.l = new THREE.Matrix4())); const e = G3M.l.elements; if (e[0] === 0 && e[1] === 0 && e[2] === 0) continue; const x = e[12], z = e[14];
         if (lamps) for (const [lx2, , lz2] of lamps.slice(0, 4)) { const dx = x - lx2, dz = z - lz2, d = Math.hypot(dx, dz) || 1, ang = Math.atan2(dz, dx); q.setFromAxisAngle(v3.set(0, 1, 0), -ang); m4.compose(v3.set(x + dx / d * .9, .02, z + dz / d * .9), q, sc3.set(2.2, 1, .7)); bl.setMatrixAt(c++, m4); }
         else { m4.compose(v3.set(x + .25, .02, z + .15), q.identity(), sc3.set(1.1, 1, .8)); bl.setMatrixAt(c++, m4); } }
-      if (lamps) { m4.compose(v3.set(bx, .02, bz), q.identity(), sc3.set(.5, 1, .5)); bl.setMatrixAt(c++, m4); } }
+      if (lamps) { m4.compose(v3.set(dbx, .02, dbz), q.identity(), sc3.set(.5, 1, .5)); bl.setMatrixAt(c++, m4); } }
     bl.count = c; bl.instanceMatrix.needsUpdate = true; bl.material.opacity = lamps ? .22 : .45; }
   // anneau de ton joueur
   if (meIdx >= 0) { P.torso.getMatrixAt(meIdx, G3M.l || (G3M.l = new THREE.Matrix4())); const e = G3M.l.elements; P.ring.visible = !(e[0] === 0 && e[1] === 0); P.ring.position.set(e[12], .03, e[14]); g3Halo(P.ring, tm); } else P.ring.visible = false;
   g3FxUpdate(G3.sc, G3.cam, dt, G3.h * G3.r.getPixelRatio());
   // ballon : rotation selon la vitesse, plus gros de loin pour rester lisible
-  { const b = G3.ball, vx = (fb[3] - fa[3]) / fdt * (mir ? -1 : 1), vz = (fb[4] - fa[4]) / fdt * (mir ? -1 : 1), sp = Math.hypot(vx, vz);
+  // conduite de balle : position affichée (le ballon poussé par le pied), vitesse tirée du mouvement réellement affiché
+  { const b = G3.ball, pbx = G3.pbx ?? dbx, pbz = G3.pbz ?? dbz; G3.pbx = dbx; G3.pbz = dbz;
+    let vx = (fb[3] - fa[3]) / fdt * (mir ? -1 : 1), vz = (fb[4] - fa[4]) / fdt * (mir ? -1 : 1);
+    if (G3DR.w > 0 && gdt > 0 && !snap) { vx = (dbx - pbx) / gdt; vz = (dbz - pbz) / gdt; }
+    const sp = Math.hypot(vx, vz);
     const camD = G3.cam.position.distanceTo(b.position), sc2 = clamp(camD / 34, 1, 2.3); b.scale.setScalar(sc2);
-    b.position.set(bx, by + .11 * sc2, bz);
+    b.position.set(dbx, by + .11 * sc2, dbz);
     if (sp > .2 && gdt > 0) { const ax = _m.av || (_m.av = new THREE.Vector3()); ax.set(vz, 0, -vx).normalize(); const qq = _m.bq || (_m.bq = new THREE.Quaternion()); qq.setFromAxisAngle(ax, sp * gdt / .11); b.quaternion.premultiply(qq); }
     // traînée derrière les frappes fortes (le ballon file vraiment)
     { const vy3 = (fb[5] - fa[5]) / fdt, sp3 = Math.hypot(vx, vz, vy3), T = G3.trail || (G3.trail = g3Trail()), k = clamp((sp3 - 15) / 12, 0, 1) * (LV.replay ? 1 : .85);
@@ -569,7 +629,7 @@ function g3Draw(M, t, dt, paused) {
         d.set(vx, vy3, vz).normalize(); c.copy(b.position).addScaledVector(d, -L / 2); n.copy(G3.cam.position).sub(c).normalize(); y.crossVectors(n, d).normalize(); n.crossVectors(d, y);
         T.matrix.makeBasis(d, y, n); T.matrix.scale(_m.ts || (_m.ts = new THREE.Vector3(1, 1, 1)).set(L, .2 * sc2, 1)); T.matrix.setPosition(c); T.material.opacity = .55 * k; } } }
   // filets : la toile épouse le ballon et ondule (temps de jeu : ralenti au ralenti, figée en pause)
-  { const rb = .11 * G3.ball.scale.x; g3NetUpdate(snap ? 0 : gdt, bx, by + rb, bz, rb); }
+  { const rb = .11 * G3.ball.scale.x; g3NetUpdate(snap ? 0 : gdt, dbx, by + rb, dbz, rb); }
   // ambiance du public, panneaux, météo, écran géant
   const now = performance.now() / 1000;
   if (G3.crowdU) { G3.crowdU.uT.value = now; const hot = lvHlSpeed(t) ? .55 : 0, gl = celeb ? 1 : 0; G3.crowdExc = (G3.crowdExc || 0) + ((Math.max(hot, gl, .08)) - (G3.crowdExc || 0)) * Math.min(1, dt * 2); G3.crowdU.uE.value = G3.crowdExc; }
@@ -581,7 +641,7 @@ function g3Draw(M, t, dt, paused) {
   if (G3.wxU) { G3.wxU.uT.value = now; G3.wx.position.set(G3.cm.p ? G3.cm.p[3] : 0, 0, 0); }
   for (const s of G3.flares || []) s.material.opacity = .6 + .4 * Math.sin(now * 9 + s.position.x);
   if (G3.sb) { const key = M.hg + '-' + M.ag + '-' + M.min; if (key !== G3.sbKey) { G3.sbKey = key; const { c, x } = G3.sb, h0 = M.side === 'h'; x.fillStyle = '#05070b'; x.fillRect(0, 0, 512, 160); x.fillStyle = '#ffd166'; x.font = '900 30px Arial'; x.textAlign = 'center'; x.fillText(M.min + "'", 256, 40); x.fillStyle = '#fff'; x.font = '800 30px Arial'; const hn = String(h0 ? M.my : M.op).slice(0, 12).toUpperCase(), an = String(h0 ? M.op : M.my).slice(0, 12).toUpperCase(); x.fillText(hn, 128, 100); x.fillText(an, 384, 100); x.font = '900 56px Arial'; x.fillText(M.hg + ' - ' + M.ag, 256, 112); G3.sb.t.needsUpdate = true; } }
-  g3Camera(M, t, dt, bx, bz, by, paused, celeb && fa[9] > .5 ? celeb : null);
+  g3Camera(M, t, dt, dbx, dbz, by, paused, celeb && fa[9] > .5 ? celeb : null);
   // vue tactique : lignes des deux équipes au sol
   g3TacLines(fa, mir, E);
   const T1 = performance.now();

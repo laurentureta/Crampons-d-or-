@@ -1,0 +1,87 @@
+{
+ "bin": "trophees.bin",
+ "items": {
+  "ballon_dor": {
+   "name": "BALLON D'OR",
+   "auteur": "tahahosseini (https://sketchfab.com/tahahosseini)",
+   "licence": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+   "source": "https://sketchfab.com/3d-models/ballon-dor-31aa899c67a74d1aad94e7ec62b39dac",
+   "qs": 1.8311105685598315e-05,
+   "oy": 0.5,
+   "parts": [
+    {
+     "mat": "gold",
+     "col": [
+      0.554,
+      0.2679,
+      0.0501
+     ],
+     "rough": 0.066,
+     "metal": 1.0,
+     "arr": {
+      "pos": [
+       0,
+       24954
+      ],
+      "nor": [
+       49908,
+       24954
+      ],
+      "idx": [
+       74864,
+       47520
+      ]
+     }
+    },
+    {
+     "mat": "gold.text",
+     "col": [
+      0.7991,
+      0.3864,
+      0.0723
+     ],
+     "rough": 0.1,
+     "metal": 1.0,
+     "arr": {
+      "pos": [
+       169904,
+       318
+      ],
+      "nor": [
+       170540,
+       318
+      ],
+      "idx": [
+       170860,
+       540
+      ]
+     }
+    },
+    {
+     "mat": "SILVER",
+     "col": [
+      0.5271,
+      0.5271,
+      0.5271
+     ],
+     "rough": 0.4,
+     "metal": 1.0,
+     "arr": {
+      "pos": [
+       171940,
+       73467
+      ],
+      "nor": [
+       318876,
+       73467
+      ],
+      "idx": [
+       392344,
+       147090
+      ]
+     }
+    }
+   ]
+  }
+ }
+}

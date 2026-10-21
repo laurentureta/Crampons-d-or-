@@ -104,6 +104,53 @@ function feteCup(name) {
   return g;
 }
 // Ballon d'Or : ballon doré sur un petit socle
+// ---------- trophées en vrai modèle 3D (assets/trophees, préparés par tools/trophee3d.py) ----------
+// Ballon d'Or : modèle « BALLON D'OR » de tahahosseini (Sketchfab, CC-BY 4.0). Le trophée dessiné en code sert en attendant.
+const TROPH = { model: null, loading: null, fail: false };
+function trophLoad() {
+  if (TROPH.model || TROPH.loading || TROPH.fail) return TROPH.loading;
+  if (typeof TROPHEES_3D === 'undefined' || !TROPHEES_3D || !TROPHEES_3D.items || typeof fetch !== 'function') { TROPH.fail = true; return null; }
+  const J = TROPHEES_3D, q = typeof MEDIA_H !== 'undefined' && MEDIA_H.troph ? '?h=' + MEDIA_H.troph : '';
+  TROPH.loading = fetch('assets/trophees/' + J.bin + q).then(r => { if (!r.ok) throw new Error('trophées'); return r.arrayBuffer(); }).then(buf => {
+    const out = {};
+    for (const [k, it] of Object.entries(J.items)) {
+      const parts = it.parts.map(p => {
+        const A = p.arr, P = new Int16Array(buf, A.pos[0], A.pos[1]), F32 = new Float32Array(P.length);
+        for (let i = 0; i < P.length; i++) F32[i] = P[i] * it.qs + (i % 3 === 1 ? it.oy : 0);
+        const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(F32, 3));
+        g.setAttribute('normal', new THREE.BufferAttribute(new Int8Array(buf, A.nor[0], A.nor[1]), 3, true));
+        g.setIndex(new THREE.BufferAttribute(new Uint16Array(buf, A.idx[0], A.idx[1]), 1)); g.computeBoundingBox(); g.computeBoundingSphere();
+        return { mat: p.mat, col: p.col, rough: p.rough, metal: p.metal, geo: g };
+      });
+      // hauteur du centre de la boule dorée (le plus gros morceau doré) : c'est là que les mains la tiennent
+      const gold = parts.filter(p => /gold/i.test(p.mat)).sort((a, b) => b.geo.boundingSphere.radius - a.geo.boundingSphere.radius)[0];
+      out[k] = { parts, ballY: gold ? gold.geo.boundingSphere.center.y : .66, ballR: gold ? gold.geo.boundingSphere.radius : .3 };
+    }
+    TROPH.model = out; return out;
+  }).catch(() => { TROPH.fail = true; return null; });
+  return TROPH.loading;
+}
+// reflets dorés : petite carte d'environnement (salle sombre, projecteurs chauds), préfiltrée pour les matériaux métalliques
+function trophEnv(r) {
+  const [c, x] = g3Canvas(256, 128), gr = x.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, '#2a2018'); gr.addColorStop(.45, '#5a4632'); gr.addColorStop(.55, '#140f0a'); gr.addColorStop(1, '#050403');
+  x.fillStyle = gr; x.fillRect(0, 0, 256, 128);
+  for (const [px, py, rr, a] of [[40, 30, 26, .95], [128, 18, 34, 1], [205, 34, 22, .85], [90, 70, 14, .5], [170, 64, 16, .55]]) { const g2 = x.createRadialGradient(px, py, 0, px, py, rr); g2.addColorStop(0, `rgba(255,246,220,${a})`); g2.addColorStop(1, 'rgba(255,230,180,0)'); x.fillStyle = g2; x.fillRect(px - rr, py - rr, rr * 2, rr * 2); }
+  const tex = new THREE.CanvasTexture(c); tex.mapping = THREE.EquirectangularReflectionMapping; tex.encoding = THREE.sRGBEncoding;
+  try { const pm = new THREE.PMREMGenerator(r), rt = pm.fromEquirectangular(tex); pm.dispose(); tex.dispose(); return rt.texture; } catch (e) { return tex; }
+}
+// le trophée k, haut de h mètres, base à y = 0
+function trophMesh(k, h, env) {
+  const M = TROPH.model && TROPH.model[k]; if (!M) return null;
+  const g = new THREE.Group(); g.scale.setScalar(h);
+  for (const p of M.parts) {
+    const text = /text/i.test(p.mat), silver = /silver/i.test(p.mat);
+    const m = new THREE.MeshStandardMaterial({ color: new THREE.Color(p.col[0], p.col[1], p.col[2]).multiplyScalar(text ? 1.15 : 1.25), metalness: p.metal == null ? 1 : p.metal, roughness: clamp(p.rough, silver ? .3 : .14, .8), envMap: env || null, envMapIntensity: silver ? 1 : 1.5, side: THREE.DoubleSide });
+    if (!env) m.emissive = new THREE.Color(silver ? 0x111111 : 0x3a2606);
+    g.add(new THREE.Mesh(p.geo, m));
+  }
+  g.userData.ballY = M.ballY * h; g.userData.ballR = M.ballR * h;
+  return g;
+}
 function feteBallonOr() {
   const g = new THREE.Group();
   const b = new THREE.Mesh(new THREE.SphereGeometry(.11, 32, 22), new THREE.MeshStandardMaterial({ map: g3Tex(g3BallPaint('gold')), metalness: .7, roughness: .25, emissive: 0x2a1c04 })); b.position.y = .145; g.add(b);
@@ -184,6 +231,8 @@ function fetePlay(f, done) {
       const back = new THREE.DirectionalLight(0xffb84a, .9); back.position.set(0, 6, -8); sc.add(back);
       const g = new THREE.Group(); g.position.y = .45; sc.add(g); F.stageY = .45;
       F.P = feteRig(g, 1); F.kits = [kitMe]; F.prop = feteBallonOr(); g.add(F.prop); F.prop.visible = false;
+      const swap = () => { if (!F.on || F.f !== f) return; const m = trophMesh('ballon_dor', .5, trophEnv(r)); if (!m) return; F.prop.clear(); F.prop.add(m); F.prop.userData.ballY = m.userData.ballY; F.prop.userData.real = true; };
+      if (TROPH.model) swap(); else { const pr = trophLoad(); if (pr) pr.then(swap); }
       F.conf = feteConfetti(sc, [new THREE.Color(0xffd23d), new THREE.Color(0xfff2c0)], low ? 260 : 600);
     } else {
       feteStade(sc, cols, f.k === 'pres' || f.night !== false, U);
@@ -230,7 +279,7 @@ function feteFrame(now) {
   if (f.k === 'pres') {
     const on = t > 1.5; F.prop.visible = on;
     if (on) { const dx = hr.x - hl.x, dz = hr.z - hl.z, d = Math.max(.35, Math.hypot(dx, dz, hr.y - hl.y)); F.prop.position.set(mid.x, mid.y - .02, mid.z + .04); let a = -Math.atan2(dz, dx), tilt = Math.atan2(hr.y - hl.y, Math.hypot(dx, dz)) * .6; if (Math.sin(a) * (cam.position.x - mid.x) + Math.cos(a) * (cam.position.z - mid.z) < 0) { a += Math.PI; tilt = -tilt; } F.prop.rotation.set(0, a, tilt); F.prop.scale.set(d + .28, 1, 1); }
-  } else if (f.k === 'bdo') { F.prop.visible = t > 1.7; F.prop.position.set(mid.x, mid.y - .14, mid.z + .06); F.prop.rotation.y = t * .6; }
+  } else if (f.k === 'bdo') { F.prop.visible = t > 1.7; F.prop.position.set(mid.x, mid.y - (F.prop.userData.real ? F.prop.userData.ballY - .08 : .14), mid.z + .06); F.prop.rotation.y = t * .6; }
   else { F.prop.position.set(mid.x, mid.y - .12, mid.z + .02); F.prop.rotation.set(0, Math.sin(t * .7) * .3, 0); }
   // effets : feux d'artifice et confettis aux grands moments
   const fx = (key, at, type, x, z) => { if (t > at && !F.fx[key]) { F.fx[key] = 1; g3FxGoal(F.sc, cam, type, x, z, f.k === 'bdo' ? ['#ffd23d', '#fff2c0'] : (k => [k.col, k.col2 || '#ffffff'])(typeof kitColors === 'function' ? kitColors(f.club || '') : { col: '#ffd23d' })); } };
@@ -244,7 +293,12 @@ function feteFrame(now) {
   const E = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
   if (f.k === 'pres') { const k = E(t / 4.2), ang = Math.PI * 1.5 * (1 - k) + Math.PI * .5 + .35 * k + Math.sin(t * .15) * .05, R = 7.5 - 3.4 * k; cam.position.set(Math.cos(ang) * R, 1.9 - .45 * k, Math.sin(ang) * R); cam.lookAt(0, 1.35, 0); cam.fov = 40; }
   else if (f.k === 'titre') { const k = E(t / 6), ang = Math.PI * .5 + Math.sin(t * .22) * .5, R = 6.2 - 1.2 * k; cam.position.set(Math.cos(ang) * R, .55 + 1.4 * k, Math.sin(ang) * R); cam.lookAt(0, 1.7 - .4 * k, 0); cam.fov = 42; }
-  else { const k = E(t / 5.5); cam.position.set(Math.sin(t * .12) * 1.2 * (1 - k * .6), 3.1 - 1.3 * k, 13.5 - 8.2 * k); cam.lookAt(0, 1.55 + Y * .5, 0); cam.fov = 36; }
+  else {
+    const k = E(t / 5.5), z = F.prop.userData.real ? E((t - 6) / 2.2) : 0, tp = F.prop.position, ty = tp.y + Y + (F.prop.userData.ballY || .14);
+    // plan large qui avance… puis gros plan sur le Ballon d'Or qui tourne entre ses mains
+    const cx = Math.sin(t * .12) * 1.2 * (1 - k * .6), cy = 3.1 - 1.3 * k, cz = 13.5 - 8.2 * k, lx = 0, ly = 1.55 + Y * .5, lz = 0;
+    cam.position.set(cx + (tp.x + .45 - cx) * z, cy + (ty + .05 - cy) * z, cz + (tp.z + 2.1 - cz) * z); cam.lookAt(lx + (tp.x - lx) * z, ly + (ty - .32 - ly) * z, lz + (tp.z - lz) * z); cam.fov = 36 - 2 * z;
+  }
   cam.updateProjectionMatrix();
   if (t > 1.1 && !F.txt) { F.txt = 1; F.el.classList.add('txt'); }
   if (t > 1.6 && !F.flash && f.k !== 'pres') { F.flash = 1; F.el.classList.add('flash'); }
