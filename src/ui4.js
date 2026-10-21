@@ -33,7 +33,7 @@ function vMg(M) {
 function vLiveStats(M) {
   if (!M.E) return '';
   const s = liveStats(M), L = (lab, a, b, pct) => { const t = a + b || 1; if (lab.startsWith('xG')) { a = a.toFixed(2); b = b.toFixed(2); } return `<div class="lsr"><b class="num">${a}${pct ? '%' : ''}</b><span>${lab}</span><b class="num">${b}${pct ? '%' : ''}</b><i style="--a:${Math.round(a / t * 100)}%"></i></div>`; };
-  return `<div class="lstats" id="lStats">${L('Possession', s.pos[0], s.pos[1], true)}${L('Tirs', s.sh[0], s.sh[1])}${L('Tirs cadrés', s.sot[0], s.sot[1])}${L('Corners', s.cor[0], s.cor[1])}${L('Fautes', s.fo[0], s.fo[1])}${L('Passes réussies', s.pc[0], s.pc[1], true)}${L('Hors-jeu', s.off[0], s.off[1])}${s.xg ? L('xG (occasions)', s.xg[0], s.xg[1]) : ''}</div>`;
+  return `<div class="lstats" id="lStats" data-ain="ls${S.day}${M.done ? 'e' : ''}">${L('Possession', s.pos[0], s.pos[1], true)}${L('Tirs', s.sh[0], s.sh[1])}${L('Tirs cadrés', s.sot[0], s.sot[1])}${L('Corners', s.cor[0], s.cor[1])}${L('Fautes', s.fo[0], s.fo[1])}${L('Passes réussies', s.pc[0], s.pc[1], true)}${L('Hors-jeu', s.off[0], s.off[1])}${s.xg ? L('xG (occasions)', s.xg[0], s.xg[1]) : ''}</div>`;
 }
 // Écran de match : tout tient dans l'écran (aucun défilement). Score en haut, terrain au centre,
 // commentaires dessous, commandes en bas ; décisions, stats et fin de match s'ouvrent en panneau par-dessus le terrain.
@@ -41,11 +41,11 @@ function vLivePanel(M, P) {
   if (M.coach) {
     if (M.pending) return `<div class="moment"><div class="lbl acc">${M.pending.k === 'tac' ? 'Plan de jeu' : M.pending.k === 'half' ? 'Causerie' : 'Coaching'} · ${M.min}'</div><p class="q">${esc(M.pending.q)}</p><div class="opts">${M.pending.o.map((o, i) => `<button class="opt ${o.v === (M.tac || S.mgr.tactic) && M.pending.k === 'tac' ? 'on' : ''}" data-a="cChoose" data-v="${i}"><b>${esc(o.t)}</b><span>${esc(o.d || '')}</span></button>`).join('')}</div></div>`;
     if (M.shoot) return `<div class="moment"><div class="lbl acc">Tirs au but</div><p class="q">${esc(M.shoot.q)}</p><div class="opts">${M.shoot.o.map((o, i) => `<button class="opt" data-a="lShoot" data-v="${i}"><b>${esc(o.t)}</b></button>`).join('')}</div></div>`;
-    if (M.done) { const mine = M.side === 'h' ? M.hg : M.ag, th = M.side === 'h' ? M.ag : M.hg, win = mine > th || (mine === th && M.pen === M.side), loss = mine < th || (mine === th && M.pen && M.pen !== M.side); return `<div class="moment end"><div class="lbl ${win ? 'ok' : loss ? 'bad' : ''}">${win ? 'Victoire' : loss ? 'Défaite' : 'Match nul'}${M.pen ? ' aux tirs au but' : ''}</div><p class="note">Le président et les supporters jugeront. Confiance actuelle : ${Math.round(S.mgr.board)} / 100.</p></div>`; }
+    if (M.done) { const mine = M.side === 'h' ? M.hg : M.ag, th = M.side === 'h' ? M.ag : M.hg, win = mine > th || (mine === th && M.pen === M.side), loss = mine < th || (mine === th && M.pen && M.pen !== M.side); return `<div class="moment end" data-ain="end${S.day}"><div class="lbl ${win ? 'ok' : loss ? 'bad' : ''}">${win ? 'Victoire' : loss ? 'Défaite' : 'Match nul'}${M.pen ? ' aux tirs au but' : ''}</div><p class="note">Le président et les supporters jugeront. Confiance actuelle : ${Math.round(S.mgr.board)} / 100.</p></div>`; }
     return '';
   }
   if (UI.gest && (!M.pending || UI.gest.m !== M.pending)) UI.gest = null;
-  if (M.pending && !UI.mg && typeof geAvail === 'function' && geAvail(M)) { if (!UI.gest) { UI.gest = geNew(M); LV.replay = null; } return vGest(M); }
+  if (M.pending && !UI.mg && typeof geAvail === 'function' && geAvail(M)) { if (!UI.gest) { UI.gest = geNew(M); LV.replay = null; LV.repPend = null; } return vGest(M); }
   if (UI.mg && (M.pending || M.shoot)) return vMg(M);
   if (M.press && typeof voOnce === 'function') voOnce(M.press, M.press.q, 'J');
   if (M.half && typeof voOnce === 'function') voOnce(M.half, coachHalfLine(M), 'C');
@@ -56,7 +56,7 @@ function vLivePanel(M, P) {
   if (M.done) {
     const pst = liveFinal(M, P), mine = M.side === 'h' ? M.hg : M.ag, th = M.side === 'h' ? M.ag : M.hg;
     const win = mine > th || (mine === th && M.pen === M.side), loss = mine < th || (mine === th && M.pen && M.pen !== M.side), st = pst.st || {};
-    return `${M.last && M.last.mg ? `<div class="moment res ${M.last.ok ? 'ok' : 'bad'}">${goalSvg(M.last.mg)}<p>${esc(M.last.txt)}</p></div>` : ''}<div class="moment end"><div class="lbl ${win ? 'ok' : loss ? 'bad' : ''}">${win ? 'Victoire' : loss ? 'Défaite' : 'Match nul'}${M.pen ? ' aux tirs au but' : ''}</div><div class="row between"><div><div class="lbl">Ta note</div><span class="rt big2 ${rtCls(pst.rt)}">${pst.min ? dec(pst.rt) : '–'}</span></div><div class="note" style="text-align:right">${pst.min}' joués${M.g ? '<br>' + M.g + ' but' + (M.g > 1 ? 's' : '') : ''}${M.a ? '<br>' + M.a + ' passe' + (M.a > 1 ? 's' : '') + ' D' : ''}${pst.min ? `<br>${st.pc}/${st.pa} passes · ${st.sh} tir${st.sh > 1 ? 's' : ''}${S.p.pos === 'GB' ? ' · ' + st.sv + ' arrêt' + (st.sv > 1 ? 's' : '') : st.tk ? ' · ' + st.tk + ' ballon' + (st.tk > 1 ? 's' : '') + ' récupéré' + (st.tk > 1 ? 's' : '') : ''}` : ''}${M.yellow && !M.sent ? '<br>Carton jaune' : ''}${M.sent ? '<br><span class="bad">Expulsé</span>' : ''}${M.injOut ? '<br><span class="bad">Blessé</span>' : ''}</div></div></div>`;
+    return `${M.last && M.last.mg ? `<div class="moment res ${M.last.ok ? 'ok' : 'bad'}">${goalSvg(M.last.mg)}<p>${esc(M.last.txt)}</p></div>` : ''}<div class="moment end" data-ain="end${S.day}"><div class="lbl ${win ? 'ok' : loss ? 'bad' : ''}">${win ? 'Victoire' : loss ? 'Défaite' : 'Match nul'}${M.pen ? ' aux tirs au but' : ''}</div><div class="row between"><div><div class="lbl">Ta note</div><span class="rt big2 ${rtCls(pst.rt)}"${pst.min ? ` data-cnt="${pst.rt}" data-ck="rt${S.day}" data-c0="0" data-fmt="r"` : ''}>${pst.min ? dec(pst.rt) : '–'}</span></div><div class="note" style="text-align:right">${pst.min}' joués${M.g ? '<br>' + M.g + ' but' + (M.g > 1 ? 's' : '') : ''}${M.a ? '<br>' + M.a + ' passe' + (M.a > 1 ? 's' : '') + ' D' : ''}${pst.min ? `<br>${st.pc}/${st.pa} passes · ${st.sh} tir${st.sh > 1 ? 's' : ''}${S.p.pos === 'GB' ? ' · ' + st.sv + ' arrêt' + (st.sv > 1 ? 's' : '') : st.tk ? ' · ' + st.tk + ' ballon' + (st.tk > 1 ? 's' : '') + ' récupéré' + (st.tk > 1 ? 's' : '') : ''}` : ''}${M.yellow && !M.sent ? '<br>Carton jaune' : ''}${M.sent ? '<br><span class="bad">Expulsé</span>' : ''}${M.injOut ? '<br><span class="bad">Blessé</span>' : ''}</div></div></div>`;
   }
   if (M.last) return `<div class="moment res ${M.last.ok ? 'ok' : 'bad'}">${M.last.mg ? goalSvg(M.last.mg) : ''}<p>${esc(M.last.txt)}</p></div>`;
   return '';
@@ -132,7 +132,8 @@ function liveLight() {
   if (b && M.E) { b.setAttribute('cx', M.E.ball.x * 2); b.setAttribute('cy', M.E.ball.y * 2); }
   const fh = vFeed(M); if (fd && fd._h !== fh) { fd.innerHTML = fh; fd._h = fh; }
   const lc = $('#lCom'); if (lc) { const ch = vCom(M); if (lc._h !== ch) { lc.innerHTML = ch; lc._h = ch; } }
-  if (ls) { const h = vLiveStats(M); ls.outerHTML = h; }
+  // les barres de stats se remplissent à leur première apparition : on ne remplace le bloc qu'après, et seulement s'il a changé
+  if (ls) { const h = vLiveStats(M), now = performance.now(); if (!ls._t) ls._t = now; if (!(ls.classList.contains('ain') && now - ls._t < 1300) && ls._h !== h) { ls.outerHTML = h; const n = $('#lStats'); if (n) { n._h = h; n._t = now; } } }
 }
 function liveRun() {
   clearInterval(UI.lt); UI.lt = null;

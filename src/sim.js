@@ -418,7 +418,7 @@ function recordMatch(prep, r, kind) {
   p.energy -= pst.min > 0 ? Math.round(6 + pst.min / 12) : 1;
   if (pst.min > 0) {
     const ss = S.ss;
-    if (kind !== 'intl' && kind !== 'reserve') { ss.apps++; ss.min += pst.min; ss.g += pst.g; ss.a += pst.a; ss.rs += pst.rt; if (pst.cs) ss.cs++; if (pst.min >= 60) ss.starts++; if (prep.cont) { ss.cl.apps++; ss.cl.g += pst.g; } }
+    if (kind !== 'intl' && kind !== 'reserve') { ss.apps++; ss.min += pst.min; ss.g += pst.g; ss.a += pst.a; ss.rs += pst.rt; if (pst.cs) ss.cs++; if (pst.min >= 60) ss.starts++; if (prep.cont) { ss.cl.apps++; ss.cl.g += pst.g; } const sc = pst.rt + pst.g * .4 + pst.a * .2; if (!ss.best || sc > ss.best.sc) ss.best = { sc, rt: pst.rt, g: pst.g, a: pst.a, h: prep.h.n, a2: prep.a.n, hg: r.hg, ag: r.ag, side: prep.side, comp: prep.comp, d: typeof dateStr === 'function' ? dateStr() : '' }; }
     if (kind === 'club') { S.stats.proApps++; S.stats.proGoals += pst.g; if (pst.cs) S.stats.cs++; if (prep.derby) S.stats.derbyGoals += pst.g; const lid = myClub().lid; if (!S.stats.leagues.includes(lid)) S.stats.leagues.push(lid); }
     if (pst.g >= 3) { S.stats.hat++; if (kind !== 'youth') addNews('Exploit', `Triplé de ${pName()} ! (${prep.h.n} ${r.hg}-${r.ag} ${prep.a.n})`); }
     if (pst.rt >= 10) S.stats.tens++;
@@ -731,6 +731,7 @@ function joinClub(cid, kind, wage, years, fee, opt = {}) {
   S.p.moral = clamp(S.p.moral + 10, 0, 100);
   if (kind === 'pro' && S.plan.filter(a => a && a.k === 'train').length < 3) S.plan = defaultPlan('pro');
   if (opt.loanFrom) S.club.loanFrom = opt.loanFrom;
+  if ((kind === 'pro' || kind === 'academy') && typeof mqQueue === 'function') mqQueue({ k: 'hwg', kind, from: prev.n && !prev.free ? prev.n : '', to: c.n, fee: fee || 0, wage, until: S.club.until + 1, loan: !!opt.loanFrom, back: !!(prev.loanFrom && prev.loanFrom.id === cid), name: pName(), ppos: S.p.pos, ovr: OVR(), age: S.p.age, lg: L_BY(c.lid) ? L_BY(c.lid).name : '' });
   buildWeek();
 }
 function histRow() { const s = S.ss; return { s: seasonLabel(S.season), c: S.club.n + (S.club.kind === 'academy' ? ' (formation)' : S.club.kind === 'amateur' ? ' (amateur)' : ''), ap: s.apps, g: s.g, a: s.a, avg: s.apps ? Math.round(s.rs / s.apps * 10) / 10 : 0 }; }

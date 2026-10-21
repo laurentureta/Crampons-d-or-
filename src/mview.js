@@ -11,7 +11,7 @@ const hashN = s => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 +
 function lvReset(M) {
   const E = M.E;
   LV.M = M; LV.frames = [meFrame(E)]; LV.ros = {}; LV.ros[E.rv || 0] = meRoster(E); LV.pt = M.clockAt != null ? Math.min(M.clockAt, E.time) : E.time;
-  LV.hl = []; LV.hli = E.ev.length; LV.pops = []; LV.replay = null; LV.lastRep = -99; LV.trail = []; LV.spd = 1; LV.cam.x = clamp(E.ball.x, 20, 85); LV.varOn = null; M.vis = []; M.say = [];
+  LV.hl = []; LV.hli = E.ev.length; LV.pops = []; LV.replay = null; LV.repPend = null; if (typeof TV !== 'undefined') TV.goal = TV.wipe = TV.intro = null; LV.lastRep = -99; LV.trail = []; LV.spd = 1; LV.cam.x = clamp(E.ball.x, 20, 85); LV.varOn = null; M.vis = []; M.say = [];
   // décor propre au match : taches de pelouse, fumigènes, gouttes, flocons
   const c = M.cond || {}, sd = c.seed || 1; let r = sd * 9301 + 49297; const rnd = () => (r = (r * 9301 + 49297) % 233280) / 233280;
   const patches = []; if (c.wear > .2) { for (const gx of [3, PL - 3]) for (let i = 0; i < 5; i++) patches.push([gx + (rnd() - .5) * 7, 34 + (rnd() - .5) * 14, 1.5 + rnd() * 3, .5 + rnd() * .5]); for (let i = 0; i < 4; i++) patches.push([52.5 + (rnd() - .5) * 12, 34 + (rnd() - .5) * 12, 1.5 + rnd() * 2.5, .4 + rnd() * .4]); for (let i = 0; i < Math.round(c.wear * 12); i++) patches.push([10 + rnd() * 85, 4 + rnd() * 60, 1 + rnd() * 2.5, .25 + rnd() * .35]); }
@@ -68,7 +68,10 @@ function lvFrame(now) {
   const M = S.live.M; if (!M.eng) return;
   if (LV.M !== M) lvReset(M);
   const dt = Math.min(.25, Math.max(0, (now - LV.last) / 1000)); LV.last = now;
-  const E = M.E, paused = !!(M.press || M.pending || M.half || M.shoot || M.done || UI.mg);
+  // habillage télé : entrée des équipes avant le coup d'envoi (le match attend la fin)
+  if (!M.tvIn && typeof tvIntroStart === 'function' && LV.pt < 3 && !M.done && String(M.min || '0') === '0' && UI.screen === 'live') tvIntroStart(M);
+  const E = M.E, paused = !!(M.press || M.pending || M.half || M.shoot || M.done || UI.mg || (typeof tvIntroBusy === 'function' && tvIntroBusy()));
+  const hold = typeof TV !== 'undefined' && !!(TV.goal || LV.repPend); // pendant le bandeau « BUT ! », le direct passe en temps réel
   let rebuild = false;
   if (!paused) {
     // garder de l'avance sur l'affichage
@@ -76,13 +79,17 @@ function lvFrame(now) {
     const s0 = performance.now(), lead = E.time - LV.pt, budget = lead < 2 ? 60 : lead < 6 ? 7 : 3.5; let g = 0;
     while (M.stopAt == null && !M.done && E.time < LV.pt + 16 && g++ < 400 && (g === 1 || performance.now() - s0 < budget)) liveSim(M, E.time + .3, lvRec);
     lvScanHl(M);
+    // ralenti en attente : il démarre derrière le volet (après le bandeau « BUT ! »)
+    if (LV.repPend && !LV.replay && now >= LV.repPend.at) { const P_ = LV.repPend; if (!P_.w) { P_.w = 1; if (typeof tvWipe !== 'function' || !tvWipe(P_.rep.col)) { LV.replay = P_.rep; LV.repPend = null; } } else if (!TV.wipe || tvWipeMid()) { LV.replay = P_.rep; LV.repPend = null; } }
     if (LV.replay) {
-      const R_ = LV.replay; R_.pt += dt * R_.rate; if (R_.pt >= R_.t1) LV.replay = null;
+      const R_ = LV.replay; R_.pt += dt * R_.rate;
+      if (R_.pt >= R_.t1 && !R_.out) lvRepOut();
+      if (R_.out && (typeof TV === 'undefined' || !TV.wipe || tvWipeMid())) LV.replay = null;
     } else {
       // vitesse choisie = vitesse réelle du jeu (×1 = temps réel) ; « Résumé » = temps forts en temps réel, coupes entre eux
       const mode = UI.lspeed ?? 1; let np;
       if (mode === LV_RESUME) {
-        const hs = lvHlSpeed(LV.pt) || (M.stopAt != null && M.stopAt - LV.pt <= 6.05 ? 1 : 0);
+        const hs = lvHlSpeed(LV.pt) || (hold ? 1 : 0) || (M.stopAt != null && M.stopAt - LV.pt <= 6.05 ? 1 : 0);
         if (hs) { LV.spd = hs; np = LV.pt + dt * hs; }
         else {
           let nx = lvNextHl(LV.pt), g2 = 0;
@@ -90,7 +97,7 @@ function lvFrame(now) {
           const tgt = nx != null ? nx : M.stopAt != null ? M.stopAt - 6 : E.time;
           np = Math.max(LV.pt + dt, tgt); LV.spd = 1; if (np - LV.pt > 3) { LV.cut = now; LV.cutFrom = M.min; }
         }
-      } else { LV.spd = LV_MULT[mode] || 2; np = LV.pt + dt * LV.spd; }
+      } else { LV.spd = hold ? Math.min(1, LV_MULT[mode] || 2) : LV_MULT[mode] || 2; np = LV.pt + dt * LV.spd; }
       const lim = M.stopAt != null ? M.stopAt : E.time;
       if (np > lim) np = lim;
       LV.pt = np;
@@ -100,7 +107,7 @@ function lvFrame(now) {
       if (AU.gen && AU.gen.kick && !LV.replay) { const f = lvAt(LV.pt); if (f) { const o = f[6] >= 0 ? f[6] + ':' + f[7] : ''; if (LV.own && o !== LV.own && !f[9] && now - (LV.kickT || 0) > 280) { sfxG('kick', .3); LV.kickT = now; } LV.own = o; } }
     }
     // élaguer les vieilles images (on garde de quoi rejouer une action)
-    let cut = 0; while (cut < LV.frames.length - 2 && LV.frames[cut][0] < LV.pt - 14) cut++;
+    const keep = Math.min(LV.pt - 14, LV.repPend ? LV.repPend.rep.pt - 1 : Infinity); let cut = 0; while (cut < LV.frames.length - 2 && LV.frames[cut][0] < keep) cut++;
     if (cut > 40) LV.frames.splice(0, cut);
   }
   if (lvCanvas()) lvDraw(M, LV.replay ? LV.replay.pt : LV.pt, dt, paused);
@@ -127,18 +134,21 @@ function lvVis(M) {
     if (typeof sfxG === 'function') { const B = { goal: 'net', wood: 'post', save: 'catch', miss: 'shot', block: 'kick' }[v.k]; if (B) { if (v.k === 'goal') sfxG('shot', .75); sfxG(B, v.k === 'block' ? .6 : .95, v.k === 'goal' ? .12 : 0); } }
     const big = v.k === 'goal' || v.k === 'pen' || v.k === 'red' || v.k === 'wood' || v.k === 'var';
     if ((v.k === 'corner' || v.k === 'adv') && !lvHlSpeed(LV.pt)) continue;
-    LV.pops.push({ t: T, at: performance.now(), dur: big ? 2400 : 1300, big, col: v.k === 'goal' ? (v.mine ? '#f5c542' : '#e6e6e6') : v.k === 'yellow' ? '#f5c542' : v.k === 'red' || (v.k === 'var' && !v.ok) ? '#e5484d' : v.k === 'var' ? '#4fd28f' : '#ffffff' });
+    const tvG = v.k === 'goal' && typeof tvOn === 'function' && tvOn();
+    if (tvG) tvGoalStart(v, M); else LV.pops.push({ t: T, at: performance.now(), dur: big ? 2400 : 1300, big, col: v.k === 'goal' ? (v.mine ? '#f5c542' : '#e6e6e6') : v.k === 'yellow' ? '#f5c542' : v.k === 'red' || (v.k === 'var' && !v.ok) ? '#e5484d' : v.k === 'var' ? '#4fd28f' : '#ffffff' });
     // ralentis : buts toujours, autres grosses actions selon l'option
     const want = rep !== 'none' && (v.k === 'goal' || (rep === 'all' && (v.k === 'wood' || (v.k === 'save' && ((v.xg || 0) >= .15 || v.me)) || (v.k === 'miss' && (v.xg || 0) >= .3) || (v.k === 'pen' && v.me))));
     if (want && LV.frames.length && LV.frames[0][0] < v.t - 4.5 && (v.k === 'goal' || v.t - LV.lastRep > 20)) {
       const fe = lvAt(v.t), ex = fe ? (fe[2] === 2 ? PL - fe[3] : fe[3]) : 80, ey = fe ? (fe[2] === 2 ? PW - fe[4] : fe[4]) : 34;
-      LV.replay = { pt: v.t - (v.k === 'pen' ? 3 : 5.5), t1: v.t + .8, rate: v.k === 'goal' ? .5 : .6, cam: v.k === 'pen' ? 'side' : 'goal', cam3: v.k === 'goal' ? 'cine' : 'goal', end: ex > 52.5 ? 1 : -1, ey, lab: v.k === 'goal' ? 'RALENTI' : v.k === 'wood' ? 'POTEAU · RALENTI' : v.k === 'save' ? 'L\'ARRÊT · RALENTI' : 'RALENTI' };
+      const rep_ = { pt: v.t - (v.k === 'pen' ? 3 : 5.5), t1: v.t + .8, rate: v.k === 'goal' ? .5 : .6, cam: v.k === 'pen' ? 'side' : 'goal', cam3: v.k === 'goal' ? 'cine' : 'goal', end: ex > 52.5 ? 1 : -1, ey, lab: v.k === 'goal' ? 'RALENTI' : v.k === 'wood' ? 'POTEAU · RALENTI' : v.k === 'save' ? 'L\'ARRÊT · RALENTI' : 'RALENTI', col: M.E && M.E.T ? M.E.T[v.mine ? 0 : 1].col : null };
+      if (typeof tvOn === 'function' && tvOn()) LV.repPend = { rep: rep_, at: performance.now() + (tvG ? 3300 : 250) }; else LV.replay = rep_;
       LV.lastRep = v.t;
     }
   }
   if (LV.pops.length > 2) LV.pops.splice(0, LV.pops.length - 2);
 }
-function lvTap() { if (LV.replay) LV.replay = null; }
+function lvRepOut() { const R_ = LV.replay; if (!R_ || R_.out) return; R_.out = 1; if (typeof tvWipe !== 'function' || !tvWipe(R_.col)) LV.replay = null; }
+function lvTap() { if (typeof TV !== 'undefined' && TV.intro) { tvIntroSkip(); return; } if (LV.replay) lvRepOut(); else if (LV.repPend) LV.repPend = null; }
 
 // ---------- Interpolation ----------
 function lvAt(t) {
@@ -396,4 +406,5 @@ function lvHud(cx, w, h, E, fa, own, C) {
     cx.font = `${p.big ? (p.t.length > 12 ? 24 : 34) : 16}px 'Protest Strike', 'Big Shoulders Display', system-ui, sans-serif`; cx.textAlign = 'center'; cx.textBaseline = 'middle';
     cx.lineWidth = p.big ? 5 : 3; cx.strokeStyle = 'rgba(0,0,0,.65)'; cx.strokeText(p.t, 0, 0); cx.fillStyle = p.col; cx.fillText(p.t, 0, 0); cx.restore();
   });
+  if (typeof tvDraw === 'function') tvDraw(cx, w, h);
 }

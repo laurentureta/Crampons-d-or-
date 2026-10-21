@@ -294,10 +294,10 @@ function endSeason() {
   const ss = S.ss, avg = ss.apps ? Math.round(ss.rs / ss.apps * 10) / 10 : 0;
   const trThis = S.trophies.filter(t => t.s === seasonLabel(S.season)).map(t => t.t);
   S.lastSS = { apps: ss.apps, g: ss.g, a: ss.a, avg, ovr: OVR(), club: S.club.n, tr: trThis };
-  let pos = null;
+  let pos = null, lgN = '';
   if (proLike() && S.club.id) {
     const lid = W.lastOrder[myClub().lid] ? myClub().lid : null; const oldLid = moves.find(m => m[0] === S.club.id) ? (moves.find(m => m[0] === S.club.id)[1] === 'up' ? myClub().cc + '2' : myClub().cc) : myClub().lid;
-    pos = W.lastOrder[oldLid].indexOf(S.club.id) + 1;
+    pos = W.lastOrder[oldLid].indexOf(S.club.id) + 1; lgN = L_BY(oldLid).name;
     if (!isCoach()) {
     const ts = topScorers(oldLid, 1)[0];
     if (ts && ts.me && ss.g >= 8) { S.awards.push({ t: 'Meilleur buteur de ' + L_BY(oldLid).name, s: seasonLabel(S.season) }); addNews('Distinction', `${pName()} termine meilleur buteur de ${L_BY(oldLid).name} avec ${ss.g} buts.`); }
@@ -305,6 +305,9 @@ function endSeason() {
     if (avg >= 7.4 && ss.apps >= 25 && R() < .5) S.awards.push({ t: 'Équipe type de ' + L_BY(oldLid).name, s: seasonLabel(S.season) });
     }
   }
+  // récap de la saison façon « stories » (motion.js)
+  if (!isCoach() && ss.apps > 0 && typeof mqQueue === 'function') { const sl = seasonLabel(S.season); mqQueue({ k: 'recap', s: sl, name: pName(), club: S.club.n, kind: S.club.kind, num: S.club.num, ppos: S.p.pos, pos, lg: lgN, apps: ss.apps, min: ss.min, g: ss.g, a: ss.a, avg, cs: ss.cs, starts: ss.starts, cl: ss.cl, best: ss.best || null, tr: trThis, aw: S.awards.filter(a => a.s === sl).map(a => a.t), val: marketValue(OVR(), S.p.age), wage: S.club.wage || 0, ovr: OVR(), ovr0: S.ovrStart || null, fol: S.p.followers }); }
+  S.ovrStart = OVR();
   if (ss.apps > 0) S.hist.push(Object.assign(histRow(), { pos }));
   S.ss = newSS(S.club.n);
   // contrats
@@ -504,7 +507,7 @@ function save() {
 }
 function loadSlot(n) { try { const t = localStorage.getItem(SAVE_PREFIX + n); if (!t) return null; const s = JSON.parse(t); if (!s || s.v !== VERSION) return null; s.slot = n; return s; } catch (e) { return null; } }
 function deleteSlot(n) { try { localStorage.removeItem(SAVE_PREFIX + n); const m = slotsMeta(); delete m[n]; localStorage.setItem(META_KEY, JSON.stringify(m)); } catch (e) { } }
-function hydrate(s) { S = s; IDX = null; EVQ = []; if (typeof FQ !== 'undefined') FQ.q = []; if (S.squad) for (const x of S.squad) if (x.star) x.ref = S.W.stars.find(st => st.n === x.n); ensureV3(); if (S.live && S.live.M && !S.live.M.eng && typeof liveSetup === 'function') { try { S.live.M = liveSetup(S.live.prep); } catch (e) { S.live = null; } } if (S.live && S.live.M && S.live.M.eng && typeof meUpgrade === 'function') { meUpgrade(S.live.M.E); const M = S.live.M; if (!M.com) { M.com = []; M.cmT = M.clockAt || 0; M.comLast = -99; M.say = []; } } }
+function hydrate(s) { S = s; IDX = null; EVQ = []; if (typeof FQ !== 'undefined') FQ.q = []; if (typeof MQ !== 'undefined') MQ.q = []; if (S.squad) for (const x of S.squad) if (x.star) x.ref = S.W.stars.find(st => st.n === x.n); ensureV3(); if (S.live && S.live.M && !S.live.M.eng && typeof liveSetup === 'function') { try { S.live.M = liveSetup(S.live.prep); } catch (e) { S.live = null; } } if (S.live && S.live.M && S.live.M.eng && typeof meUpgrade === 'function') { meUpgrade(S.live.M.E); const M = S.live.M; if (!M.com) { M.com = []; M.cmT = M.clockAt || 0; M.comLast = -99; M.say = []; } } }
 function exportSave() {
   try { if (typeof shopSnap === 'function') S.shopW = shopSnap(); } catch (e) { }
   const json = JSON.stringify(S, (k, v) => k === 'ref' ? undefined : v);

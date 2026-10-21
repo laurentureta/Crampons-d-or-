@@ -117,7 +117,7 @@ function liveEvent(M, e) {
       const how = e.og ? ' (contre son camp)' : e.kind === 'head' ? ' de la tête' : e.kind === 'pen' ? ' sur penalty' : e.kind === 'fk' ? ' sur coup franc' : e.kind === 'chip' ? ' d\'un lob' : e.kind === 'volley' ? ' d\'une reprise de volée' : '';
       if (mineK) F(`⚽ But pour ${M.my} ! ${e.me ? 'Tu marques' : e.n + ' marque'}${how}${e.as ? ' (passe de ' + (e.asMe ? 'toi' : e.as) + ')' : ''}.`, 'goal');
       else F(`But de ${M.op} : ${e.n}${how}.`, 'opp');
-      sfx(M, mineK ? 'goal' : 'oppgoal'); vis(M, { k: 'goal', t: e.t, mine: mineK, me: e.me });
+      sfx(M, mineK ? 'goal' : 'oppgoal'); vis(M, { k: 'goal', t: e.t, mine: mineK, me: e.me, n: e.og ? e.n + ' (csc)' : e.n, as: e.asMe ? 'P' : (e.as || ''), how: how.replace(/^ \(|\)$/g, '').trim(), min: minNum(e.c, e.h), hg: M.hg, ag: M.ag });
       return true;
     }
     case 'save': {

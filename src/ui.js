@@ -6,7 +6,7 @@ let MODAL = null, TOAST_T = null;
 const OPTS_KEY = 'cdo2_opts';
 // caméras du match en 3D : [clé, nom court, description]
 const CAM_VIEWS = [['tv', 'TV', 'Caméra TV'], ['large', 'Large', 'Caméra large'], ['tac', 'Tactique', 'Vue tactique : les lignes des deux équipes'], ['joueur', 'Mon joueur', 'Caméra derrière ton joueur'], ['but', 'Derrière le but', 'Caméra derrière le but'], ['bord', 'Bord du terrain', 'Caméra au bord du terrain'], ['drone', 'Drone', 'Caméra drone au-dessus de l\'action']];
-const OPT_DEF = { live: 'all', speed: 1, music: true, mvol: .55, svol: .8, shuffle: true, mg: true, geste: true, interrupt: 'all', voice: true, replay: 'all', gfx: '3d', cam: 'tv', chat: 'all', v1: '', v2: '', aiv: 'off', aivMode: 'all', aivS: '', aivN: '', aivM: 'eleven_flash_v2_5', aivEL: [], intro: true, fetes: true };
+const OPT_DEF = { live: 'all', speed: 1, music: true, mvol: .55, svol: .8, shuffle: true, mg: true, geste: true, interrupt: 'all', voice: true, replay: 'all', gfx: '3d', cam: 'tv', chat: 'all', v1: '', v2: '', aiv: 'off', aivMode: 'all', aivS: '', aivN: '', aivM: 'eleven_flash_v2_5', aivEL: [], intro: true, fetes: true, tv: true, motion: true };
 function loadOpts() { try { return Object.assign({}, OPT_DEF, JSON.parse(localStorage.getItem(OPTS_KEY) || '{}')); } catch (e) { return Object.assign({}, OPT_DEF); } }
 let OPTS = loadOpts();
 function saveOpts() { try { localStorage.setItem(OPTS_KEY, JSON.stringify(OPTS)); } catch (e) { } }
@@ -74,6 +74,7 @@ function renderModal() {
   if (!MODAL) { ov.innerHTML = ''; return; }
   ov.innerHTML = `<div class="ov"><div class="md ${MODAL.cls || ''}" role="dialog" aria-modal="true" aria-label="${esc(MODAL.title)}">${MODAL.kicker ? `<div class="lbl acc">${esc(MODAL.kicker)}</div>` : ''}<div class="ttl">${esc(MODAL.title)}</div><div class="body">${MODAL.html || ''}</div><div class="btns">${(MODAL.btns || []).map((b, i) => `<button class="btn ${b.cls || ''}" data-a="mbtn" data-v="${i}" ${b.dis ? 'disabled' : ''}>${esc(b.t)}</button>`).join('')}</div></div></div>`;
   const md = ov.querySelector('.md'); if (md) md.scrollTop = 0;
+  if (typeof uimModal === 'function') uimModal();
 }
 const shortDate = d => DAYS_S[(d.getDay() + 6) % 7] + '. ' + d.getDate() + ' ' + MONTHS_S[d.getMonth()] + ' ' + d.getFullYear();
 const dayMonth = d => d.getDate() + ' ' + MONTHS[d.getMonth()];
@@ -101,6 +102,7 @@ function render() {
   if (UI.screen === 'live') { if (typeof lvAttach === 'function' && S && S.live && S.live.M.eng && !LV.off) lvAttach(); } else if (typeof lvStop === 'function') lvStop();
   if (typeof ldStart === 'function') { if (UI.screen === 'loading' || UI.screen === 'splash') ldStart(); else ldStop(); }
   if (typeof shopAfterRender === 'function') shopAfterRender();
+  if (typeof uiMotion === 'function') uiMotion();
   if (UI.anim) setTimeout(() => { UI.anim = null; }, 50);
 }
 
@@ -221,7 +223,7 @@ function vActBar() {
 }
 function vTop() {
   const n = unread();
-  return `<header class="top"><div class="when"><b>${shortDate(today())}</b><span>Sem. ${S.week} · Saison ${seasonLabel(S.season)}</span></div><div class="cash num">${eur(S.p.money)}</div><button class="bell" data-a="open" data-v="settings" aria-label="Réglages">${icon('gear')}</button><button class="bell" data-a="open" data-v="inbox" aria-label="Messages${n ? ', ' + n + ' non lus' : ''}">${icon('bell')}${n ? `<span class="cnt">${n > 9 ? '9+' : n}</span>` : ''}</button></header>`;
+  return `<header class="top"><div class="when"><b>${shortDate(today())}</b><span>Sem. ${S.week} · Saison ${seasonLabel(S.season)}</span></div><div class="cash num" data-cnt="${Math.round(S.p.money)}" data-ck="cash" data-fmt="eur">${eur(S.p.money)}</div><button class="bell" data-a="open" data-v="settings" aria-label="Réglages">${icon('gear')}</button><button class="bell" data-a="open" data-v="inbox" aria-label="Messages${n ? ', ' + n + ' non lus' : ''}">${icon('bell')}${n ? `<span class="cnt">${n > 9 ? '9+' : n}</span>` : ''}</button></header>`;
 }
 function vNav() {
   const t = [['home', 'Accueil', 'home'], ['agenda', 'Agenda', 'cal'], ['career', 'Carrière', 'trophy'], ['life', 'Vie', 'heart'], ['profile', 'Profil', 'user']];
@@ -297,11 +299,11 @@ function vHome() {
         <div class="hsub"><span class="chip acc">${p.pos}</span>${S.club.captain ? '<span class="chip gold">C</span>' : ''}<span class="t">${p.age} ans · ${S.club.kind === 'pro' ? 'N°' + S.club.num + ' · ' : ''}${esc(S.club.n)}</span></div>
         <div class="note hrole">${esc(roleLabel())}${c ? ' · ' + L_BY(c.lid).name : ''}</div>
       </div>
-      <div class="ovr"><div class="v num">${o}</div><div class="hst">${stars(potStars())}</div></div>
+      <div class="ovr"><div class="v num" data-cnt="${o}" data-ck="ovr">${o}</div><div class="hst">${stars(potStars())}</div></div>
     </div>
     <div class="gauges">${gauge('Énergie', p.energy, p.energy < 30 ? 'bad' : 'ok')}${gauge('Moral', p.moral, 'info')}${gauge('Forme', p.forme)}</div>
   </section>
-  ${typeof shopW === 'function' ? `<button class="pepbar" data-a="open" data-v="shop"><i class="pep"></i><b>${fnum(shopW().bal)}</b><span class="grow">Pépites · Boutique</span>${shopDailyOk() ? '<span class="pepnew">Bonus du jour</span>' : ''}<span class="chev">›</span></button>` : ''}
+  ${typeof shopW === 'function' ? `<button class="pepbar" data-a="open" data-v="shop"><i class="pep"></i><b data-cnt="${shopW().bal}" data-ck="pep" data-fmt="n">${fnum(shopW().bal)}</b><span class="grow">Pépites · Boutique</span>${shopDailyOk() ? '<span class="pepnew">Bonus du jour</span>' : ''}<span class="chev">›</span></button>` : ''}
   ${alerts.slice(0, 2).join('')}${alerts.length > 2 ? `<p class="note">+ ${alerts.length - 2} autre${alerts.length > 3 ? 's' : ''} alerte${alerts.length > 3 ? 's' : ''}</p>` : ''}
   <section class="card sec">
     <div class="hd"><h3>${cap(MONTHS[d0.getMonth()])} ${d0.getFullYear()}</h3><span class="note">Semaine ${S.week}${WINTER(S.week) || SUMMER(S.week) ? ' · mercato ouvert' : ''}</span></div>

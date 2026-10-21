@@ -32,7 +32,7 @@ function advance(mode) {
     if (r.live) { UI.adv = null; save(); startLive(); return; }
     A.i++; if (r.log) A.logs.push(r.log);
     UI.anim = prev;
-    const stop = EVQ.length || (typeof FQ !== 'undefined' && FQ.q.length) || S.trial || S.over || S.pendingNum || (r.log && r.log.injured) || A.i >= A.n || (A.mode === 'match' && fixturesOn(S.day).length > 0);
+    const stop = EVQ.length || (typeof FQ !== 'undefined' && FQ.q.length) || (typeof MQ !== 'undefined' && MQ.q.length) || S.trial || S.over || S.pendingNum || (r.log && r.log.injured) || A.i >= A.n || (A.mode === 'match' && fixturesOn(S.day).length > 0);
     if (stop) { finishAdvance(); return; }
     if (delay) { render(); setTimeout(step, delay); } else step();
   };
@@ -62,11 +62,16 @@ function flow() {
   if (S.live) return startLive();
   if (S.over) { closeModal(); render(); return; }
   if (S.trial) return trialModal();
+  if (typeof MQ !== 'undefined' && MQ.q.length) {
+    // annonce de transfert d'abord, puis le choix du numéro, le maillot, et le récap après les fêtes de trophées
+    const i = MQ.q.findIndex(m => m.k === 'hwg' || (!S.pendingNum && (m.k !== 'recap' || !(typeof FQ !== 'undefined' && FQ.q.length))));
+    if (i >= 0) { const m = MQ.q.splice(i, 1)[0]; if (mqOk()) { closeModal(); if (mqPlay(m, flow)) return; } return flow(); }
+  }
   if (S.pendingNum) return numberModal();
   if (typeof FQ !== 'undefined' && FQ.q.length) { const f = FQ.q.shift(); if (feteOk()) { closeModal(); return fetePlay(f, flow); } return flow(); }
   if (EVQ.length) {
     const e = EVQ.shift();
-    openModal({ kicker: e.kind === 'press' ? 'Médias' : e.kind === 'month' ? 'Fin du mois' : dateStr(), title: e.title, html: e.text, cls: e.kind === 'month' ? 'month' : '', btns: e.ch.map((c, i) => ({ t: c.t, cls: i === 0 ? 'pri' : '', fn: () => { const r = c.f(); save(); if (r) openModal({ title: e.title, html: `<p>${esc(r)}</p>`, btns: [{ t: 'Continuer', cls: 'pri', fn: flow }] }); else flow(); } })) });
+    openModal({ kicker: e.kind === 'press' ? 'Médias' : e.kind === 'month' ? 'Fin du mois' : dateStr(), title: e.title, html: e.text, cls: (e.kind === 'month' ? 'month ' : '') + 'evc', btns: e.ch.map((c, i) => ({ t: c.t, cls: i === 0 ? 'pri' : '', fn: () => { const r = c.f(); save(); if (r) openModal({ title: e.title, html: `<p>${esc(r)}</p>`, btns: [{ t: 'Continuer', cls: 'pri', fn: flow }] }); else flow(); } })) });
     return;
   }
   closeModal(); render();
@@ -208,6 +213,9 @@ const ACT = {
   optMg: v => { if (UI.screen === 'game' && S) { S.settings.mg = v === '1'; save(); } OPTS.mg = v === '1'; saveOpts(); render(); },
   optIntro: v => { OPTS.intro = v === '1'; saveOpts(); render(); },
   optFetes: v => { OPTS.fetes = v === '1'; saveOpts(); render(); },
+  optTv: v => { OPTS.tv = v === '1'; saveOpts(); render(); },
+  optMotion: v => { OPTS.motion = v === '1'; saveOpts(); render(); },
+  mqDemo: v => { if (typeof mqDemo === 'function') mqDemo(v); },
   feteDemo: v => { if (typeof fetePlay !== 'function' || (typeof feteOk === 'function' && !feteOk() && !(typeof navigator !== 'undefined' && navigator.webdriver))) return toast('La 3D n\'est pas disponible sur cet appareil.');
     const c = S && S.club && S.club.n ? S.club.n : 'FC Crampons', yr = S ? S.season : 2026, ss = S && typeof seasonLabel === 'function' ? seasonLabel(S.season) : '2026-27';
     fetePlay(v === 'pres' ? { k: 'pres', club: c, num: S && S.club && S.club.num || 10, until: S && S.club && S.club.until ? S.club.until + 1 : 2030 } : v === 'bdo' ? { k: 'bdo', yr, club: c } : { k: 'titre', name: 'Championnat', club: c, season: ss, list: ['Championnat'] }, null); },
@@ -246,7 +254,7 @@ const ACT = {
   req: () => confirmM('Demander un transfert ?', '<p>Le coach et le vestiaire vont mal le prendre, mais davantage de clubs vont se manifester au prochain mercato.</p>', 'Demander', () => { S.transferReq = true; S.coach.rel -= 12; S.mateRel -= 5; S.p.pop -= 3; addNews('Mercato', `${pName()} demande à quitter ${S.club.n}.`); save(); render(); toast('Demande envoyée. Le coach fait la tête.'); }),
   ext: () => { if (R() < .35 + S.coach.rel / 200) { renewalOffer(); save(); render(); toast('Le club te propose une prolongation : voir Transferts.'); } else { S.coach.rel -= 3; save(); render(); toast('Le club ne souhaite pas prolonger pour l\'instant.'); } },
   changeNum: () => { S.pendingNum = true; flow(); },
-  pickNum: v => { S.club.num = +v; S.pendingNum = false; if (S.club.pres === 0 && typeof feteQueue === 'function') { S.club.pres = 1; feteQueue({ k: 'pres', club: S.club.n, num: +v, until: S.club.until + 1 }); } save(); closeModal(); toast('Tu porteras le numéro ' + v + '.'); flow(); },
+  pickNum: v => { S.club.num = +v; S.pendingNum = false; if (typeof mqQueue === 'function') mqQueue({ k: 'maillot', club: S.club.n, num: +v, name: S.p.last, first: S.p.first }); if (S.club.pres === 0 && typeof feteQueue === 'function') { S.club.pres = 1; feteQueue({ k: 'pres', club: S.club.n, num: +v, until: S.club.until + 1 }); } save(); closeModal(); toast('Tu porteras le numéro ' + v + '.'); flow(); },
   amateur: () => { S.club = { kind: 'amateur', id: null, n: amateurName(S.p.nat, S.p.city), wage: 0, until: 0, since: S.season, num: S.club.num }; S.coach = { n: genName(S.p.nat), rel: 60 }; S.plan = defaultPlan('amateur'); buildWeek(); buildMates(); genObjectives(); save(); render(); toast('Retour au club de ta ville.'); },
   retire: () => confirmM('Prendre ta retraite ?', '<p>Ta carrière de joueur s\'arrête ici.</p>', 'Raccrocher les crampons', () => { retire(); save(); render(); }),
   planB: () => confirmM('Arrêter le foot ?', `<p>Tu raccroches les crampons sans être passé pro.${S.school.bac ? ' Ton bac t\'ouvre d\'autres portes.' : ''}</p>`, 'Arrêter', () => { planB(); save(); render(); }),

@@ -110,6 +110,18 @@ En 3D (`src/geste.js`), au moment clé le match se fige et la caméra se place d
 
 Au lancement (`src/intro.js`), un vrai retourné en photo : un joueur photographié de nuit en plein retourné (photo de **Chaim Weingarten**, [Unsplash](https://unsplash.com/photos/man-performs-acrobatic-kick-with-soccer-ball-on-beach-5WzxI2voAfg)), détouré par le robot médias (`rembg`), posé devant le **Parc des Princes** de nuit vu du bord du terrain (photo de **Chris Kursikowski**, [Unsplash](https://unsplash.com/photos/a-soccer-field-at-night-with-the-lights-on-5IS7UghgoMA)), flouté comme par un objectif. Les deux photos sont sous [licence Unsplash](https://unsplash.com/license) (usage libre). Travelling lent, flashs des photographes dans les tribunes, puis la frappe : le vrai ballon de la photo fonce vers l'objectif et brise la vitre du téléphone — les éclats décalent l'image comme du verre cassé, fissures, flash, écran qui bave — et le titre apparaît derrière la vitre. Tout est dessiné en canvas 2D. `tools/intro_photos.py` prépare les images de `assets/intro/` (joueur sans le ballon, ballon seul, stade flouté, repères dans `intro.json`) à partir des originaux de `media-raw/intro/`.
 
+## Motion design
+
+Tout est dessiné en code (`src/motion.js`), sans vidéo :
+
+- **Habillage télé des matchs** (sur le calque du direct, en 3D comme en 2D) : entrée des équipes avant le coup d'envoi (compétition, écussons, systèmes, les deux onze en cascade, toi en or, « VS », « Coup d'envoi » ; on touche pour passer), bandeau « BUT ! » / « TU MARQUES ! » aux couleurs de l'équipe avec buteur, minute, manière, passeur et tableau d'affichage dont le chiffre bascule, puis le ralenti encadré par un volet de transition.
+- **Grands moments de carrière** (plein écran, format story 9:16, on touche pour passer) : annonce de transfert « Here we go » à chaque signature (info mercato, départ → arrivée, montant et salaire qui défilent, tampon « Officiel »), maillot dévoilé qui se retourne avec ton nom et ton numéro, et récap de fin de saison en 8 écrans (matchs, minutes, buts et passes, note moyenne, match de l'année, classement et trophées, cote, affiche finale) **exportable en vidéo** (`MediaRecorder`, MP4 sur iPhone) pour les réseaux.
+- **Interface vivante** : l'argent, la note et les Pépites défilent quand ils changent (vert si ça monte, rouge si ça baisse), les jauges se remplissent, le contenu glisse dans le sens de l'onglet choisi, l'icône de l'onglet saute, la cloche sonne à chaque message, les fenêtres d'événement s'ouvrent comme une carte qu'on retourne, la fin de match fait claquer le résultat et monter ta note.
+
+Réglages → *Habillage télé et animations* : tout se désactive, et trois boutons rejouent les grands moments. Les animations respectent le réglage « réduire les animations » de l'iPhone.
+
+**Bande-annonce** (`bande-annonce/crampons-dor-bande-annonce.mp4`, 1080×1920, ~27 s, pour les réseaux) : montée à partir d'images du vrai jeu capturées image par image (ouverture, entrée des équipes, match en 3D, bandeau de but, annonce de transfert, maillot, trophée en 3D, récap de saison), avec la foule et les bruitages du jeu.
+
 ## Pépites et Boutique
 
 Les Pépites se gagnent uniquement en jouant (matchs, buts, passes, notes, trophées, succès, bonus du jour) et n'achètent que du style : crampons, ballons, célébrations et effets de but en 3D, halos, cartes de joueur, thèmes de couleurs (`src/shop.js`). Le porte-monnaie est commun à toutes les carrières et voyage avec les sauvegardes exportées ou en ligne.
